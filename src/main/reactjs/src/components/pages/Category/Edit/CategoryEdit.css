@@ -1,0 +1,81 @@
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 10px
+}
+
+.title {
+  text-align: center;
+}
+
+form {
+  width: 100%;
+  /* border: 1px solid black; */
+  margin: 20px 0;
+}
+
+form>div {
+  display: flex;
+  padding: 10px 5%;
+  flex-direction: column;
+}
+
+div.action {
+  display: flex;
+  justify-content: space-between;
+}
+
+form>div>div.action label {
+  width: 40%;
+}
+
+form>div>div.action input {
+  width: 50%;
+  padding: 8px 20px
+}
+
+form>div>div.action select {
+  width: 50%;
+  padding: 8px 20px;
+}
+
+select>option {
+  padding: 8px 20px;
+}
+
+.image-view {
+  justify-content: space-around;
+}
+
+.summit-button {
+  justify-content: space-around;
+}
+
+.summit-button>div.action {
+  justify-content: center;
+}
+
+div.alert p {
+  color: red;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.summit-button>div.action button {
+  padding: 8px 20px;
+  width: 80%;
+  max-width: 400px;
+  color: #fff;
+  background-color: #000;
+  border-radius: 4px;
+}
+
+.summit-button>div.action button:hover {
+  color: #000;
+  background-color: transparent;
+}
+
+@media screen and (max-width: 960px) {
+  .action button {
+    display: block;
+  }
+}

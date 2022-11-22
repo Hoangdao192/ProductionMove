@@ -6,9 +6,13 @@
     cursor: pointer;;
 }
 
-[class*='-search']>* {
-    /* border: 1px solid black; */
+.non-visibility {
+    visibility: hidden;
 }
+
+/* [class*='-search']>* {
+    border: 1px solid black;
+} */
 
 [class*='-search']>label {
     width: 30%;

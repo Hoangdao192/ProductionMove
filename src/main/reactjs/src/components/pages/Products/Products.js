@@ -18,6 +18,9 @@ export default function Products() {
 
   const [products, setProducts] = useState(data);
   const [sorted, setSorted] = useState({ sorted: "", reversed: false });
+  const [isSearchFactory, setIsSearchFactory] = useState(false);
+  const [isSearchAgency, setIsSearchAgency] = useState(false);
+  const [isSearchIsuarance, setIsSearchIsuarance] = useState(false);
 
   // Xắp xếp theo tên
   function sortByName() {
@@ -252,6 +255,24 @@ export default function Products() {
     setProducts(result);
   }
 
+  // Kiểm tra ẩn hiện tìm kiếm vị trí
+  function checkPositionSearch(param) {
+    let result = [];
+    if (isSearchFactory) result.push("factory");
+    if (isSearchAgency) result.push("agency");
+    if (isSearchIsuarance) result.push("insuarance");
+
+    if (result.length === 0) {
+      return true;
+    }
+
+    if (result.includes(param)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <>
       <div className="products">
@@ -268,7 +289,7 @@ export default function Products() {
           <div className="category-search">
             <label htmlFor="category">Loại máy</label>
             <select name="category" id="category">
-              <option value=""></option>
+              <option value="">Không chọn</option>
               {category.map((item, index) => {
                 return (
                   <option value={index} key={index}>
@@ -281,7 +302,7 @@ export default function Products() {
           <div className="status-search">
             <label htmlFor="status">Trạng thái</label>
             <select name="status" id="status">
-              <option value=""></option>
+              <option value="">Không chọn</option>
               {status.map((item, index) => {
                 return (
                   <option value={index} key={index}>
@@ -291,10 +312,28 @@ export default function Products() {
               })}
             </select>
           </div>
-          <div className="factory-search">
+          <div
+            className={
+              checkPositionSearch("factory")
+                ? "factory-search"
+                : "factory-search non-visibility"
+            }
+          >
             <label htmlFor="factory">Cơ sở sản xuất</label>
-            <select name="factory" id="factory">
-              <option value=""></option>
+
+            <select
+              name="factory"
+              id="factory"
+              onChange={(e) => {
+                let value = parseInt(e.target.value);
+                if (!isNaN(value)) {
+                  setIsSearchFactory(true);
+                } else {
+                  setIsSearchFactory(false);
+                }
+              }}
+            >
+              <option value="">Không chọn</option>
               {factory.map((item, index) => {
                 return (
                   <option value={index} key={index}>
@@ -304,10 +343,28 @@ export default function Products() {
               })}
             </select>
           </div>
-          <div className="agency-search">
+          <div
+            className={
+              checkPositionSearch("agency")
+                ? "agency-search"
+                : "agency-search non-visibility"
+            }
+          >
             <label htmlFor="agency">Đại lý</label>
-            <select name="agency" id="agency">
-              <option value=""></option>
+            <select
+              name="agency"
+              id="agency"
+              onChange={(e) => {
+                let value = parseInt(e.target.value);
+                if (!isNaN(value)) {
+                  setIsSearchAgency(true);
+                } else {
+                  setIsSearchAgency(false);
+                }
+              }}
+            >
+              <option value="">Không chọn</option>
+
               {agency.map((item, index) => {
                 return (
                   <option value={index} key={index}>
@@ -317,10 +374,27 @@ export default function Products() {
               })}
             </select>
           </div>
-          <div className="insuarance-search">
+          <div
+            className={
+              checkPositionSearch("insuarance")
+                ? "insuarance-search"
+                : "insuarance-search non-visibility"
+            }
+          >
             <label htmlFor="insuarance">Trung tâm bảo hành</label>
-            <select name="insuarance" id="insuarance">
-              <option value=""></option>
+            <select
+              name="insuarance"
+              id="insuarance"
+              onChange={(e) => {
+                let value = parseInt(e.target.value);
+                if (!isNaN(value)) {
+                  setIsSearchIsuarance(true);
+                } else {
+                  setIsSearchIsuarance(false);
+                }
+              }}
+            >
+              <option value="">Không chọn</option>
               {insuarance.map((item, index) => {
                 return (
                   <option value={index} key={index}>
