@@ -1,0 +1,15 @@
+.home {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    background-image: url('../../../../image/Home.webp');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #fff;
+    font-size: 100px;
+    border-radius: 1rem;
+    object-fit: cover;
+}
