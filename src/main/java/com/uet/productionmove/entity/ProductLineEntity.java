@@ -1,22 +1,69 @@
 package com.uet.productionmove.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity(name = "product_line")
+@Table(name = "products")
+@Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProductLineEntity {
+@NoArgsConstructor
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @org.hibernate.annotations.Type(type="uuid-char")
-    @Column(name = "id", length = 36)
-    private UUID id;
-    @Column(name = "name")
-    private String name;
+    private Long id;
+    private String productName;
+    private String processor;
+    private String operatingSystem;
+    private String videoCard;
+    private String display;
+    private String memory;
+    private String hardDrive;
+    private String camera;
+    private String audioAndSpeaker;
+    private String wireless;
+    private String battery;
+
+    @ManyToOne
+    @JoinColumn(name = "product_line_id")
+    private ProductLineEntity productLine;
+
+    public ProductEntity(
+            ProductLineEntity productLine,
+            String productName, String processor, String operatingSystem,
+            String videoCard, String display, String memory,
+            String hardDrive, String camera, String audioAndSpeaker,
+            String wireless, String battery) {
+        this.productName = productName;
+        this.processor = processor;
+        this.operatingSystem = operatingSystem;
+        this.videoCard = videoCard;
+        this.display = display;
+        this.memory = memory;
+        this.hardDrive = hardDrive;
+        this.camera = camera;
+        this.audioAndSpeaker = audioAndSpeaker;
+        this.wireless = wireless;
+        this.battery = battery;
+        this.productLine = productLine;
+    }
+
+    public ProductEntity(
+            String productName, String processor, String operatingSystem,
+            String videoCard, String display, String memory, String hardDrive,
+            String camera, String audioAndSpeaker, String wireless, String battery) {
+        this.productName = productName;
+        this.processor = processor;
+        this.operatingSystem = operatingSystem;
+        this.videoCard = videoCard;
+        this.display = display;
+        this.memory = memory;
+        this.hardDrive = hardDrive;
+        this.camera = camera;
+        this.audioAndSpeaker = audioAndSpeaker;
+        this.wireless = wireless;
+        this.battery = battery;
+    }
 }
