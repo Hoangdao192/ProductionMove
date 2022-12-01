@@ -30,6 +30,9 @@ import CreateProduct from "./components/Dashboard/pages/Product/Products/Create/
 // import Device from "./components/Dashboard/pages/Product/Device/Device";
 import NoPage from "./components/Dashboard/pages/NoPage/NoPage";
 
+// Outline---______________----------------000
+import CreateProductLineSample from "./components/pages/CreateProductLineSample/CreateProductLineSample";
+
 function App() {
   return (
     <>
@@ -37,7 +40,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Darshboard />}>
           {/* Home */}
-          <Route index element={<Home />} />
+          <Route index element={<CreateProductLineSample />} />
 
           {/* Product */}
           <Route path="product/productLine" element={<ProductLine />}/>

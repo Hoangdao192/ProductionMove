@@ -1,0 +1,42 @@
+.form {
+  /* border: 1px solid black; */
+}
+
+.form>div {
+  display: flex;
+  flex-direction: column;
+  /* padding: 0.1rem; */
+}
+
+.action {
+  font-weight: bold;
+}
+
+.action label {
+  font-size: 1.1rem;
+}
+
+.action>* {
+  /* border: 1px solid black; */
+  width: 100%;
+}
+
+.submit .action {
+  justify-content: center;
+}
+
+.submit .action button {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background-color: #000;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+}
+
+.submit .action button:hover {
+  color: #000;
+  background-color: #fff;
+}
