@@ -1,8 +1,10 @@
 import "./ProductLine.css";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { category } from "./ProductLineItems";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { UilFilePlusAlt } from '@iconscout/react-unicons'
 
 import ProductLineEdit from "./Edit/ProductLineEdit";
 
@@ -77,6 +79,9 @@ export default function ProductLine() {
   return (
     <>
       <div className={(!edit.edit && !create) ? "productLine" : "hiddenPage"}>
+        <Link to="createProductLine">
+          <UilFilePlusAlt className="creatButton"/>
+        </Link>
         <div className="search">
           <input
             type="text"

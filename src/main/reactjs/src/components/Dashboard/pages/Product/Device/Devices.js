@@ -1,19 +1,22 @@
 import "./Devices.css";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import DeviceEdit from "./Edit/DeviceEdit";
 
 import {
   getItems,
+  setItems,
+  product,
   status,
-  factory,
-  category,
   agency,
-  insuarance,
   productLine,
+  factory,
+  insuarance,
 } from "./DevicesItems";
 
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { UilFilePlusAlt } from '@iconscout/react-unicons'
 
 export default function Devices() {
   const data = getItems();
@@ -38,17 +41,18 @@ export default function Devices() {
     // productLine[item.productLineId].name
     productCopy.sort(function sortData(a, b) {
       console.log(
-        productLine[a.productLineId].name.localeCompare(
-          productLine[b.productLineId].name
+        // product[item.productId].name
+        product[a.productId].name.localeCompare(
+          product[b.productId].name
         )
       );
       if (sorted.reversed) {
-        return -productLine[a.productLineId].name.localeCompare(
-          productLine[b.productLineId].name
+        return -product[a.productId].name.localeCompare(
+          product[b.productId].name
         );
       }
-      return productLine[a.productLineId].name.localeCompare(
-        productLine[b.productLineId].name
+      return product[a.productId].name.localeCompare(
+        product[b.productId].name
       );
     });
 
@@ -294,6 +298,7 @@ export default function Devices() {
         edit: true,
         deviceId: deviceId
       })
+      console.log("deviceId: " + deviceId)
     } else if (page === 'create') {
       setCreate(true)
     }
@@ -302,6 +307,9 @@ export default function Devices() {
   return (
     <>
       <div className={(!edit.edit && !create) ? "devices" : "hiddenPage"}>
+        <Link to="createDevice">
+          <UilFilePlusAlt className="creatButton"/>
+        </Link>
         <div className="search">
           <div className="name-search">
             <input
@@ -316,7 +324,7 @@ export default function Devices() {
             <label htmlFor="category">Dòng sản phẩm</label>
             <select name="category" id="category">
               <option value="">Không chọn</option>
-              {category.map((item, index) => {
+              {productLine.map((item, index) => {
                 return (
                   <option value={index} key={index}>
                     {item}
@@ -464,13 +472,13 @@ export default function Devices() {
             return (
               <li className="tb-row" key={index}>
                 <div className="col-1" data-label="ID">
-                  {item.productId}
+                  {item.deviceId}
                 </div>
                 <div className="col-2" data-label="Tên">
-                  {productLine[item.productLineId].name}
+                  {product[item.productId].name}
                 </div>
                 <div className="col-3" data-label="Dòng sản phẩm">
-                  {category[item.category]}
+                  {productLine[item.productLine]}
                 </div>
                 <div className="col-4" data-label="Trạng thái">
                   {status[item.status]}
@@ -488,7 +496,7 @@ export default function Devices() {
                   <MdEdit 
                     className="edit" 
                     title="Chỉnh sửa" 
-                    onClick={() => handleDevice('edit', item.id)}
+                    onClick={() => handleDevice('edit', item.deviceId)}
                   />
                   <MdDelete className="delete" title="Xóa" />
                 </div>

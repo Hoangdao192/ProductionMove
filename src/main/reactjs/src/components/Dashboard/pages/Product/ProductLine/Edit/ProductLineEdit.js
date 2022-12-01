@@ -2,7 +2,7 @@ import "./ProductLineEdit.css";
 import React, { useState, useEffect } from "react";
 import { category } from "../ProductLineItems";
 
-import { nameCategoryValidation } from "../Validation/Validation.js";
+import { productLineValidation } from "../Validation/Validation.js";
 
 export default function ProductLineEdit(props) {
 
@@ -17,7 +17,7 @@ export default function ProductLineEdit(props) {
 
   function formValidation(event) {
     let result = {};
-    result.name = nameCategoryValidation(nameNew);
+    result.name = productLineValidation(nameNew);
 
     setMessage(result);
 

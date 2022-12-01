@@ -44,7 +44,12 @@ const Sider = (props) => {
 					} 
 					className={selected===index?'menuItem active': 'menuItem'} 
 					key={index} 
-					onClick={()=>setSeclect(index, item.children ? true : false)}
+					onClick={()=>{
+						setSeclect(index, item.children ? true : false)
+						if (!item.children) {
+							setVisiableSider()
+						}
+					}}
 					>
 						<item.icon/>
 						{item.heading}
@@ -60,6 +65,7 @@ const Sider = (props) => {
 									onClick={()=>{
 										setSeclectedSub(index *10 + subIndex)
 										console.log(index *10 + subIndex)
+										setVisiableSider()
 									}}
 									>
 										<UilCircle className="subMenuItemIcon"/>

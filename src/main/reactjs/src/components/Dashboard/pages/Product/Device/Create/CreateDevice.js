@@ -1,4 +1,4 @@
-import "./DeviceEdit.css";
+import './CreateDevice.css'
 import React, { useState, useEffect } from "react";
 import {
   getItems,
@@ -18,36 +18,16 @@ import {
   positionValidation
 } from '../Validation/Validation'
 
-export default function DeviceEdit(props) {
+const CreateDevice = () => {
   const data = getItems();
-  let productOld = data.filter((item, index) => {
-    return item.deviceId === props.edit.deviceId
-  })[0];
-
-  // { deviceItems
-  //   deviceId: 0,
-    // productId: 0,
-    // productLine: 0,
-    // status: 0,
-    // factory: -1,
-    // agency: 1,
-    // insuarance: -1,
-  // },
-
-  // { product
-  //   productId: 8,
-  //   name: "Laptop Dell Vostro 5320 V3I7005W",
-  //   image: "../../../image/pc_sample.png",
-  //   productLine: "Dell Vostro",
-  // },
 
   const [products, setProducts] = useState([...data])
-  const [productNew, setProductNew] = useState("");
-  const [productLineNew, setProductLineNew] = useState("");
-  const [statusNew, setStatusNew] = useState("");
-  const [factoryNew, setFactoryNew] = useState("");
-  const [agencyNew, setAgencyNew] = useState("");
-  const [insuaranceNew, setInsuaranceNew] = useState("");
+  const [productNew, setProductNew] = useState(-1);
+  const [productLineNew, setProductLineNew] = useState(-1);
+  const [statusNew, setStatusNew] = useState(-1);
+  const [factoryNew, setFactoryNew] = useState(-1);
+  const [agencyNew, setAgencyNew] = useState(-1);
+  const [insuaranceNew, setInsuaranceNew] = useState(-1);
   const [position, setPosition] = useState({
     factory: false,
     agency: false,
@@ -59,6 +39,7 @@ export default function DeviceEdit(props) {
     status: null,
     position: null
   });
+
 
   // Chọn sản phẩm dựa theo category
   function selectProductsByProductLine(productLine) {
@@ -99,12 +80,11 @@ export default function DeviceEdit(props) {
     console.log("Validation!");
 
     const result = {};
-    result.productLine = productLineValidation(parseInt(productLineNew))
-    result.product = productValidation(parseInt(productNew))
-    result.status = statusValidation(parseInt(statusNew))
+    result.productLine = productLineValidation(productLineNew)
+    result.product = productValidation(productNew)
+    result.status = statusValidation(statusNew)
     result.position = positionValidation(position)
 
-    console.log(statusNew)
     setMessage(result);
 
     if (
@@ -118,49 +98,18 @@ export default function DeviceEdit(props) {
       console.log(message)
       event.preventDefault();
     }
-    else {
-      console.log(message)
-      event.preventDefault();
-    }
   }
 
-  // Khởi tạo
+  // Khởi tạo ban đầu lựa chọn product
   useEffect(() => {
-    if (productOld) {
-      setProductNew(productOld.productId)
-      setProductLineNew(productOld.productLine)
-      setStatusNew(productOld.status)
-      setFactoryNew(productOld.factory)
-      if(productOld.factory > -1) setPosition({...position, factory: true})
-      setAgencyNew(productOld.agency)
-      if(productOld.agency > -1) setPosition({...position, agency: true})
-      setInsuaranceNew(productOld.insuarance)
-      if(productOld.insuarance > -1) setPosition({...position, insuarance: true})
-      selectProductsByProductLine(productOld.productLine)
-      console.log(productOld.factory)
-      console.log("factory: " + factoryNew + " agency: " + agencyNew + " insuarance " + insuaranceNew)
-      console.log(position)
-    }
-  },[productOld]);
-
-  console.log(productOld);
+    selectProductsByProductLine(-1)
+  },[]);
 
   return (
-    <>
-      <div className="deviceEdit">
-        <h2 className="title">Sửa thiết bị</h2>
-        <form action="" method="post">
-          <div className="id">
-            <label htmlFor="id">ID</label>
-            <input
-              type="number"
-              name=""
-              id="id"
-              value={productOld && productOld.deviceId}
-              readOnly
-            />
-          </div>
-          <div className="productLine">
+    <div className="CreateDevice">
+      <h2 className="title">Tạo thiết bị</h2>
+      <form action="" method="post">
+      <div className="productLine">
           <div className="action">
             <label htmlFor="productLine">Dòng sản phẩm</label>
             <select
@@ -171,7 +120,6 @@ export default function DeviceEdit(props) {
                 console.log(e.target.value);
                 setProductLineNew(e.target.value);
                 selectProductsByProductLine(e.target.value);
-                setProductNew(-1)
               }}
             >
               <option value={-1}>Chọn dòng sản phẩm</option>
@@ -198,8 +146,7 @@ export default function DeviceEdit(props) {
               id="name"
               value={productNew}
               onChange={(e) => {
-                console.log("Name: " + 
-                (e.target.value > -1 ? product[e.target.value].name : ""));
+                console.log("Name: " + product[e.target.value].name);
                 setProductNew(e.target.value);
               }}
             >
@@ -249,8 +196,7 @@ export default function DeviceEdit(props) {
         </div>
         <div 
         className={
-          checkPositionSetting("factory") ? "factory" : "hiddenFile"}
-          >
+          checkPositionSetting("factory") ? "factory" : "hiddenFile"}>
           <div className="action">
             <label htmlFor="factory">Cơ sở sản xuất</label>
             <select
@@ -317,11 +263,8 @@ export default function DeviceEdit(props) {
             )} */}
           </div>
         </div>
-        <div 
-        className={
-          // "hiddenFile"
-          checkPositionSetting("insuarance") ? "insuarance" : "hiddenFile"
-        }
+        <div className={
+          checkPositionSetting("insuarance") ? "insuarance" : "hiddenFile"}
           >
           <div className="action">
             <label htmlFor="insuarance">Trung tâm bảo hành</label>
@@ -362,23 +305,28 @@ export default function DeviceEdit(props) {
             }
           </div>
         </div>
-          <div className="image">
-            <label htmlFor="image">Hình ảnh</label>
-            <input type="file" name="" id="" accept=".png,.jpg" />
-          </div>
-          <div className="image-view">
-            <img src={require("../../../../../../image/pc_sample.png")} alt="" />
-          </div>
-          <div className="summit-button">
-            {/* <input type="submit" value="Sửa" /> */}
+        <div className="button-summit">
             <button type="submit" 
             onClick={(e) => validationForm(e)}
+            // onClick={(e) => {
+            //   console.log({
+            //     productNew: productNew,
+            //     productLineNew: productLineNew,
+            //     statusNew: statusNew,
+            //     factoryNew: factoryNew,
+            //     agencyNew: agencyNew,
+            //     insuaranceNew: insuaranceNew
+            //   })
+            //   e.prevenDefault()
+            // }
+            // }
             >
-              Sửa
+              Tạo thiết bị
             </button>
           </div>
-        </form>
-      </div>
-    </>
+      </form>
+    </div>
   );
 }
+
+export default CreateDevice;

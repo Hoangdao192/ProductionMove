@@ -81,7 +81,7 @@ export default function CreateAcount(props) {
 
   return (
     <>
-      <div className="container">
+      <div className="CreateAcount">
         <h2 className="title">Tạo tài khoản</h2>
         <form action="" method="post">
           <div className="name">

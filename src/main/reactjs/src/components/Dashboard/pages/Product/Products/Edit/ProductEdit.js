@@ -1,20 +1,46 @@
 import "./ProductEdit.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getItems, category } from "../ProductItems";
-// import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+
+import {
+  productValidation,
+  productLineValidation,
+  avatartValidation,
+} from '../Validation/Validation'
 
 export default function ProductEdit(props) {
   const data = getItems();
 
-  let productOld = data[0];
+  let productOld = data[props.edit.productId];
 
-  // const [products, setProducts] = useState([...data]);
+  const [products, setProducts] = useState([...data]);
+  const [productNew, setProductNew] = useState("");
+  const [productLineNew, setProductLineNew] = useState(-1);
+  const [avatar, setAvatar] = useState("")
+  const [message, setMessage] = useState({
+    product: null,
+    productLine: null
+   });
 
-  const [nameNew, setNameNew] = useState(productOld.name);
-  // const [image, setImage] = useState("");
-  const [categoryNew, setCategoryNew] = useState(productOld.category);
+  // Hiển thị trước avatar
+  useEffect(() => {
+    // effect
+    return () => {
+      avatar && URL.revokeObjectURL(avatar.preview);
+    };
+  }, [avatar]);
 
-  // let Id = props.Id;
+  // Hiển thị trước avatar
+  const handleAvatar = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      file.preview = URL.createObjectURL(file);
+      console.log(file.preview);
+    }
+
+    setAvatar(file);
+  };
 
   function selectProducts(cat) {
     const copyProducts = [...data];
@@ -22,90 +48,147 @@ export default function ProductEdit(props) {
       return item.category === parseInt(cat);
     });
 
-    console.log(categoryNew);
+    console.log(productLineNew);
     console.log(copyProducts);
     console.log(result);
     setProducts(result);
     return result;
   }
 
-  const [products, setProducts] = useState([...data]);
-  // const [products, setProducts] = useState(selectProducts());
+  // Kiểm tra lân cuối
+  function validationForm(event) {
+    console.log("Validation!");
+
+    const result = {};
+    result.productLine = productLineValidation(parseInt(productLineNew))
+    result.product = productValidation(productNew)
+
+    console.log(productLineNew)
+
+    setMessage(result);
+
+    if (
+      !(
+        result.productLine.validation &&
+        result.product.validation 
+      )
+    ) {
+      console.log(message)
+      event.preventDefault();
+    } 
+    // else {
+    //   console.log(message)
+    //   event.preventDefault();
+    // }
+  }
+
+  // Khởi tạo
+  useEffect(() => {
+    if (productOld) {
+      setProductNew(productOld.name)
+      setProductLineNew(productOld.category)
+      selectProducts(productOld.category)
+    }
+  },[productOld]);
 
   console.log(productOld);
 
   return (
     <>
+      {console.log(props.edit)}
       <div className="productEdit">
-        <h2 className="title">Sửa dòng sản phẩm</h2>
+        <h2 className="title">Sửa sản phẩm</h2>
         <form action="" method="post">
           <div className="id">
-            <label htmlFor="id">ID dòng sản phẩm</label>
-            <input
-              type="number"
-              name=""
-              id="id"
-              value={productOld.id}
-              readOnly
-            />
+            <div className="action">
+              <label htmlFor="id">ID sản phẩm</label>
+              <input
+                type="number"
+                name=""
+                id="id"
+                value={productOld ? productOld.id : ""}
+                readOnly
+              />
+            </div>
           </div>
           <div className="category">
-            <label htmlFor="category">Loại sản phẩm</label>
-            <select
-              name="category"
-              id="category"
-              value={categoryNew}
-              onChange={(e) => {
-                console.log(e.target.value);
-                setCategoryNew(e.target.value);
-                selectProducts(e.target.value);
-              }}
-            >
-              <option value=""></option>
-              {category.map((item, index) => {
-                return categoryNew === index ? (
-                  <option value={index} key={index}>
-                    {item}
-                  </option>
-                ) : (
-                  <option value={index} key={index}>
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
+            <div className="action">
+              <label htmlFor="category">Dòng sản phẩm</label>
+              <select
+                name="category"
+                id="category"
+                value={productLineNew}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setProductLineNew(e.target.value);
+                  // selectProducts(e.target.value);
+                }}
+              >
+                <option value={-1}></option>
+                {category.map((item, index) => {
+                  return productLineNew === index ? (
+                    <option value={index} key={index}>
+                      {item}
+                    </option>
+                  ) : (
+                    <option value={index} key={index}>
+                      {item}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="alert">
+              {message.productLine && !message.productLine.validation && (
+                <p>{message.productLine.message}</p>
+              )}
+            </div>
           </div>
           <div className="name">
-            <label htmlFor="name">Tên sản phẩm</label>
-            <select
-              name="name"
-              id="name"
-              value={nameNew}
-              onChange={(e) => setNameNew(e.target.value)}
-            >
-              <option value=""></option>
-              {products.map((item, index) => {
-                return nameNew === item.name ? (
-                  <option value={item.name} key={index}>
-                    {item.name}
-                  </option>
-                ) : (
-                  <option value={index.name} key={index}>
-                    {item.name}
-                  </option>
-                );
-              })}
-            </select>
+            <div className="action">
+              <label htmlFor="name">Tên sản phẩm</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Tên sản phẩm"
+                value={productNew}
+                onChange={(e) => setProductNew(e.target.value)}
+              />
+            </div>
+            <div className="alert">
+              {message.product && !message.product.validation && (
+                <p>{message.product.message}</p>
+              )}
+            </div>
           </div>
-          <div className="image">
-            <label htmlFor="image">Hình ảnh</label>
-            <input type="file" name="" id="" accept=".png,.jpg" />
+          <div className="avatar">
+            <div className="action">
+              <label htmlFor="avatar">Ảnh đại diện</label>
+              <input
+                type="file"
+                name=""
+                id="avatar"
+                accept=".png,.jpg"
+                onChange={handleAvatar}
+              />
+            </div>
+            <div className="alert">
+              {/* {message.avatar && !message.avatar.validation && (
+                <p>{message.avatar.message}</p>
+              )} */}
+            </div>
           </div>
-          <div className="image-view">
-            <img src={require("../../../../../../image/pc_sample.png")} alt="" />
+          <div className="avatar-view">
+            {avatar ? (<img src={avatar.preview} alt="" width="80%" />)
+            : (<img src={require('../../../../../../image/pc_sample.png')} alt="" width="80%" />)}
           </div>
           <div className="summit-button">
-            <input type="submit" value="Sửa" />
+            <button type="submit"
+             onClick={(e) => validationForm(e)}
+            >
+              Sửa
+            </button>
           </div>
         </form>
       </div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { acounts, typeAcounts } from "../AcountItems.js";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { UilFilePlusAlt } from '@iconscout/react-unicons'
 
 import EditAcount from "../Edit/EditAcount";
 import { category } from "../../Product/Products/ProductItems";
@@ -122,6 +123,9 @@ export default function ShowAcount() {
       console.log("edit: " + edit + "; category: " + category + "; create: " + create)
     } */}
       <div  className={(!edit.edit && !create) ? "category" : "hiddenPage"}>
+        <Link to="createAcount">
+          <UilFilePlusAlt className="creatButton"/>
+        </Link>
         <div className="search">
           <div className="search-name">
             <input

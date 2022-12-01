@@ -1,4 +1,4 @@
-var productLine = [
+var product = [
   {
     id: 0,
     name: "Laptop Dell Inspiron T7420 N4I5021W",
@@ -56,11 +56,11 @@ var productLine = [
 ];
 
 function getItems() {
-  return productLine;
+  return product;
 }
 
 function setItems(newItems) {
-  productLine = newItems;
+  product = newItems;
 }
 
 const category = ["Dell Inspiron", "Dell Vostro", "Dell XPS"];

@@ -1,0 +1,15 @@
+.CreateDevice form div.action {
+  /* border: 1px solid black; */
+}
+
+.CreateDevice form>div {
+  padding: 10px 5%;
+  margin: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.CreateDevice .hiddenFile {
+  display: none;
+}
