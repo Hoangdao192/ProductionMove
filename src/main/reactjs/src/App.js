@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {privateRoutes, publicRoutes} from "./routes";
 import BlankLayout from "./components/Layouts/BlankLayout";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
+import './App.css';
 
 function App() {
 	return (
