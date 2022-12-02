@@ -15,19 +15,18 @@ import java.util.UUID;
 public class CustomerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @org.hibernate.annotations.Type(type="uuid-char")
-    @Column(name = "id")
-    private UUID id;
-
-    @Column(name = "first_name")
+    private Long id;
     private String firstName;
-
-    @Column(name = "last_name")
     private String lastName;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "phone_number")
     private String phoneNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private AddressEntity address;
+
+    public CustomerEntity(String firstName, String lastName, String phoneNumber, AddressEntity address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 }

@@ -1,0 +1,209 @@
+.search {
+  padding: 0 10px 50px;
+}
+
+.search-name {
+  width: 100%;
+  padding: 20px 0;
+  justify-content: center;
+}
+
+[class*="-search"] {
+  padding: 10px 10%;
+  display: flex;
+}
+
+.type-acount-search {
+  justify-content: space-between;
+  /* padding: 8px 20px; */
+}
+
+.type-acount-search label {
+  width: 40%;
+  /* text-align: center; */
+  /* border: 1px solid black; */
+  padding: 8px 20px;
+}
+
+.type-acount-search select {
+  width: 50%;
+  padding: 8px 20px;
+}
+
+.btn-search {
+  justify-content: flex-end;
+}
+
+.btn-search button {
+  width: 30%;
+  min-width: 100px;
+  border-radius: 4px;
+  color: #fff;
+  background-color: #000;
+  padding: 8px 20px;
+  transition: all 0.3s;
+}
+
+.btn-search button:hover {
+  color: #000;
+  background-color: #fff;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+img {
+  width: 4vw;
+  height: 4vw;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.search-name #search-name {
+  width: 100%;
+  padding: 20px;
+  font-size: 1.2 rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.category {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 10px;
+}
+
+li {
+  border-radius: 4px;
+  padding: 25px 30px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+img {
+  max-width: 100px;
+}
+
+.tb-head-acount {
+  background-color: #95a5a6;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tb-row-acount {
+  font-size: 0.75rem;
+  background-color: #fff;
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+  padding: 0px 30px;
+}
+
+.tb-row-acount:hover {
+  /* cursor: pointer; */
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.5);
+}
+
+.col-1 {
+    text-align: center;
+  flex-basis: 5%;
+  /* cursor: pointer; */
+}
+
+.col-2 {
+    text-align: center;
+  flex-basis: 20%;
+}
+
+.col-3 {
+  flex-basis: 15%;
+}
+
+.col-4 {
+    text-align: center;
+  flex-basis: 20%;
+}
+
+.col-5 {
+    text-align: center;
+    flex-basis: 20%;
+}
+
+.tb-row-acount .col-3 {
+  -webkit-mask-image: radial-gradient(
+    circle,
+    black 50%,
+    rgba(0, 0, 0, 0.5) 50%
+  );
+  mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0.5) 50%);
+}
+
+.col-6 {
+  flex-basis: 20%;
+  /* cursor: pointer; */
+}
+
+.col-6 > * {
+  margin: 5px;
+  border: 3px soild black;
+  font-size: 24px;
+}
+
+.col-6 .delete:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.col-6 .edit:hover {
+  color: #1888ff;
+  cursor: pointer;
+}
+
+[class*="col"] {
+  text-align: center;
+  align-self: center;
+}
+
+.hiddenPage {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .tb-head {
+    display: none;
+  }
+
+  .tb-row-acount {
+    display: block;
+    justify-content: center;
+  }
+
+  [class*="col"] {
+    display: flex;
+    padding: 10px 0;
+    /* border: 1px solid black; */
+    text-align: left;
+  }
+
+  [class*="col"]::before {
+    color: #6c7a89;
+    /* padding-right: 10px; */
+    content: attr(data-label);
+    flex-basis: 40%;
+    text-align: right;
+    /* border: 1px solid black; */
+    padding-right: 10%;
+    align-self: center;
+  }
+
+  [class*="-search"] {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .btn-search button {
+    display: block;
+  }
+}

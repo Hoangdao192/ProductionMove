@@ -3,14 +3,13 @@ package com.uet.productionmove.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.UUID;
 
-@Table(name = "products")
+@Table(name = "product_lines")
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductEntity {
+public class ProductLineEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -26,31 +25,7 @@ public class ProductEntity {
     private String wireless;
     private String battery;
 
-    @ManyToOne
-    @JoinColumn(name = "product_line_id")
-    private ProductLineEntity productLine;
-
-    public ProductEntity(
-            ProductLineEntity productLine,
-            String productName, String processor, String operatingSystem,
-            String videoCard, String display, String memory,
-            String hardDrive, String camera, String audioAndSpeaker,
-            String wireless, String battery) {
-        this.productName = productName;
-        this.processor = processor;
-        this.operatingSystem = operatingSystem;
-        this.videoCard = videoCard;
-        this.display = display;
-        this.memory = memory;
-        this.hardDrive = hardDrive;
-        this.camera = camera;
-        this.audioAndSpeaker = audioAndSpeaker;
-        this.wireless = wireless;
-        this.battery = battery;
-        this.productLine = productLine;
-    }
-
-    public ProductEntity(
+    public ProductLineEntity(
             String productName, String processor, String operatingSystem,
             String videoCard, String display, String memory, String hardDrive,
             String camera, String audioAndSpeaker, String wireless, String battery) {

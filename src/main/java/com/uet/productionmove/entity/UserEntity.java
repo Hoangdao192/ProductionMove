@@ -3,6 +3,7 @@ package com.uet.productionmove.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -15,13 +16,9 @@ import java.util.UUID;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @org.hibernate.annotations.Type(type="uuid-char")
-    @Column(name = "id", length = 36)
+    @Type(type = "uuid-char")
     private UUID id;
-    @Column(name = "user_name")
     private String username;
-    @Column(name = "password")
     private String password;
-    @Column(name = "role")
     private String role;
 }
