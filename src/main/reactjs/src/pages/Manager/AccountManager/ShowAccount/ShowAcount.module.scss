@@ -2,7 +2,7 @@
   padding: 0 10px 50px;
 }
 
-.search-name {
+.searchName {
   width: 100%;
   padding: 20px 0;
   justify-content: center;
@@ -13,28 +13,28 @@
   display: flex;
 }
 
-.type-acount-search {
+.typeAccountSearch {
   justify-content: space-between;
   /* padding: 8px 20px; */
 }
 
-.type-acount-search label {
+.typeAccountSearch label {
   width: 40%;
   /* text-align: center; */
   /* border: 1px solid black; */
   padding: 8px 20px;
 }
 
-.type-acount-search select {
+.typeAccountSearch select {
   width: 50%;
   padding: 8px 20px;
 }
 
-.btn-search {
+.btnSearch {
   justify-content: flex-end;
 }
 
-.btn-search button {
+.btnSearch button {
   width: 30%;
   min-width: 100px;
   border-radius: 4px;
@@ -44,7 +44,7 @@
   transition: all 0.3s;
 }
 
-.btn-search button:hover {
+.btnSearch button:hover {
   color: #000;
   background-color: #fff;
 }
@@ -53,14 +53,14 @@
   cursor: pointer;
 }
 
-img {
-  width: 4vw;
-  height: 4vw;
-  object-fit: cover;
-  border-radius: 50%;
-}
+// img {
+//   width: 4vw;
+//   height: 4vw;
+//   object-fit: cover;
+//   border-radius: 50%;
+// }
 
-.search-name #search-name {
+.searchName #searchName {
   width: 100%;
   padding: 20px;
   font-size: 1.2 rem;
@@ -86,51 +86,51 @@ img {
   max-width: 100px;
 }
 
-.tb-head-acount {
+.tbHeadAccount {
   background-color: #95a5a6;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
-.tb-row-acount {
+.tbRowAccount {
   font-size: 0.75rem;
   background-color: #fff;
   box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
   padding: 0px 30px;
 }
 
-.tb-row-acount:hover {
+.tbRowAccount:hover {
   /* cursor: pointer; */
   box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.5);
 }
 
-.col-1 {
+.col1 {
     text-align: center;
   flex-basis: 5%;
   /* cursor: pointer; */
 }
 
-.col-2 {
+.col2 {
     text-align: center;
   flex-basis: 20%;
 }
 
-.col-3 {
+.col3 {
   flex-basis: 15%;
 }
 
-.col-4 {
+.col4 {
     text-align: center;
   flex-basis: 20%;
 }
 
-.col-5 {
+.col5 {
     text-align: center;
     flex-basis: 20%;
 }
 
-.tb-row-acount .col-3 {
+.tbRowAccount .col3 {
   -webkit-mask-image: radial-gradient(
     circle,
     black 50%,
@@ -139,23 +139,23 @@ img {
   mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0.5) 50%);
 }
 
-.col-6 {
+.col6 {
   flex-basis: 20%;
   /* cursor: pointer; */
 }
 
-.col-6 > * {
+.col6 > * {
   margin: 5px;
   border: 3px soild black;
   font-size: 24px;
 }
 
-.col-6 .delete:hover {
+.col6 .delete:hover {
   color: red;
   cursor: pointer;
 }
 
-.col-6 .edit:hover {
+.col6 .edit:hover {
   color: #1888ff;
   cursor: pointer;
 }
@@ -170,11 +170,11 @@ img {
 }
 
 @media screen and (max-width: 768px) {
-  .tb-head {
+  .tbHead {
     display: none;
   }
 
-  .tb-row-acount {
+  .tbRowAccount {
     display: block;
     justify-content: center;
   }
@@ -197,13 +197,13 @@ img {
     align-self: center;
   }
 
-  [class*="-search"] {
+  [class*="search"] {
     flex-direction: column;
   }
 }
 
 @media screen and (max-width: 960px) {
-  .btn-search button {
+  .btnSearch button {
     display: block;
   }
 }

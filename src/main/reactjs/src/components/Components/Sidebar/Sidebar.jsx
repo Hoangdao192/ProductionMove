@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './Sidebar.css';
+import style from './Sidebar.module.scss';
 import Logo from '../../img/logo.svg';
 
 // import { SidebarData } from '../Data/Data';
@@ -9,28 +9,28 @@ const Sidebar = ({ itemList }) => {
 	const [selected, setSeclected] = useState(0)
 
 	return (
-		<div className="Sidebar">
+		<div className={style.Sidebar}>
 			{/* Logo */}
-			<div className="logo">
+			<div className={style.logo}>
 				<img src={Logo}  alt="Logo"/>
 				<p>Big Corp</p>
 			</div>
 			{/* Menu */}
-			<div className="menu">
+			<div className={style.menu}>
 				{itemList.map((item, index) => {
 					return(
-						<div className={selected===index?'menuItem active': 'menuItem'} 
+						<div className={selected===index?`${style.menuItem} ${style.active}`: style.menuItem} 
 							key={index} 
 							onClick={()=>setSeclected(index)}>
-							<div className="head">
-								<item.icon className="icon"/>
+							<div className={style.head}>
+								<item.icon className={style.icon}/>
 								<span>
 									{item.heading}
 								</span>
 							</div>
 							{
 								item.children ? 
-									<div className="dropdown">
+									<div className={style.dropdown}>
 										{
 											item.children.map((child) => {
 												return (<a href={child.action}>{child.heading}</a>)

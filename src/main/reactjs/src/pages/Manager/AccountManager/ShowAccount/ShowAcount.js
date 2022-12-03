@@ -1,4 +1,4 @@
-import "./ShowAcount.css";
+import style from "./ShowAcount.module.scss";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { acounts, typeAccounts } from "../AcountItems.js";
@@ -131,20 +131,20 @@ function ShowAcount() {
     console.log(users)
     return (
         <>
-            <div className={(!edit.edit && !create) ? "category" : "hiddenPage"}>
-                <div className="search">
-                    <div className="search-name">
+            <div className={(!edit.edit && !create) ? style.category : style.hiddenPage}>
+                <div className={style.search}>
+                    <div className={style.searchName}>
                         <input
                             type="text"
                             name="search-name"
-                            id="search-name"
+                            id={style.searchName}
                             placeholder="Tìm kiếm tên tài khoản"
                             onChange={(e) => handleSearch(e)}
                         />
                     </div>
-                    <div className="type-acount-search">
+                    <div className={style.typeAcountSearch}>
                         <label htmlFor="type-acount">Loại tài khoản</label>
-                        <select name="type-acount" id="type-acount">
+                        <select name="type-acount" id={style.typeAccount}>
                             <option value="">Không chọn</option>
                             {typeAccounts.map((item, index) => {
                                 return (
@@ -155,57 +155,57 @@ function ShowAcount() {
                             })}
                         </select>
                     </div>
-                    <div className="btn-search">
+                    <div className={style.btnSearch}>
                         <button onClick={hadleClickSearch}>Tìm kiếm</button>
                     </div>
                 </div>
 
-                <ul className="list_product">
-                    <li className="tb-head-acount">
-                        <div className="col-1" onClick={sortByName}>
+                <ul className={style.listProduct}>
+                    <li className={style.tbHeadAccount}>
+                        <div className={style.col1} onClick={sortByName}>
                             STT
                         </div>
-                        <div className="col-2 pointer" onClick={sortByName}>
+                        <div className={`${style.col2} ${style.pointer}`} onClick={sortByName}>
                             Tên tài khoản {sorted.sorted === "name" ? renderArrow() : null}
                         </div>
-                        <div className="col-3 pointer">
+                        <div className={`${style.col3} ${style.pointer}`}>
                             Tên người dùng
                         </div>
-                        <div className="col-4 pointer">
+                        <div className={`${style.col4} ${style.pointer}`}>
                             Địa chỉ
                         </div>
-                        <div className="col-5 pointer" onClick={sortByTypeAcount}>
+                        <div className={`${style.col5} ${style.pointer}`} onClick={sortByTypeAcount}>
                             Loại tài khoản{" "}
                             {sorted.sorted === "type-acount" ? renderArrow() : null}
                         </div>
-                        <div className="col-6">Hành động</div>
+                        <div className={style.col6}>Hành động</div>
                     </li>
                     {
                         users.map((item, index) => {
                             return (
-                                <li className="tb-row-acount" key={index}>
-                                    <div className="col-1" data-label="ID">
+                                <li className={style.tbRowAccount} key={index}>
+                                    <div className={style.col1} data-label="ID">
                                         {index}
                                     </div>
-                                    <div className="col-2" data-label="Tên tài khoản">
+                                    <div className={style.col2} data-label="Tên tài khoản">
                                         {item.username}
                                     </div>
-                                    <div className="col-3" data-label="Tên người dùng">
+                                    <div className={style.col3} data-label="Tên người dùng">
                                         {item.name}
                                     </div>
-                                    <div className="col-4" data-label="Địa chỉ">
+                                    <div className={style.col4} data-label="Địa chỉ">
                                         {item.address}
                                     </div>
-                                    <div className="col-5" data-label="Loại tài khoản">
+                                    <div className={style.col5} data-label="Loại tài khoản">
                                         {item.role}
                                     </div>
-                                    <div className="col-6" data-label="Hành động">
+                                    <div className={style.col6} data-label="Hành động">
                                         <MdEdit
-                                            className="edit"
+                                            className={style.edit}
                                             title="Chỉnh sửa"
                                             onClick={() => handleAcount('edit', item.id)}
                                         />
-                                        <MdDelete className="delete" title="Xóa" />
+                                        <MdDelete className={style.delete} title="Xóa" />
                                     </div>
                                 </li>
                             );
@@ -213,7 +213,7 @@ function ShowAcount() {
                     }
                 </ul>
             </div>
-            <div className={edit.edit ? "edit" : "hiddenPage"}>
+            <div className={edit.edit ? style.edit : style.hiddenPage}>
                 <EditAcount handleAcount={handleAcount} edit={edit} />
             </div>
         </>
