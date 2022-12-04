@@ -1,0 +1,19 @@
+.CreatUser {
+  width: 100%;
+}
+
+.CreatUser form>div {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.phonenumber select {
+  width: 100%;
+}
+
+
+.phonenumber div>input {
+  width: 100%;
+}

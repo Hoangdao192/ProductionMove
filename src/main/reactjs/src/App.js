@@ -1,13 +1,12 @@
 import "./App.css";
 
 // import Navbar from "./components/navigation/Navbar";
-import { BrowserRouter , Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Dashboard/pages/Home/Home";
 import Location from "./components/pages/Location/Location";
-import ProductLine from './components/Dashboard/pages/Product/ProductLine/ProductLine'
+import ProductLine from "./components/Dashboard/pages/Product/ProductLine/ProductLine";
 import CreateProductLine from "./components/Dashboard/pages/Product/ProductLine/Create/CreateProductLine";
 // import CategoryEdit from "./components/pages/Category/Edit/CategoryEdit";
-
 
 import Darshboard from "./components/Dashboard/Darshboard";
 import Devices from "./components/Dashboard/pages/Product/Device/Devices";
@@ -21,7 +20,6 @@ import CreateAcount from "./components/Dashboard/pages/Acount/CreateAcount/Creat
 // import CreateAcount from "./components/pages/Acount/CreateAcount/CreateAcount";
 // import EditAcount from "./components/pages/Acount/Edit/EditAcount";
 
-
 // import Acount from "./components/Dashboard/pages/Acount/Acount";
 // import ProductLine from "./components/Dashboard/pages/Product/ProductLine/ProductLine";
 import Product from "./components/Dashboard/pages/Product/Products/Product";
@@ -33,45 +31,47 @@ import NoPage from "./components/Dashboard/pages/NoPage/NoPage";
 // Outline---______________----------------000
 import CreateProductLineSample from "./components/pages/CreateProductLineSample/CreateProductLineSample";
 
+// User-----------------------------------------------
+import CreatUser from "./components/Dashboard/pages/User/CreateUser/CreateUser";
+
 function App() {
   return (
     <>
       <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Darshboard />}>
-          {/* Home */}
-          <Route index element={<CreateProductLineSample />} />
+        <Routes>
+          <Route path="/" element={<Darshboard />}>
+            {/* Home */}
+            <Route index element={<Home />} />
 
-          {/* Product */}
-          <Route path="product/productLine" element={<ProductLine />}/>
-          <Route 
-          path="product/productLine/createProductLine" 
-          element={<CreateProductLine />}
-          />
-          <Route path="product/product" element={<Product />} />
-          <Route 
-          path="product/product/createProduct" 
-          element={<CreateProduct />}
-          />
-          <Route path="product/device" element={<Devices />} />
-          <Route 
-          path="product/device/createDevice" 
-          element={<CreateDevice />}
-          />
+            {/* Product */}
+            <Route path="product/productLine" element={<CreatUser />} />
+            <Route
+              path="product/productLine/createProductLine"
+              element={<CreateProductLine />}
+            />
+            <Route path="product/product" element={<Product />} />
+            <Route
+              path="product/product/createProduct"
+              element={<CreateProduct />}
+            />
+            <Route path="product/device" element={<Devices />} />
+            <Route
+              path="product/device/createDevice"
+              element={<CreateDevice />}
+            />
 
-          {/* Acount */}
-          <Route path="acount/listAcount" element={<ShowAcount />} />
-          <Route 
-          path="acount/listAcount/createAcount" 
-          element={<CreateAcount />} 
-          />
+            {/* Acount */}
+            <Route path="acount/listAcount" element={<ShowAcount />} />
+            <Route
+              path="acount/listAcount/createAcount"
+              element={<CreateAcount />}
+            />
 
-          {/* 404 */}
-          <Route path="*" element={<NoPage />} />
-        </Route>
-      </Routes>
-
-    </BrowserRouter>
+            {/* 404 */}
+            <Route path="*" element={<NoPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

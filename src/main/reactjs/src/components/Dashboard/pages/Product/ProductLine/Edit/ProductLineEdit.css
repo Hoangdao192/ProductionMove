@@ -27,18 +27,13 @@ div.action {
   justify-content: space-between;
 }
 
-form>div>div.action label {
+div.action label {
   width: 40%;
 }
 
-form>div>div.action input {
+div.action input {
   width: 50%;
   padding: 8px 20px
-}
-
-form>div>div.action select {
-  width: 50%;
-  padding: 8px 20px;
 }
 
 select>option {
