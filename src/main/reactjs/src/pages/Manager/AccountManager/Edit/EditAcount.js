@@ -2,6 +2,7 @@ import "./EditAcount.css";
 import React, { useState, useEffect } from "react";
 import userAvatar from "./user.jpg";
 import { acounts, typeAccounts } from "../AcountItems.js";
+import config from "../../../../config.json";
 import {
     nameValidation,
     userValidation,
@@ -11,19 +12,55 @@ import {
     typeAcountValidation,
     avatartValidation,
 } from "../Validation/ValidationFrom.js";
+import { useLocation } from "react-router-dom";
+import ReactModal from "react-modal";
 
 export default function EditAcount(props) {
-    let data = acounts[props.edit.acountId];
-    console.log(typeAccounts);
+    const { account } = useLocation().state;
+    const [userData, setUserData] = useState({});
 
-    const [user, setUser] = useState("");
-    const [pass, setPass] = useState("");
-    const [passAgain, setPassAgain] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [typeAcount, setTypeAcount] = useState("");
+    useEffect(() => {
+        /**Load user data */
+        let requestUrl = "";
+        switch (account.role) {
+            case "Distributor": requestUrl = config.server.api.distributor.get.url; break;
+            case "Manufacture": requestUrl = config.server.api.factory.get.url; break;
+            case "Warranty": requestUrl = config.server.api.warranty.get.url; break;
+        }
+        let request = new XMLHttpRequest();
+        if (requestUrl != "") {
+            request.open("GET", requestUrl + `?userId=${account.id}`);
+            request.onload = () => {
+                if (request.status == 200) {
+                    let data;
+                    switch (account.role) {
+                        case "Distributor":
+                            data = JSON.parse(request.response).content.distributor;
+                            break;
+                        case "Manufacture":
+                            data = JSON.parse(request.response).content.factory;
+                            break;
+                        case "Warranty":
+                            data = JSON.parse(request.response).content.warranty;
+                            break;
+                    }
+                    setUserData(data);
+                }
+            }
+            request.send();
+        }
+    }, []);
 
-    const [avatar, setAvatar] = useState("");
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [modelMessage, setModelMessage] = useState("");
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
     const [message, setMessage] = useState({
         name: null,
         user: null,
@@ -34,36 +71,11 @@ export default function EditAcount(props) {
         avatar: null,
     });
 
-    // Hiển thị trước avatar
-    useEffect(() => {
-        // effect
-        return () => {
-            avatar && URL.revokeObjectURL(avatar.preview);
-        };
-    }, [avatar]);
-
-    // Hiển thị trước avatar
-    const handleAvatar = (e) => {
-        const file = e.target.files[0];
-
-        if (file) {
-            file.preview = URL.createObjectURL(file);
-            console.log(file.preview);
-        }
-
-        setAvatar(file);
-    };
-
     // Thẩm định cuối
     function validationForm(event) {
-        console.log("Validation!");
         const result = {};
-        result.name = nameValidation(name);
-        result.user = userValidation(user);
-        result.pass = passValidation(pass);
-        result.passAgain = passAgainValidation(pass, passAgain);
-        result.email = emailValidation(email);
-        result.typeAcount = typeAcountValidation(typeAcount);
+        result.name = nameValidation(userData.name);
+        result.user = userValidation(userData.user.username);
         // result.avatar = avatartValidation(avatar);
 
         setMessage(result);
@@ -72,11 +84,7 @@ export default function EditAcount(props) {
         if (
             !(
                 result.name.validation &&
-                result.user.validation &&
-                result.pass.validation &&
-                result.passAgain.validation &&
-                result.email.validation &&
-                result.typeAcount.validation
+                result.user.validation
             )
         ) {
             event.preventDefault();
@@ -85,159 +93,161 @@ export default function EditAcount(props) {
         }
     }
 
-    useEffect(() => {
-        if (data) {
-            setUser(data.user)
-            setPass(data.pass)
-            setPassAgain(data.passAgain)
-            setName(data.name)
-            setEmail(data.email)
-            setTypeAcount(data.typeAcount)
+    /**
+     * Gửi request update đến server
+     */
+    function submitForm() {
+        let requestUrl = "";
+        switch (account.role) {
+            case "Distributor": requestUrl = config.server.api.distributor.update.url; break;
+            case "Manufacture": requestUrl = config.server.api.factory.update.url; break;
+            case "Warranty": requestUrl = config.server.api.warranty.update.url; break;
         }
-    }, [data]);
+        if (requestUrl != "") {
+            let request = new XMLHttpRequest();
+            request.setRequestHeader("Content-type", "application/json");
+            request.open("POST", config.server.api.account.update);
+            request.onload = function () {
+                if (this.status == 200) {
+                    let request2 = new XMLHttpRequest();
+                    request2.setRequestHeader("Content-type", "application/json");
+                    request2.open("POST", requestUrl);
+                    request2.onload = function() {
+                        if (request2.status == 200) {
+                            /**TODO: UI notify */
+                        }
+                    }
+                    request2.send(JSON.stringify(userData));
+                }
+            }
+            let accountData = account;
+            accountData.username = username;
+            request.send(JSON.stringify(accountData));
+        }
+    }
 
     return (
-        <>
-            {console.log(data)}
-            <div className="acount-container-edit">
-                <h2 className="title">Chỉnh sửa tài khoản</h2>
-                <form action="" method="post">
-                    <div className="name">
-                        <div className="action">
-                            <label htmlFor="name">Tên tài khoản</label>
-                            <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                placeholder="Trần Đình Cường"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
-                        <div className="alert">
-                            {message.name && !message.name.validation && (
-                                <p>{message.name.message}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="user">
-                        <div className="action">
-                            <label htmlFor="user">Tên người dùng</label>
-                            <input
-                                type="text"
-                                name="user"
-                                id="user"
-                                value={user}
-                                onChange={(e) => setUser(e.target.value)}
-                            />
-                        </div>
-                        <div className="alert">
-                            {message.user && !message.user.validation && (
-                                <p>{message.user.message}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="pass">
-                        <div className="action">
-                            <label htmlFor="pass">Mật khẩu</label>
-                            <input
-                                type="password"
-                                name="pass"
-                                id="pass"
-                                value={pass}
-                                onChange={(e) => setPass(e.target.value)}
-                            />
-                        </div>
-                        <div className="alert">
-                            {message.pass && !message.pass.validation && (
-                                <p>{message.pass.message}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="pass-again">
-                        <div className="action">
-                            <label htmlFor="pass-again">Xác nhận mật khẩu</label>
-                            <input
-                                type="password"
-                                name="pass-again"
-                                id="pass-again"
-                                value={passAgain}
-                                onChange={(e) => setPassAgain(e.target.value)}
-                            />
-                        </div>
-                        <div className="alert">
-                            {message.passAgain && !message.passAgain.validation && (
-                                <p>{message.passAgain.message}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="email">
-                        <div className="action">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="text"
-                                name="email"
-                                id="email"
-                                placeholder="abc@gmail.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <div className="alert">
-                            {message.email && !message.email.validation && (
-                                <p>{message.email.message}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="address">
+        <div className="acount-container-edit">
+            <h2 className="title">Chỉnh sửa tài khoản</h2>
+            <form action="" method="post">
+                <div className="name">
                     <div className="action">
-                            <label htmlFor="address">Địa chỉ</label>
-                            <input
-                                type="text"
-                                name="address"
-                                id="address"
-                                placeholder="Nhập địa chỉ"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <div className="alert">
-                            {message.email && !message.email.validation && (
-                                <p>{message.email.message}</p>
+                        <label htmlFor="name">Tên tài khoản</label>
+                        <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            placeholder="Trần Đình Cường"
+                            value={userData.user.username}
+                            onChange={(e) => setUserData(
+                                {
+                                    ...userData, 
+                                    user : {
+                                        ...userData.user,
+                                        username: e.target.value
+                                    }
+                                }
                             )}
-                        </div>
+                        />
                     </div>
-                    <div className="type-acount">
-                        <div className="action">
-                            <label htmlFor="type-acount">Loại tài khoản</label>
-                            <select
-                                name="type-acount"
-                                id="type-acount"
-                                value={typeAcount}
-                                onChange={(e) => setTypeAcount(e.target.value)}
-                            >
-                                {typeAccounts.map((item, index) => {
-                                    return (
-                                        <option value={index} key={index}>
-                                            {index}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
-                        <div className="alert">
-                            {message.typeAcount && !message.typeAcount.validation && (
-                                <p>{message.typeAcount.message}</p>
+                    <div className="alert">
+                        {message.name && !message.name.validation && (
+                            <p>{message.name.message}</p>
+                        )}
+                    </div>
+                </div>
+                <div className="user">
+                    <div className="action">
+                        <label htmlFor="user">Tên {typeAccounts[account.role].toLowerCase()}</label>
+                        <input
+                            type="text"
+                            name="user"
+                            id="user"
+                            value={userData.name}
+                            onChange={(e) => setUserData(
+                                {
+                                    ...userData,
+                                    name: e.target.value
+                                }
                             )}
-                        </div>
+                        />
                     </div>
-                    <div className="button-summit">
-                        <button type="submit" onClick={(e) => validationForm(e)}>
-                            Tạo tài khoản
-                        </button>
+                    <div className="alert">
+                        {message.user && !message.user.validation && (
+                            <p>{message.user.message}</p>
+                        )}
                     </div>
-                </form>
-            </div>
-        </>
+                </div>
+                <div className="phoneNumber">
+                    <div className="action">
+                        <label htmlFor="phoneNumber">Số điện thoại</label>
+                        <input
+                            type="text"
+                            name="phoneNumber"
+                            id="phoneNumber"
+                            placeholder="Nhập số điện thoại"
+                            value={userData.phoneNumber}
+                            onChange={(e) => setPhoneNumber(
+                                {
+                                    ...userData,
+                                    phoneNumber: e.value.target
+                                }
+                            )}
+                        />
+                    </div>
+                    <div className="alert">
+                        {message.email && !message.email.validation && (
+                            <p>{message.email.message}</p>
+                        )}
+                    </div>
+                </div>
+                <div className="address">
+                    <div className="action">
+                        <label htmlFor="address">Địa chỉ</label>
+                        <input
+                            type="text"
+                            name="address"
+                            id="address"
+                            placeholder="Nhập địa chỉ"
+                            value={userData.address}
+                            onChange={(e) => setAddress(
+                                {
+                                    ...userData,
+                                    address: e.target.value
+                                }
+                            )}
+                        />
+                    </div>
+                    <div className="alert">
+                        {message.email && !message.email.validation && (
+                            <p>{message.email.message}</p>
+                        )}
+                    </div>
+                </div>
+                <div className="type-acount">
+                    <div className="action">
+                        <p>Loại tài khoản</p>
+                        <p>{typeAccounts[userData.user.role]}</p>
+                    </div>
+                    <div className="alert">
+                        {message.typeAcount && !message.typeAcount.validation && (
+                            <p>{message.typeAcount.message}</p>
+                        )}
+                    </div>
+                </div>
+                <div className="button-summit">
+                    <button type="submit" onClick={(e) => validationForm(e)}>
+                        Sửa tài khoản
+                    </button>
+                </div>
+            </form>
+            <ReactModal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+            >
+                <p>{modelMessage}</p>
+            </ReactModal>
+        </div>
     );
 }

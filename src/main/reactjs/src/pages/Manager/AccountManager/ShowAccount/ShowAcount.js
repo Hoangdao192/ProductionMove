@@ -5,11 +5,11 @@ import { acounts, typeAccounts } from "../AcountItems.js";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import userAvatar from "./user.jpg";
+import config from "../../../../config.json";
 
 import EditAcount from "../Edit/EditAcount";
 
 function ShowAcount() {
-
     const [users, setUsers] = useState([]);
     const [sorted, setSorted] = useState({ sorted: "", reversed: false });
     const [edit, setEdit] = useState({
@@ -148,8 +148,8 @@ function ShowAcount() {
                             <option value="">Không chọn</option>
                             {typeAccounts.map((item, index) => {
                                 return (
-                                    <option value={index} key={index}>
-                                        {item}
+                                    <option value={item.key} key={index}>
+                                        {item.value}
                                     </option>
                                 );
                             })}
@@ -160,19 +160,13 @@ function ShowAcount() {
                     </div>
                 </div>
 
-                <ul className={style.listProduct}>
+                <ul className={style.listAccount}>
                     <li className={style.tbHeadAccount}>
                         <div className={style.col1} onClick={sortByName}>
                             STT
                         </div>
                         <div className={`${style.col2} ${style.pointer}`} onClick={sortByName}>
                             Tên tài khoản {sorted.sorted === "name" ? renderArrow() : null}
-                        </div>
-                        <div className={`${style.col3} ${style.pointer}`}>
-                            Tên người dùng
-                        </div>
-                        <div className={`${style.col4} ${style.pointer}`}>
-                            Địa chỉ
                         </div>
                         <div className={`${style.col5} ${style.pointer}`} onClick={sortByTypeAcount}>
                             Loại tài khoản{" "}
@@ -190,21 +184,16 @@ function ShowAcount() {
                                     <div className={style.col2} data-label="Tên tài khoản">
                                         {item.username}
                                     </div>
-                                    <div className={style.col3} data-label="Tên người dùng">
-                                        {item.name}
-                                    </div>
-                                    <div className={style.col4} data-label="Địa chỉ">
-                                        {item.address}
-                                    </div>
                                     <div className={style.col5} data-label="Loại tài khoản">
-                                        {item.role}
+                                        {typeAccounts[item.role]}
                                     </div>
                                     <div className={style.col6} data-label="Hành động">
-                                        <MdEdit
-                                            className={style.edit}
-                                            title="Chỉnh sửa"
-                                            onClick={() => handleAcount('edit', item.id)}
-                                        />
+                                        <Link to="/manager/account/edit" state={{account: item}}>
+                                            <MdEdit
+                                                className={style.edit}
+                                                title="Chỉnh sửa"
+                                            />
+                                        </Link>
                                         <MdDelete className={style.delete} title="Xóa" />
                                     </div>
                                 </li>
@@ -213,9 +202,9 @@ function ShowAcount() {
                     }
                 </ul>
             </div>
-            <div className={edit.edit ? style.edit : style.hiddenPage}>
+            {/* <div className={edit.edit ? style.edit : style.hiddenPage}>
                 <EditAcount handleAcount={handleAcount} edit={edit} />
-            </div>
+            </div> */}
         </>
     );
 }

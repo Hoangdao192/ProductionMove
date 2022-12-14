@@ -1,6 +1,6 @@
 package com.uet.productionmove.controller;
 
-import com.uet.productionmove.entity.ProductLineEntity;
+import com.uet.productionmove.entity.ProductLine;
 import com.uet.productionmove.service.ProductLineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,7 @@ public class ProductLineController {
     private ProductLineService productLineService;
 
     @GetMapping(path = "/list")
-    public Page<ProductLineEntity> getAllProductLine(
+    public Page<ProductLine> getAllProductLine(
             @RequestParam int page,
             @RequestParam int perPage
     ) {
@@ -22,7 +22,7 @@ public class ProductLineController {
     }
 
     @PostMapping(path = "/create")
-    public String createProductLine(@RequestBody ProductLineEntity productLine) {
+    public String createProductLine(@RequestBody ProductLine productLine) {
         productLineService.insertProductLine(productLine);
         return "";
     }
@@ -35,7 +35,7 @@ public class ProductLineController {
     }
 
     @PostMapping(path = "/update")
-    public String updateProductLine(@RequestBody ProductLineEntity productLine) {
+    public String updateProductLine(@RequestBody ProductLine productLine) {
         productLineService.updateProductLine(productLine);
         return "";
     }

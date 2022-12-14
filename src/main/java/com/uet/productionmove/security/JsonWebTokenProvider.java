@@ -1,8 +1,6 @@
 package com.uet.productionmove.security;
 
-import com.uet.productionmove.entity.UserEntity;
 import io.jsonwebtoken.*;
-import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

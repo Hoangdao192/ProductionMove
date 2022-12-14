@@ -12,7 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProductBatchModel {
     private LocalDate manufacturingDate;
-    private UUID userId;
+    private UUID ownerId;
     private Long productLineId;
     private Long stockId;
+    private Long factoryId;
 }

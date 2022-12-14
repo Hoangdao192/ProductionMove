@@ -46,8 +46,12 @@ const acounts = [
   },
 ];
 
-const typeAccounts = [];
+const typeAccounts = [
+    { key: "Manufacture", value: "Nhà sản xuất"},
+    { key: "Admin", value: "Ban quản lý"}
+];
 typeAccounts["Manufacture"] = "Nhà sản xuất";
 typeAccounts["Admin"] = "Ban quản lý";
+
 
 export { acounts, typeAccounts };

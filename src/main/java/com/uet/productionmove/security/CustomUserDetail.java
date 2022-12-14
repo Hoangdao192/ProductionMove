@@ -1,6 +1,6 @@
 package com.uet.productionmove.security;
 
-import com.uet.productionmove.entity.UserEntity;
+import com.uet.productionmove.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +13,7 @@ import java.util.Collections;
 @Data
 @AllArgsConstructor
 public class CustomUserDetail implements UserDetails {
-    UserEntity user;
+    User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

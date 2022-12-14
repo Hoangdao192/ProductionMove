@@ -14,9 +14,7 @@ function ManagerLayout ({ children }) {
         {
             icon: UilEstate,
             heading: "DashBoard",
-            children: [
-                { heading: "A", action: "b"}
-            ]
+            action: "/manager/home"
         },
         {
             icon: UilClipboardAlt,
@@ -27,12 +25,12 @@ function ManagerLayout ({ children }) {
             heading: "Tài khoản",
             children: [
                 { 
-                    heading: "Cấp tài khoản", 
-                    action: "b"
-                },
-                { 
                     heading: "Quản lý tài khoản", 
                     action: "/manager/account/list"
+                },
+                { 
+                    heading: "Cấp tài khoản", 
+                    action: "/manager/account/create"
                 }
             ]
         },

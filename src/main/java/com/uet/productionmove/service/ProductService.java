@@ -1,6 +1,6 @@
 package com.uet.productionmove.service;
 
-import com.uet.productionmove.entity.ProductLineEntity;
+import com.uet.productionmove.entity.ProductLine;
 import com.uet.productionmove.repository.ProductLineRepository;
 import com.uet.productionmove.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class ProductService {
 //        ));
     }
 
-    public void insertProduct(ProductLineEntity productLineEntity) {
-        ProductLineEntity p = productRepository.save(productLineEntity);
+    public void insertProduct(ProductLine productLine) {
+        ProductLine p = productRepository.save(productLine);
         System.out.println(p.getId());
     }
 }

@@ -1,0 +1,42 @@
+{
+    "server" : {
+        "url" : "http://localhost:5000",
+        "api" : {
+            "account" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/account/create"
+                },
+                "update" : {
+                    "url" : "http://localhost:5000/api/account/update"
+                },
+                "get" : {
+                    "url" : "http://localhost:5000/api/account/get"
+                }
+            },
+            "distributor" : {
+                "update" : {
+                    "url" : "http://localhost:5000/api/account/distributor/update"
+                },
+                "get" : {
+                    "url" : "http://localhost:5000/api/account/distributor/get"
+                }
+            },
+            "factory" : {
+                "update" : {
+                    "url" : "http://localhost:5000/api/account/factory/update"
+                },
+                "get" : {
+                    "url" : "http://localhost:5000/api/account/factory/get"
+                }
+            },
+            "warranty" : {
+                "update" : {
+                    "url" : "http://localhost:5000/api/account/warranty/update"
+                },
+                "get" : {
+                    "url" : "http://localhost:5000/api/account/warranty/get"
+                }
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 package com.uet.productionmove.model;
 
-import com.uet.productionmove.entity.UserEntity;
+import com.uet.productionmove.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserModel extends UserEntity {
+public class UserModel extends User {
     private String name;
     private String phoneNumber;
     private String address;
 
-    public UserModel(UserEntity userEntity) {
-        this.setId(userEntity.getId());
-        this.setRole(userEntity.getRole());
-        this.setPassword(userEntity.getPassword());
-        this.setUsername(userEntity.getUsername());
+    public UserModel(User user) {
+        this.setId(user.getId());
+        this.setRole(user.getRole());
+        this.setPassword(user.getPassword());
+        this.setUsername(user.getUsername());
     }
 }
