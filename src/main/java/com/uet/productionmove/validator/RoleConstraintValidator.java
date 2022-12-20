@@ -15,6 +15,10 @@ public class RoleConstraintValidator implements
 
     @Override
     public boolean isValid(String role, ConstraintValidatorContext context) {
+        if (role == null) {
+            return false;
+        }
+
         return switch (role) {
             case UserType.WARRANTY_CENTER, UserType.DISTRIBUTOR, UserType.MANUFACTURE, UserType.ADMIN -> true;
             default -> false;

@@ -14,27 +14,36 @@
                 }
             },
             "distributor" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/distributor/create"
+                },
                 "update" : {
-                    "url" : "http://localhost:5000/api/account/distributor/update"
+                    "url" : "http://localhost:5000/api/distributor/update"
                 },
                 "get" : {
-                    "url" : "http://localhost:5000/api/account/distributor/get"
+                    "url" : "http://localhost:5000/api/distributor/get"
                 }
             },
             "factory" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/factory/create"
+                },
                 "update" : {
-                    "url" : "http://localhost:5000/api/account/factory/update"
+                    "url" : "http://localhost:5000/api/factory/update"
                 },
                 "get" : {
-                    "url" : "http://localhost:5000/api/account/factory/get"
+                    "url" : "http://localhost:5000/api/factory/get"
                 }
             },
             "warranty" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/warranty/create"
+                },
                 "update" : {
-                    "url" : "http://localhost:5000/api/account/warranty/update"
+                    "url" : "http://localhost:5000/api/warranty/update"
                 },
                 "get" : {
-                    "url" : "http://localhost:5000/api/account/warranty/get"
+                    "url" : "http://localhost:5000/api/warranty/get"
                 }
             }
         }

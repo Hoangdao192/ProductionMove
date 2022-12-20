@@ -1,6 +1,7 @@
 package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.*;
+import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.exception.user.UsernameExistsException;
 import com.uet.productionmove.repository.DistributorRepository;
 import com.uet.productionmove.repository.FactoryRepository;
@@ -39,97 +40,50 @@ public class UserService {
         initAdminAccount();
     }
 
-    public User createUser(String username, String password, String accountType) {
-        if (!userRepository.existsByUsername(username)) {
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setRole(accountType);
-            return userRepository.save(user);
-        }
-
-        return null;
-    }
-
-    public User createUser(User user) throws UsernameExistsException {
+    public User createUser(User user) throws InvalidArgumentException {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new UsernameExistsException();
+            throw new InvalidArgumentException("User with username exists.");
         }
+
         user.setId(null);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public Factory createFactory(Factory factory) {
-        return factoryRepository.save(factory);
-    }
-
-    public Factory updateFactory(Factory factory) {
-        if (factory.getId() != null && factoryRepository.existsById(factory.getId())) {
-            return factoryRepository.save(factory);
+    public User updateUser(User user) throws InvalidArgumentException {
+        Optional<User> userOptional = userRepository.findById(user.getId());
+        if (userOptional.isEmpty()) {
+            throw new InvalidArgumentException("User with ID not exists.");
         }
-        return null;
+
+        User dbUser = userOptional.get();
+        dbUser.setUsername(user.getUsername());
+        dbUser.setPassword(user.getPassword());
+        dbUser.setRole(user.getRole());
+
+        return userRepository.save(dbUser);
     }
 
-    public Optional<Factory> getFactoryByUser(String userId) {
-        return factoryRepository.findByUserId(UUID.fromString(userId));
-    }
-
-    public Distributor createDistributor(Distributor distributor) {
-        return distributorRepository.save(distributor);
-    }
-
-    public Distributor updateDistributor(Distributor distributor) {
-        if (distributor.getId() != null && distributorRepository.existsById(distributor.getId())) {
-            return distributorRepository.save(distributor);
+    public boolean deleteUser(String userId) throws InvalidArgumentException {
+        Optional<User> userOptional = userRepository.findById(UUID.fromString(userId));
+        if (userOptional.isEmpty()) {
+            throw new InvalidArgumentException("User with ID not exists.");
         }
-        return null;
-    }
 
-    public Optional<Distributor> getDistributorByUser(String userId) {
-        return distributorRepository.findByUserId(UUID.fromString(userId));
-    }
-
-    public WarrantyCenter createWarrantyCenter(WarrantyCenter warrantyCenter) {
-        return warrantyCenterRepository.save(warrantyCenter);
-    }
-
-    public WarrantyCenter updateWarrantyCenter(WarrantyCenter warrantyCenter) {
-        if (warrantyCenter.getId() != null && warrantyCenterRepository.existsById(warrantyCenter.getId())) {
-            return warrantyCenterRepository.save(warrantyCenter);
+        User user = userOptional.get();
+        switch (user.getRole()) {
+            case UserType.DISTRIBUTOR:
+                distributorRepository.deleteByUserId(user.getId());
+                break;
+            case UserType.MANUFACTURE:
+                factoryRepository.deleteByUserId(user.getId());
+                break;
+            case UserType.WARRANTY_CENTER:
+                warrantyCenterRepository.deleteByUserId(user.getId());
+                break;
         }
-        return null;
-    }
-
-    public Optional<WarrantyCenter> getWarrantyCenterByUser(String userId) {
-        return warrantyCenterRepository.findByUserId(UUID.fromString(userId));
-    }
-
-    public User updateUser(User user) {
-        if (user.getId() != null && userRepository.existsById(user.getId())) {
-            return userRepository.save(user);
-        }
-        return null;
-    }
-
-    public boolean deleteUser(String userId) {
-        Optional<User> optionalUserEntity = getUserById(userId);
-        if (optionalUserEntity.isPresent()) {
-            User user = optionalUserEntity.get();
-            switch (user.getRole()) {
-                case UserType.DISTRIBUTOR:
-                    distributorRepository.deleteByUserId(user.getId());
-                    break;
-                case UserType.MANUFACTURE:
-                    factoryRepository.deleteByUserId(user.getId());
-                    break;
-                case UserType.WARRANTY_CENTER:
-                    warrantyCenterRepository.deleteByUserId(user.getId());
-                    break;
-            }
-            userRepository.deleteById(user.getId());
-            return true;
-        }
-        return false;
+        userRepository.deleteById(user.getId());
+        return true;
     }
 
     private void initAdminAccount() {
@@ -147,8 +101,22 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public Optional<User> getUserById(String userId) {
+    public User getUserById(String userId) throws InvalidArgumentException {
         log.info("Get user by id");
-        return userRepository.findById(UUID.fromString(userId));
+        Optional<User> userOptional = userRepository.findById(UUID.fromString(userId));
+        if (userOptional.isEmpty()) {
+            throw new InvalidArgumentException("User with ID not exists.");
+        }
+
+        return userOptional.get();
+    }
+
+    public User getUserByUsername(String username) throws InvalidArgumentException {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            throw new InvalidArgumentException("User with username not exists.");
+        }
+
+        return userOptional.get();
     }
 }

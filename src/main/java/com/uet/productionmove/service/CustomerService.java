@@ -19,17 +19,17 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public void createOrder(Order order) throws CreateOrderException {
-        if (order.getId() != null) {
-            throw new CreateOrderException("You cannot specify id for order, it is auto generated");
-        }
-
-        if (order.getOrderDate() == null) {
-            throw new CreateOrderException("Order date cannot be null");
-        }
-
-        if (customerRepository.existsById(order.getCustomerId())) {
-            orderRepository.save(order);
-        }
-    }
+//    public void createOrder(Order order) throws CreateOrderException {
+//        if (order.getId() != null) {
+//            throw new CreateOrderException("You cannot specify id for order, it is auto generated");
+//        }
+//
+//        if (order.getOrderDate() == null) {
+//            throw new CreateOrderException("Order date cannot be null");
+//        }
+//
+//        if (customerRepository.existsById(order.getCustomerId())) {
+//            orderRepository.save(order);
+//        }
+//    }
 }

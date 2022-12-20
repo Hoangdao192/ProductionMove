@@ -2,8 +2,7 @@ package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.Distributor;
 import com.uet.productionmove.entity.User;
-import com.uet.productionmove.exception.user.DistributorNotExistsException;
-import com.uet.productionmove.exception.user.UserNotExistsException;
+import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.repository.DistributorRepository;
 import com.uet.productionmove.repository.UserRepository;
@@ -15,36 +14,39 @@ import java.util.UUID;
 
 @Service
 public class DistributorService {
-    @Autowired
+
     private DistributorRepository distributorRepository;
-    @Autowired
     private UserRepository userRepository;
 
-    public Distributor createDistributor(DistributorModel distributorModel) throws UserNotExistsException {
+    public Distributor createDistributor(DistributorModel distributorModel)
+            throws InvalidArgumentException {
         Optional<User> userOptional = userRepository.findById(UUID.fromString(distributorModel.getUserId()));
-        if (userOptional.isPresent()) {
-            Distributor distributor = new Distributor(
-                    distributorModel.getName(),
-                    userOptional.get(),
-                    distributorModel.getAddress(),
-                    distributorModel.getPhoneNumber()
-            );
-            return distributorRepository.save(distributor);
-        } else {
-            throw new UserNotExistsException("User with ID not exists");
+
+        if (userOptional.isEmpty()) {
+            throw new InvalidArgumentException("User with ID not exists.");
         }
+
+        Distributor distributor = new Distributor(
+                distributorModel.getName(),
+                userOptional.get(),
+                distributorModel.getAddress(),
+                distributorModel.getPhoneNumber()
+        );
+
+        return distributorRepository.save(distributor);
     }
 
-    public Distributor updateDistributor(DistributorModel distributorModel) throws UserNotExistsException, DistributorNotExistsException {
+    public Distributor updateDistributor(DistributorModel distributorModel)
+            throws InvalidArgumentException {
         Optional<User> userOptional = userRepository.findById(UUID.fromString(distributorModel.getUserId()));
         Optional<Distributor> distributorOptional = distributorRepository.findById(distributorModel.getId());
 
         if (userOptional.isEmpty()) {
-            throw new UserNotExistsException("User with ID not exists");
+            throw new InvalidArgumentException("User with ID not exists");
         }
 
         if (distributorOptional.isEmpty()) {
-            throw new DistributorNotExistsException("Distributor with ID not exists");
+            throw new InvalidArgumentException("Distributor with ID not exists");
         }
 
         Distributor distributor = distributorOptional.get();
@@ -53,5 +55,15 @@ public class DistributorService {
         distributor.setAddress(distributorModel.getAddress());
         distributor.setPhoneNumber(distributorModel.getPhoneNumber());
         return distributorRepository.save(distributor);
+    }
+
+    @Autowired
+    public void setDistributorRepository(DistributorRepository distributorRepository) {
+        this.distributorRepository = distributorRepository;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }

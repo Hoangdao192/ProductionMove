@@ -3,95 +3,51 @@ import React, { useState, useEffect } from "react";
 import config from "../../../../config.json";
 
 import { typeAccounts } from "../AcountItems.js";
-import {
-    nameValidation,
-    userValidation,
-    passValidation,
-    passAgainValidation,
-    emailValidation,
-    typeAcountValidation,
-    avatartValidation,
-} from "../Validation/ValidationFrom.js";
+
 
 export default function CreateAccount(props) {
-    const [user, setUser] = useState("");
-    const [pass, setPass] = useState("");
-    const [passAgain, setPassAgain] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [typeAcount, setTypeAcount] = useState(-1);
-    const [avatar, setAvatar] = useState("");
-    const [message, setMessage] = useState({
-        name: null,
-        user: null,
-        pass: null,
-        passAgain: null,
-        email: null,
-        typeAcount: null,
-        avatar: null,
-    });
-
-    // Hiển thị trước avatar
-    useEffect(() => {
-        // effect
-        return () => {
-            avatar && URL.revokeObjectURL(avatar.preview);
-        };
-    }, [avatar]);
-
-    // Hiển thị trước avatar
-    const handleAvatar = (e) => {
-        const file = e.target.files[0];
-
-        if (file) {
-            file.preview = URL.createObjectURL(file);
-            console.log(file.preview);
-        }
-
-        setAvatar(file);
-    };
+    const [user, setUser] = useState({role: "Manufacture"});
+    const [profile, setProfile] = useState({});
+    const [message, setMessage] = useState({});
 
     // Thẩm định cuối
     function validationForm(event) {
-        console.log("Validation!");
-        const result = {};
-        result.name = nameValidation(name);
-        result.user = userValidation(user);
-        result.pass = passValidation(pass);
-        result.passAgain = passAgainValidation(pass, passAgain);
-        result.email = emailValidation(email);
-        result.typeAcount = typeAcountValidation(typeAcount);
-        result.avatar = avatartValidation(avatar);
-
-        setMessage(result);
         event.preventDefault();
-        if (
-            !(
-                result.name.validation &&
-                result.user.validation &&
-                result.pass.validation &&
-                result.passAgain.validation &&
-                result.typeAcount.validation
-            )
-        ) {
-            console.log("NOT RUN") 
-            
-            
-        } else {
-            console.log("RUN")
-            let request = new XMLHttpRequest();
-            request.open("POST", config.server.api.account.create.url);
-            request.setRequestHeader("Content-type", "application/json");
-            let data = {
-                username: name,
-                password: pass,
-                type: typeAcount,
-                name: user,
-                phoneNumber: "54666"
+        let request = new XMLHttpRequest();
+        request.open("POST", config.server.api.account.create.url);
+        request.setRequestHeader("Content-type", "application/json");
+        
+        request.onreadystatechange = function() {
+            if (request.readyState == 4 && (request.status == 200 || request.status == 202)) {
+                let result = JSON.parse(request.response);
+                console.log(result);
+
+                let request2 = new XMLHttpRequest();
+                let requestUrl = '';
+                switch(user.role) {
+                    case "Manufacture": requestUrl = config.server.api.factory.create.url;
+                        break;
+                    case "Distributor": requestUrl = config.server.api.distributor.create.url;
+                        break;
+                    case "Warranty center": requestUrl = config.server.api.warranty.create.url;
+                        break;
+                }
+                request2.open("POST", requestUrl);
+                request2.setRequestHeader("Content-type", "application/json");
+                request2.send(JSON.stringify({
+                    name: profile.name,
+                    userId: result.content.user.id,
+                    address: profile.address,
+                    phoneNumber: profile.phoneNumber
+                }))
+
             }
-            console.log(data);
-            request.send(JSON.stringify(data));
         }
+        request.send(JSON.stringify({
+            username: user.username,
+            password: user.password,
+            role: user.role
+        }));
     }
 
     return (
@@ -107,8 +63,11 @@ export default function CreateAccount(props) {
                                 name="name"
                                 id="name"
                                 placeholder="Trần Đình Cường"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={user.username}
+                                onChange={(e) => setUser({
+                                    ...user,
+                                    username: e.target.value
+                                })}
                             />
                         </div>
                         <div className="alert">
@@ -124,8 +83,11 @@ export default function CreateAccount(props) {
                                 type="password"
                                 name="pass"
                                 id="pass"
-                                value={pass}
-                                onChange={(e) => setPass(e.target.value)}
+                                value={user.password}
+                                onChange={(e) => setUser({
+                                    ...user,
+                                    password: e.target.value
+                                })}
                             />
                         </div>
                         <div className="alert">
@@ -141,8 +103,11 @@ export default function CreateAccount(props) {
                                 type="password"
                                 name="pass-again"
                                 id="pass-again"
-                                value={passAgain}
-                                onChange={(e) => setPassAgain(e.target.value)}
+                                value={user.confirmPassword}
+                                onChange={(e) => setUser({
+                                    ...user,
+                                    confirmPassword: e.target.value
+                                })}
                             />
                         </div>
                         <div className="alert">
@@ -157,7 +122,10 @@ export default function CreateAccount(props) {
                             <select
                                 name="type-acount"
                                 id="type-acount"
-                                onChange={(e) => setTypeAcount(e.target.value)}
+                                onChange={(e) => setUser({
+                                    ...user,
+                                    role: e.target.value
+                                })}
                             >
                                 {typeAccounts.map((item, index) => {
                                     return (
@@ -181,8 +149,11 @@ export default function CreateAccount(props) {
                                 type="text"
                                 name="user"
                                 id="user"
-                                value={user}
-                                onChange={(e) => setUser(e.target.value)}
+                                value={profile.name}
+                                onChange={(e) => setProfile({
+                                    ...profile,
+                                    name: e.target.value
+                                })}
                             />
                         </div>
                         <div className="alert">
@@ -198,6 +169,11 @@ export default function CreateAccount(props) {
                                 name="address"
                                 id="address"
                                 placeholder="Nhập địa chỉ"
+                                value={profile.address}
+                                onChange={(e) => setProfile({
+                                    ...profile,
+                                    address: e.target.value
+                                })}
                             />
                         </div>
                         <div className="alert">
@@ -213,6 +189,11 @@ export default function CreateAccount(props) {
                                 name="phoneNumber"
                                 id="phoneNumber"
                                 placeholder="Nhập số điện thoại"
+                                value={profile.phoneNumber}
+                                onChange={(e) => setProfile({
+                                    ...profile,
+                                    phoneNumber: e.target.value
+                                })}
                             />
                         </div>
                         <div className="alert">

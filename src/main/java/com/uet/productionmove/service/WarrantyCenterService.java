@@ -16,9 +16,9 @@ import java.util.UUID;
 @Service
 public class WarrantyCenterService {
 
-    @Autowired
+
     private WarrantyCenterRepository warrantyCenterRepository;
-    @Autowired
+
     private UserRepository userRepository;
 
     public WarrantyCenter createWarrantyCenter(WarrantyCenterModel warrantyCenterModel)
@@ -58,4 +58,14 @@ public class WarrantyCenterService {
         return warrantyCenterRepository.save(warrantyCenter);
     }
 
+    @Autowired
+    public void setWarrantyCenterRepository(
+            WarrantyCenterRepository warrantyCenterRepository) {
+        this.warrantyCenterRepository = warrantyCenterRepository;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 }

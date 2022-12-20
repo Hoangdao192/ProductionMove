@@ -15,7 +15,14 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long orderId;
-    private Long productLineId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_line_id")
+    private ProductLine productLine;
+
     private Integer quantity;
 }
