@@ -35,4 +35,23 @@ public class ProductLineService {
             this.productLineRepository.save(productLine);
         }
     }
+
+//    USE production_move;
+//    INSERT INTO product_lines(
+//            id, audio_and_speaker, battery, camera, display, hard_drive, memory, operating_system, processor, product_name, video_card, wireless
+//            )
+//    VALUES(
+//	1, "Dual stereo speakers (tweeter + woofer), Realtek ALC1319D, 2 W x 2 = 4 W total",
+//            "3-Cell Battery, 51 Whr (Integrated)",
+//            "720p at 30 fps HD RGB camera, 400p at 30 fps IR camera, dual-array microphones",
+//            "13.4 FHD+ (1920 x 1200) InfinityEdge Touch Anti-Reflective 500-Nit Display",
+//            "256GB PCIe NVMe x2 Solid State Drive Onboard, 512GB PCIe NVMe x2 Solid State Drive Onboard",
+//            "8GB, LPDDR5, 5200 MHz, integrated, dual channel; 16 GB, LPDDR5, 5200 MHz, integrated, dual-channel",
+//            "Windows 11 Pro, 64-bit; Windows 11 Home, 64-bit",
+//            "12th Generation Intel® Core™ i5-1230U (12MB Cache, up to 4.4 GHz, 10 cores); 12th Generation Intel® Core™ i7-1250U (12MB Cache, up to 4.7 GHz, 10 cores)",
+//            "XPS 13",
+//            "Intel® Iris Xe Graphics",
+//            "Intel® Killer™ Wi-Fi 6 1675 (AX211) 2x2 + Bluetooth 5.2 Wireless Card"
+//    );
+//    SELECT * FROM production_move.product_lines;
 }

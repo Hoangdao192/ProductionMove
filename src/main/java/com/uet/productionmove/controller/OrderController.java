@@ -1,10 +1,11 @@
 package com.uet.productionmove.controller;
 
 import com.uet.productionmove.entity.Order;
+import com.uet.productionmove.entity.OrderDetail;
 import com.uet.productionmove.exception.InvalidArgumentException;
+import com.uet.productionmove.model.OrderDetailModel;
 import com.uet.productionmove.model.OrderModel;
 import com.uet.productionmove.service.OrderService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,13 +62,51 @@ public class OrderController {
     }
 
     @GetMapping(path = "list")
-    public ResponseEntity<Map<String, Object>> getOrder()
-            throws InvalidArgumentException {
+    public ResponseEntity<Map<String, Object>> getOrder() {
         List<Order> orders = orderService.getAllOrder();
         return ResponseEntity.ok(
                 Map.of("message", "List order successful",
                         "content", Map.of("orders", orders))
         );
+    }
+
+    @PostMapping(path = "/detail/create")
+    public ResponseEntity<Map<String, Object>> createOrderDetail(
+            @RequestBody @Valid OrderDetailModel orderDetailModel) throws InvalidArgumentException {
+        OrderDetail orderDetail = orderService.createOrderDetail(orderDetailModel);
+        return ResponseEntity.ok(Map.of(
+                "message", "Create order detail successful",
+                "content", Map.of("orderDetail", orderDetail))
+        );
+    }
+
+    @PostMapping(path = "/detail/update")
+    public ResponseEntity<Map<String, Object>> updateOrderDetail(
+            @RequestBody @Valid OrderDetailModel orderDetailModel
+    ) throws InvalidArgumentException {
+        OrderDetail orderDetail = orderService.updateOrderDetail(orderDetailModel);
+        return ResponseEntity.ok(Map.of(
+                "message", "Update order detail successful",
+                "content", Map.of("orderDetail", orderDetail)
+        ));
+    }
+
+    @GetMapping(path = "/detail/get")
+    public ResponseEntity<OrderDetail> getOrderDetail(@RequestParam Long orderDetailId)
+            throws InvalidArgumentException {
+        OrderDetail orderDetail = orderService.getOrderDetail(orderDetailId);
+        return ResponseEntity.ok(orderDetail);
+    }
+
+    @DeleteMapping(path = "/detail/delete/{orderDetailId}")
+    public ResponseEntity<Map<String, Object>> deleteOrderDetailById(@PathVariable Long orderDetailId)
+            throws InvalidArgumentException {
+        orderService.deleteOrderDetail(orderDetailId);
+        return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Delete order detail successful",
+                "content", Map.of("id", orderDetailId)
+        ));
     }
 
     @Autowired

@@ -1,35 +1,61 @@
 package com.uet.productionmove.service;
 
-import com.uet.productionmove.entity.Order;
-import com.uet.productionmove.exception.order.CreateOrderException;
+import com.uet.productionmove.entity.Customer;
+import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.repository.CustomerRepository;
 import com.uet.productionmove.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CustomerService {
-    @Autowired
     private CustomerRepository customerRepository;
-    @Autowired
-    private OrderRepository orderRepository;
+    private OrderService orderService;
+
+    public Customer createCustomer(Customer customer) {
+        customer.setId(null);
+        return customerRepository.save(customer);
+    }
+
+    public Customer updateCustomer(Customer customer) throws InvalidArgumentException {
+        Optional<Customer> customerOptional = customerRepository.findById(customer.getId());
+        if (customerOptional.isEmpty()) {
+            throw new InvalidArgumentException("Customer with ID not exists.");
+        }
+        return customerRepository.save(customer);
+    }
+
+    public Customer getCustomer(Long customerId) throws InvalidArgumentException {
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if (customerOptional.isEmpty()) {
+            throw new InvalidArgumentException("Customer with ID not exists.");
+        }
+        return customerOptional.get();
+    }
+
+    public void deleteCustomer(Long customerId) throws InvalidArgumentException {
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if (customerOptional.isEmpty()) {
+            throw new InvalidArgumentException("Customer with ID not exists.");
+        }
+        orderService.deleteOrderByCustomer(customerId);
+        customerRepository.deleteById(customerId);
+    }
+
+    public List<Customer> getAllCustomer() {
+        return customerRepository.findAll();
+    }
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    public void setCustomerRepository(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
-//    public void createOrder(Order order) throws CreateOrderException {
-//        if (order.getId() != null) {
-//            throw new CreateOrderException("You cannot specify id for order, it is auto generated");
-//        }
-//
-//        if (order.getOrderDate() == null) {
-//            throw new CreateOrderException("Order date cannot be null");
-//        }
-//
-//        if (customerRepository.existsById(order.getCustomerId())) {
-//            orderRepository.save(order);
-//        }
-//    }
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
 }

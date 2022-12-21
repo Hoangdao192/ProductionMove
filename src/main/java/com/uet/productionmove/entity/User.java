@@ -28,7 +28,7 @@ public class User {
 
     @NotNull(message = "Username must not be null")
     @NotBlank(message = "Username must not be empty")
-    @Length(min = 8, message = "Username must be equal or more than 8 characters")
+    @Length(min = 5, message = "Username must be equal or more than 8 characters")
     private String username;
 
     @NotNull(message = "Password must not be null")
