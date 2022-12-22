@@ -13,7 +13,6 @@ const Sidebar = () => {
   const { togleSider, setTogleSider, togleBar, setTogleBar } = context;
 
   return (
-    // <div className={styles.container + " " + styles.openSide}>
     <div
       className={
         togleBar
@@ -30,7 +29,7 @@ const Sidebar = () => {
     >
       <div className={styles.logo}>
         <div className={styles.logoImg}>
-          <img src={require("../../asset/image/logo.jpg")} alt="Avatar" />
+          <img src={require("../../asset/image/logo.jpg")} alt="Logo" />
         </div>
         <div className={togleBar ? styles.backBtn : "nonDisplay"}>
           <UilArrowLeft size={48} />

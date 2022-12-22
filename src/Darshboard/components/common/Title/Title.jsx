@@ -9,6 +9,19 @@ function Title({ icon, title, name, avatar }) {
 
   const { togleBar, togleSider, setTogleSider } = context;
 
+  useEffect(() => {
+    console.log(
+      "togleSider: " +
+        togleSider +
+        "\n" +
+        "togleBar: " +
+        togleBar +
+        "\n" +
+        "screenWidth: " +
+        window.innerWidth
+    );
+  }, [togleSider]);
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -31,7 +44,8 @@ function Title({ icon, title, name, avatar }) {
           />
         </div>
         <div
-          className={togleBar ? "" : "nonDisplay"}
+          // className={togleBar ? "" : "nonDisplay"}
+          className={styles.barBtn}
           onClick={() => setTogleSider(!togleSider)}
         >
           <UilBars className={styles.bar} size={35} />

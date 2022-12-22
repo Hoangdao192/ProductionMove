@@ -12,8 +12,8 @@ export default function DarshBoard() {
 
   const showBarIcon = () => {
     if (
-      (window.screen.width <= 750 && togleBar === false) ||
-      (window.screen.width <= 750 && togleBar === 0)
+      (window.innerWidth <= 750 && togleBar === false) ||
+      (window.innerWidth <= 750 && togleBar === 0)
     ) {
       setTogleBar(true);
     }
@@ -21,8 +21,8 @@ export default function DarshBoard() {
 
   const hiddenBarIcon = () => {
     if (
-      (window.screen.width > 750 && togleBar === true) ||
-      (window.screen.width > 750 && togleBar === 0)
+      (window.innerWidth > 750 && togleBar === true) ||
+      (window.innerWidth > 750 && togleBar === 0)
     ) {
       setTogleBar(false);
     }
