@@ -1,0 +1,9 @@
+.container {
+  flex: 8;
+  /* border: 1px solid black; */
+  /* width: 80%; */
+  
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

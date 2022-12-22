@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  border-bottom: 2px solid #f4f5f0;
+  flex: 1
+}
+
+.navItem {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  margin-right: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.active {
+  border-bottom: 3px solid #e7f0c2;
+  transition: all 0.2s ease-in;
+}
