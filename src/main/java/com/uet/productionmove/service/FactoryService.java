@@ -22,6 +22,8 @@ public class FactoryService {
     private StockRepository stockRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Optional<User> userOptional = userRepository.findById(UUID.fromString(factoryModel.getUserId()));
@@ -56,6 +58,40 @@ public class FactoryService {
         factory.setAddress(factoryModel.getAddress());
         factory.setPhoneNumber(factoryModel.getPhoneNumber());
         return factoryRepository.save(factory);
+    }
+
+    public Factory getFactoryById(Long factoryId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists");
+        }
+        return factoryOptional.get();
+    }
+
+    public Factory getFactoryByUserId(String userId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findByUserId(UUID.fromString(userId));
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with User ID not exists.");
+        }
+        return factoryOptional.get();
+    }
+
+    public void deleteFactoryById(Long factoryId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists.");
+        }
+        factoryRepository.deleteById(factoryId);
+        userService.deleteUser(factoryOptional.get().getUser().getId());
+    }
+
+    public void deleteFactoryByUserId(String userId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findByUserId(UUID.fromString(userId));
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists.");
+        }
+        factoryRepository.deleteByUserId(UUID.fromString(userId));
+        userService.deleteUser(factoryOptional.get().getUser().getId());
     }
 
     @Autowired

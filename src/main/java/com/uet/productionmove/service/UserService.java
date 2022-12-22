@@ -71,19 +71,27 @@ public class UserService {
         }
 
         User user = userOptional.get();
-        switch (user.getRole()) {
-            case UserType.DISTRIBUTOR:
-                distributorRepository.deleteByUserId(user.getId());
-                break;
-            case UserType.MANUFACTURE:
-                factoryRepository.deleteByUserId(user.getId());
-                break;
-            case UserType.WARRANTY_CENTER:
-                warrantyCenterRepository.deleteByUserId(user.getId());
-                break;
-        }
+//        switch (user.getRole()) {
+//            case UserType.DISTRIBUTOR:
+//                distributorRepository.deleteByUserId(user.getId());
+//                break;
+//            case UserType.MANUFACTURE:
+//                factoryRepository.deleteByUserId(user.getId());
+//                break;
+//            case UserType.WARRANTY_CENTER:
+//                warrantyCenterRepository.deleteByUserId(user.getId());
+//                break;
+//        }
         userRepository.deleteById(user.getId());
         return true;
+    }
+
+    public void deleteUser(UUID userId) throws InvalidArgumentException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new InvalidArgumentException("User with ID not exists.");
+        }
+        userRepository.deleteById(userId);
     }
 
     private void initAdminAccount() {

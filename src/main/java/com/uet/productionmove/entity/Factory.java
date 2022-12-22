@@ -20,6 +20,10 @@ public class Factory {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "unit_id")
+    private Unit unit;
+
     private String name;
     private String phoneNumber;
     private String address;

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/product_batch")
 public class ProductBatchController {
 
-    @Autowired
     private ProductBatchService productBatchService;
 
     @PostMapping(path = "/create")
@@ -23,4 +22,8 @@ public class ProductBatchController {
         return "";
     }
 
+    @Autowired
+    public void setProductBatchService(ProductBatchService productBatchService) {
+        this.productBatchService = productBatchService;
+    }
 }

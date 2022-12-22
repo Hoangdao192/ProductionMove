@@ -23,7 +23,7 @@ public class ProductBatch {
 
     private LocalDate manufacturingDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "factory_id")
     private Factory factory;
 
