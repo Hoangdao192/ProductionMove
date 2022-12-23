@@ -12,13 +12,13 @@
 
 .wrapper {
   width: 100%;
-  max-width: 1400px;
+  /* max-width: 1400px; */
   height: 100%;
-  max-height: 600px;
+  /* max-height: 600px; */
   /* border: 1px solid black; */
   display: flex;
   padding: 0.5rem;
   background-color: #f9faf5;
-  border-radius: 1.5rem;
+  /* border-radius: 1.5rem; */
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }

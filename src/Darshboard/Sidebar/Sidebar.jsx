@@ -10,7 +10,7 @@ const Sidebar = () => {
   const context = useContext(DarshboardContext);
   const [selected, setSelected] = useState(0);
 
-  const { togleSider, setTogleSider, togleBar, setTogleBar } = context;
+  const { togleSider, setTogleSider, togleBar } = context;
 
   return (
     <div
@@ -34,12 +34,12 @@ const Sidebar = () => {
         <div className={togleBar ? styles.backBtn : "nonDisplay"}>
           <UilArrowLeft size={48} />
         </div>
-        <div className={styles.avatar}>
+        {/* <div className={styles.avatar}>
           <div className={styles.avatarImg}>
             <img src={require("../../asset/image/avatar.jpg")} alt="Avatar" />
           </div>
           <div className={styles.name}>Xin chào Cường</div>
-        </div>
+        </div> */}
       </div>
 
       <div className={styles.menu}>

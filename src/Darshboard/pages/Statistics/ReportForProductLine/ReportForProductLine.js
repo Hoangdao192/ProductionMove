@@ -4,6 +4,8 @@ import { navData } from "./data";
 import { Title, Navigation } from "../../../components/common";
 import { UisStar } from "@iconscout/react-unicons-solid";
 
+import Table from "./Table/Table";
+
 function ReportForProductLine() {
   return (
     <div className={styles.container}>
@@ -13,7 +15,9 @@ function ReportForProductLine() {
       <div className={styles.nav}>
         <Navigation navData={navData} />
       </div>
-      <div className={styles.contain}>Contain</div>
+      <div className={styles.contain}>
+        <Table />
+      </div>
     </div>
   );
 }

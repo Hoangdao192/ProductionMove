@@ -17,7 +17,7 @@ export default function DarshBoard() {
     ) {
       setTogleBar(true);
     }
-  };
+  }; // eslint-disable-next-line
 
   const hiddenBarIcon = () => {
     if (
@@ -26,20 +26,16 @@ export default function DarshBoard() {
     ) {
       setTogleBar(false);
     }
-  };
+  }; // eslint-disable-next-line
 
   useEffect(() => {
-    window.addEventListener("resize", showBarIcon);
-    window.addEventListener("resize", hiddenBarIcon);
+    window.addEventListener("resize", showBarIcon); // eslint-disable-next-line
+    window.addEventListener("resize", hiddenBarIcon); // eslint-disable-next-line
     return () => {
-      window.removeEventListener("resize", showBarIcon);
-      window.removeEventListener("resize", hiddenBarIcon);
+      window.removeEventListener("resize", showBarIcon); // eslint-disable-next-line
+      window.removeEventListener("resize", hiddenBarIcon); // eslint-disable-next-line
     };
   }, []);
-
-  useEffect(() => {
-    console.log("togleBar: " + togleBar);
-  }, [togleBar]);
 
   return (
     <div className={styles.container}>

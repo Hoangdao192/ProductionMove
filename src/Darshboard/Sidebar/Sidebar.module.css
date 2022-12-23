@@ -100,9 +100,8 @@
   cursor: pointer;
 }
 
-.titleContent {
-  /* display: none; */
-}
+/* .titleContent {
+} */
 
 .hover {
   display: none;
@@ -211,7 +210,7 @@
     background-color: #d8d8d8;
     height: 100%;
     width: 96%;
-    max-height: 580px;
+    /* max-height: 580px; */
     border-radius: 0.5rem;
     transform: translateX(-120%);
     transition: all 0.2s ease;
@@ -227,9 +226,9 @@
     max-width: 24rem;
     width: 100%;
   }
-  .logoImg {
+  /* .logoImg {
     opacity: 20%;
-  }
+  } */
   .avatar {
     display: flex;
     position: absolute;
@@ -258,7 +257,7 @@
     border-radius: 0.7rem;
     font-weight: 500;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     padding: 5px 1rem;
   }
   .active {

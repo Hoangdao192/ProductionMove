@@ -7,20 +7,7 @@ import { DarshboardContext } from "../../../../context/DarshboardProvider/Darshb
 function Title({ icon, title, name, avatar }) {
   const context = useContext(DarshboardContext);
 
-  const { togleBar, togleSider, setTogleSider } = context;
-
-  useEffect(() => {
-    console.log(
-      "togleSider: " +
-        togleSider +
-        "\n" +
-        "togleBar: " +
-        togleBar +
-        "\n" +
-        "screenWidth: " +
-        window.innerWidth
-    );
-  }, [togleSider]);
+  const { togleSider, setTogleSider } = context;
 
   return (
     <div className={styles.container}>
@@ -36,13 +23,13 @@ function Title({ icon, title, name, avatar }) {
         {title}
       </div>
       <div className={styles.avatar}>
-        <div className={styles.name}>Xin chào Cường</div>
+        {/* <div className={styles.name}>Xin chào Cường</div>
         <div className={styles.avatarImg}>
           <img
             src={require("../../../../asset/image/avatar.jpg")}
             alt="Avatar"
           />
-        </div>
+        </div> */}
         <div
           // className={togleBar ? "" : "nonDisplay"}
           className={styles.barBtn}
