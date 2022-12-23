@@ -1,10 +1,13 @@
 package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.Distributor;
+import com.uet.productionmove.entity.Unit;
 import com.uet.productionmove.entity.User;
+import com.uet.productionmove.entity.UserType;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.repository.DistributorRepository;
+import com.uet.productionmove.repository.UnitRepository;
 import com.uet.productionmove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,19 +19,19 @@ import java.util.UUID;
 public class DistributorService {
 
     private DistributorRepository distributorRepository;
-    private UserRepository userRepository;
+    @Autowired
+    private UnitRepository unitRepository;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
-        Optional<User> userOptional = userRepository.findById(UUID.fromString(distributorModel.getUserId()));
 
-        if (userOptional.isEmpty()) {
-            throw new InvalidArgumentException("User with ID not exists.");
-        }
+        Unit unit = new Unit();
+        unit.setType(UserType.DISTRIBUTOR);
+        unit = unitRepository.save(unit);
 
         Distributor distributor = new Distributor(
+                unit,
                 distributorModel.getName(),
-                userOptional.get(),
                 distributorModel.getAddress(),
                 distributorModel.getPhoneNumber()
         );
@@ -38,19 +41,13 @@ public class DistributorService {
 
     public Distributor updateDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
-        Optional<User> userOptional = userRepository.findById(UUID.fromString(distributorModel.getUserId()));
         Optional<Distributor> distributorOptional = distributorRepository.findById(distributorModel.getId());
-
-        if (userOptional.isEmpty()) {
-            throw new InvalidArgumentException("User with ID not exists");
-        }
 
         if (distributorOptional.isEmpty()) {
             throw new InvalidArgumentException("Distributor with ID not exists");
         }
 
         Distributor distributor = distributorOptional.get();
-        distributor.setUser(userOptional.get());
         distributor.setName(distributorModel.getName());
         distributor.setAddress(distributorModel.getAddress());
         distributor.setPhoneNumber(distributorModel.getPhoneNumber());
@@ -60,10 +57,5 @@ public class DistributorService {
     @Autowired
     public void setDistributorRepository(DistributorRepository distributorRepository) {
         this.distributorRepository = distributorRepository;
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 }

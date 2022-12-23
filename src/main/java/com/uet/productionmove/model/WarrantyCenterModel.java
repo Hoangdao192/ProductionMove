@@ -16,13 +16,11 @@ import javax.validation.constraints.Pattern;
 public class WarrantyCenterModel {
     private Long id;
 
+    private Long unitId;
+
     @NotBlank(message = "name must not be empty")
     @NotNull(message = "name must not be null")
     private String name;
-
-    @NotBlank(message = "userId must not be empty")
-    @NotNull(message = "userId must not be null")
-    private String userId;
 
     @NotBlank(message = "address must not be empty")
     @NotNull(message = "address must not be null")
@@ -30,13 +28,7 @@ public class WarrantyCenterModel {
 
     @NotBlank(message = "phoneNumber must not be empty")
     @NotNull(message = "phoneNumber must not be null")
-    @Pattern(regexp = "^\\d{10}$", message = "Phone number is invalid")
+    @Pattern(regexp = "^\\d+", message = "Phone number is invalid")
     private String phoneNumber;
 
-    public WarrantyCenterModel(String name, String userId, String address, String phoneNumber) {
-        this.name = name;
-        this.userId = userId;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
 }

@@ -20,18 +20,19 @@ public class Distributor {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
-
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(
+            name = "unit_id", nullable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "unit_foreign_key"))
+    private Unit unit;
 
+    private String name;
     private String address;
     private String phoneNumber;
 
-    public Distributor(String name, User user, String address, String phoneNumber) {
+    public Distributor(Unit unit, String name, String address, String phoneNumber) {
+        this.unit = unit;
         this.name = name;
-        this.user = user;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }

@@ -17,19 +17,17 @@ public class Factory {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "unit_id")
+    @JoinColumn(
+            name = "unit_id", nullable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "unit_foreign_key"))
     private Unit unit;
 
     private String name;
     private String phoneNumber;
     private String address;
 
-    public Factory(User user, String name, String phoneNumber, String address) {
-        this.user = user;
+    public Factory(Unit unit, String name, String phoneNumber, String address) {
+        this.unit = unit;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;

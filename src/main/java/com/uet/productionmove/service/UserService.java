@@ -3,10 +3,8 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.exception.user.UsernameExistsException;
-import com.uet.productionmove.repository.DistributorRepository;
-import com.uet.productionmove.repository.FactoryRepository;
-import com.uet.productionmove.repository.UserRepository;
-import com.uet.productionmove.repository.WarrantyCenterRepository;
+import com.uet.productionmove.model.UserModel;
+import com.uet.productionmove.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +24,7 @@ public class UserService {
     private FactoryRepository factoryRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private UnitRepository unitRepository;
 
     @Autowired
     public UserService(
@@ -40,26 +39,32 @@ public class UserService {
         initAdminAccount();
     }
 
-    public User createUser(User user) throws InvalidArgumentException {
-        if (userRepository.existsByUsername(user.getUsername())) {
+    public User createUser(UserModel userModel) throws InvalidArgumentException {
+        if (userRepository.existsByUsername(userModel.getUsername())) {
             throw new InvalidArgumentException("User with username exists.");
         }
 
-        user.setId(null);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Optional<Unit> unitOptional = unitRepository.findById(userModel.getUnitId());
+        if (unitOptional.isEmpty()) {
+            throw new InvalidArgumentException("Unit with ID not exists.");
+        }
+
+        User user = new User();
+        user.setUnit(unitOptional.get());
+        user.setUsername(userModel.getUsername());
+        user.setRole(userModel.getRole());
+        user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         return userRepository.save(user);
     }
 
-    public User updateUser(User user) throws InvalidArgumentException {
-        Optional<User> userOptional = userRepository.findById(user.getId());
+    public User updateUser(UserModel userModel) throws InvalidArgumentException {
+        Optional<User> userOptional = userRepository.findById(UUID.fromString(userModel.getId()));
         if (userOptional.isEmpty()) {
             throw new InvalidArgumentException("User with ID not exists.");
         }
 
         User dbUser = userOptional.get();
-        dbUser.setUsername(user.getUsername());
-        dbUser.setPassword(user.getPassword());
-        dbUser.setRole(user.getRole());
+        dbUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
 
         return userRepository.save(dbUser);
     }
@@ -71,17 +76,6 @@ public class UserService {
         }
 
         User user = userOptional.get();
-//        switch (user.getRole()) {
-//            case UserType.DISTRIBUTOR:
-//                distributorRepository.deleteByUserId(user.getId());
-//                break;
-//            case UserType.MANUFACTURE:
-//                factoryRepository.deleteByUserId(user.getId());
-//                break;
-//            case UserType.WARRANTY_CENTER:
-//                warrantyCenterRepository.deleteByUserId(user.getId());
-//                break;
-//        }
         userRepository.deleteById(user.getId());
         return true;
     }

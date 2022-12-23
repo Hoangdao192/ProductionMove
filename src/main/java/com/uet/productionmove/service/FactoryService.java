@@ -1,7 +1,9 @@
 package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.Factory;
+import com.uet.productionmove.entity.Unit;
 import com.uet.productionmove.entity.User;
+import com.uet.productionmove.entity.UserType;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.FactoryModel;
 import com.uet.productionmove.repository.*;
@@ -23,37 +25,32 @@ public class FactoryService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private UnitRepository unitRepository;
+    @Autowired
     private UserService userService;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
-        Optional<User> userOptional = userRepository.findById(UUID.fromString(factoryModel.getUserId()));
-        if (userOptional.isPresent()) {
-            Factory factory = new Factory(
-                    userOptional.get(),
-                    factoryModel.getName(),
-                    factoryModel.getPhoneNumber(),
-                    factoryModel.getAddress()
-            );
-            return factoryRepository.save(factory);
-        } else {
-            throw new InvalidArgumentException("User with ID not exists");
-        }
+        Unit unit = new Unit();
+        unit.setType(UserType.MANUFACTURE);
+        unit = unitRepository.save(unit);
+
+        Factory factory = new Factory(
+                unit,
+                factoryModel.getName(),
+                factoryModel.getPhoneNumber(),
+                factoryModel.getAddress()
+        );
+        return factoryRepository.save(factory);
     }
 
     public Factory updateFactory(FactoryModel factoryModel) throws InvalidArgumentException {
-        Optional<User> userOptional = userRepository.findById(UUID.fromString(factoryModel.getUserId()));
         Optional<Factory> factoryOptional = factoryRepository.findById(factoryModel.getId());
-
-        if (userOptional.isEmpty()) {
-            throw new InvalidArgumentException("User with ID not exists.");
-        }
 
         if (factoryOptional.isEmpty()) {
             throw new InvalidArgumentException("Factory with ID not exists.");
         }
 
         Factory factory = factoryOptional.get();
-        factory.setUser(userOptional.get());
         factory.setName(factoryModel.getName());
         factory.setAddress(factoryModel.getAddress());
         factory.setPhoneNumber(factoryModel.getPhoneNumber());
@@ -82,16 +79,6 @@ public class FactoryService {
             throw new InvalidArgumentException("Factory with ID not exists.");
         }
         factoryRepository.deleteById(factoryId);
-        userService.deleteUser(factoryOptional.get().getUser().getId());
-    }
-
-    public void deleteFactoryByUserId(String userId) throws InvalidArgumentException {
-        Optional<Factory> factoryOptional = factoryRepository.findByUserId(UUID.fromString(userId));
-        if (factoryOptional.isEmpty()) {
-            throw new InvalidArgumentException("Factory with ID not exists.");
-        }
-        factoryRepository.deleteByUserId(UUID.fromString(userId));
-        userService.deleteUser(factoryOptional.get().getUser().getId());
     }
 
     @Autowired

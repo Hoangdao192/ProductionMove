@@ -6,6 +6,7 @@ import com.uet.productionmove.entity.User;
 import com.uet.productionmove.entity.WarrantyCenter;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.ResponseModel;
+import com.uet.productionmove.model.UserModel;
 import com.uet.productionmove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,17 +28,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path = "create")
-    public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody User user)
+    public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody UserModel userModel)
         throws InvalidArgumentException {
 
-        user = userService.createUser(user);
+        User user = userService.createUser(userModel);
         return ResponseEntity.ok(Map.of("message", "Create user successful",
                 "content" , Map.of("user", user)));
     }
 
     @PostMapping(path = "update")
-    public Object updateAccount(@RequestBody @Valid User user) throws InvalidArgumentException {
-        user = userService.updateUser(user);
+    public Object updateAccount(@RequestBody @Valid UserModel userModel) throws InvalidArgumentException {
+        User user = userService.updateUser(userModel);
         return ResponseEntity.ok(Map.of("message", "Update user successful",
                 "content" , Map.of("user", user)));
     }

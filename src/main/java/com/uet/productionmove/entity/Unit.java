@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +25,16 @@ public class Unit {
     @RoleConstraint
     @Column(nullable = false)
     private String type;
+
+    @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
+    private Factory factory;
+
+    @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
+    private Distributor distributor;
+
+    @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
+    private WarrantyCenter warrantyCenter;
+
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
+    private List<User> users;
 }
