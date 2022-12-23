@@ -3,10 +3,10 @@
     flex-direction: column;
     position: relative;
     padding-top: 1rem;
-    min-width: 15rem;
+    min-width: 17rem;
     transition:  all 300ms ease;
     padding: 2rem;
-    background-color: white;
+    background-color: #f9faf5;
 }
 
 .Sidebar::after {
@@ -17,7 +17,7 @@
     content: " ";
     height: 90%;
     width: 1px;
-    background-color: gray;
+    background-color: #edeee9;
 }
 
 .logo {
@@ -101,6 +101,7 @@
 .active .head {
     /* background: var(--activeItem); */
     background-color: #f6f6f6;
+    font-weight: bold;
 }
 
 .active .dropdown {

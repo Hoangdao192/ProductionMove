@@ -6,7 +6,7 @@ import { Link, redirect, useNavigate } from 'react-router-dom';
 // import { SidebarData } from '../Data/Data';
 // import {UilSignOutAlt} from '@iconscout/react-unicons';
 
-const Sidebar = ({ itemList }) => {
+const Sidebar = ({ itemList, className }) => {
 	const [selected, setSeclected] = useState(0)
     const [selectedChild, setSeclectedChild] = useState(0);
 
@@ -32,7 +32,7 @@ const Sidebar = ({ itemList }) => {
     };
 
 	return (
-		<div className={style.Sidebar}>
+		<div className={`${style.Sidebar} ${className}`}>
 			{/* Logo */}
 			<div className={style.logo}>
 				<img src={Logo}  alt="Logo"/>
@@ -57,6 +57,7 @@ const Sidebar = ({ itemList }) => {
 											item.children.map((child, index) => {
 												return (
                                                     <Link to={child.action}
+                                            
                                                         className={selectedChild === index ? style.activeChild : ""}
                                                         onClick={()=>setSeclectedChild(index)}
                                                     >{child.heading}</Link>

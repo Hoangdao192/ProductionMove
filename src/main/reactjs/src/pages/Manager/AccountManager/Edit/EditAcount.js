@@ -18,6 +18,9 @@ import ReactModal from "react-modal";
 export default function EditAcount(props) {
     const { account } = useLocation().state;
     const [userData, setUserData] = useState({});
+    const [username, setUsername] = useState("");
+    const [address, setAddress] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
 
     useEffect(() => {
         /**Load user data */

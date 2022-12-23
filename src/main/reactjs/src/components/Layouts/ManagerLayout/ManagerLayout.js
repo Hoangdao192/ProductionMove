@@ -7,6 +7,8 @@ import {
     UilUser,
     UilPackage,
     UilChart,
+    UilSignOutAlt,
+    UilBuilding
 } from "@iconscout/react-unicons";
 
 function ManagerLayout ({ children }) {
@@ -19,6 +21,20 @@ function ManagerLayout ({ children }) {
         {
             icon: UilClipboardAlt,
             heading: "Orders"
+        },
+        {
+            icon: UilBuilding,
+            heading: "Đơn vị",
+            children: [
+                {
+                    heading: "Tạo mới",
+                    action: "/manager/unit/create"
+                },
+                {
+                    heading: "Quản lý đơn vị",
+                    action: ""
+                }
+            ]
         },
         {
             icon: UilUser,
@@ -51,12 +67,16 @@ function ManagerLayout ({ children }) {
         {
             icon: UilChart,
             heading: "Analytics"
-        },  
+        },
+        {
+            icon: UilSignOutAlt,
+            heading: "Đăng xuất"
+        }
     ];
 
     return (
         <div className={style.container}>
-            <Sidebar itemList={itemList}/>
+            <Sidebar className={style.sideBar} itemList={itemList}/>
             <div className={style.main}>
                 {children}
             </div>
