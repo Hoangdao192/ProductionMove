@@ -46,12 +46,6 @@ public class FactoryController {
         return ResponseEntity.ok(factory);
     }
 
-    @GetMapping(path = "get", params = "userId")
-    public ResponseEntity<Factory> getFactoryByUserId(@RequestParam String userId) throws InvalidArgumentException {
-        Factory factory = factoryService.getFactoryByUserId(userId);
-        return ResponseEntity.ok(factory);
-    }
-
     @DeleteMapping(path = "delete")
     public ResponseEntity<Map<String, Object>> deleteFactory(@RequestParam Long factoryId)
             throws InvalidArgumentException {

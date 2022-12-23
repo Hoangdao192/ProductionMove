@@ -65,14 +65,6 @@ public class FactoryService {
         return factoryOptional.get();
     }
 
-    public Factory getFactoryByUserId(String userId) throws InvalidArgumentException {
-        Optional<Factory> factoryOptional = factoryRepository.findByUserId(UUID.fromString(userId));
-        if (factoryOptional.isEmpty()) {
-            throw new InvalidArgumentException("Factory with User ID not exists.");
-        }
-        return factoryOptional.get();
-    }
-
     public void deleteFactoryById(Long factoryId) throws InvalidArgumentException {
         Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
         if (factoryOptional.isEmpty()) {

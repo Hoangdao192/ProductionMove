@@ -7,7 +7,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface DistributorRepository extends JpaRepository<Distributor, Long> {
-    Optional<Distributor> findByUserId(UUID userId);
-
-    void deleteByUserId(UUID userId);
 }

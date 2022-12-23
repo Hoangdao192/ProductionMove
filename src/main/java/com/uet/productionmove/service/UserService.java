@@ -24,18 +24,21 @@ public class UserService {
     private FactoryRepository factoryRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+//    @Autowired
     private UnitRepository unitRepository;
 
     @Autowired
     public UserService(
             DistributorRepository distributorRepository, WarrantyCenterRepository warrantyCenterRepository,
             FactoryRepository factoryRepository, UserRepository userRepository,
+            UnitRepository unitRepository,
             PasswordEncoder passwordEncoder) {
         this.distributorRepository = distributorRepository;
         this.warrantyCenterRepository = warrantyCenterRepository;
         this.factoryRepository = factoryRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.unitRepository = unitRepository;
         initAdminAccount();
     }
 
@@ -90,7 +93,12 @@ public class UserService {
 
     private void initAdminAccount() {
         if (userRepository.findByUsername("admin").isEmpty()) {
+            Unit unit = new Unit();
+            unit.setType("Admin");
+            unit = unitRepository.save(unit);
+
             User user = new User();
+            user.setUnit(unit);
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("admin"));
             user.setRole("Admin");
