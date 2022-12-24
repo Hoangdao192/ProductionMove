@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,6 +73,20 @@ public class FactoryService {
             throw new InvalidArgumentException("Factory with ID not exists.");
         }
         factoryRepository.deleteById(factoryId);
+    }
+
+    public List<FactoryModel> getAllFactory() {
+        List<FactoryModel> factoryModels = new ArrayList<>();
+        factoryRepository.findAll().forEach(factory -> {
+            FactoryModel factoryModel = new FactoryModel();
+            factoryModel.setId(factory.getId());
+            factoryModel.setUnitId(factory.getUnit().getId());
+            factoryModel.setName(factory.getName());
+            factoryModel.setAddress(factory.getAddress());
+            factoryModel.setPhoneNumber(factory.getPhoneNumber());
+            factoryModels.add(factoryModel);
+        });
+        return factoryModels;
     }
 
     @Autowired

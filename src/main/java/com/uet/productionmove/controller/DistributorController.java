@@ -6,12 +6,10 @@ import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.service.DistributorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,6 +36,11 @@ public class DistributorController {
         return ResponseEntity.ok().body(Map.of(
                 "message", "Update distributor successful",
                 "distributor", distributor));
+    }
+
+    @GetMapping(path = "/list")
+    public ResponseEntity<List<DistributorModel>> getAllDistributor() {
+        return ResponseEntity.ok(distributorService.getAllDistributor());
     }
 
     @Autowired

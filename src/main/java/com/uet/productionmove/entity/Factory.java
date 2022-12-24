@@ -1,5 +1,6 @@
 package com.uet.productionmove.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class Factory {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     @JoinColumn(
             name = "unit_id", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "unit_foreign_key"))

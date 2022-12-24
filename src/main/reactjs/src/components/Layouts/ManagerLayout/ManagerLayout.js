@@ -32,7 +32,7 @@ function ManagerLayout ({ children }) {
                 },
                 {
                     heading: "Quản lý đơn vị",
-                    action: ""
+                    action: "/manager/unit/list"
                 }
             ]
         },

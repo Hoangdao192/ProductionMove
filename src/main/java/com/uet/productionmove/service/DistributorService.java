@@ -12,6 +12,8 @@ import com.uet.productionmove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,6 +54,21 @@ public class DistributorService {
         distributor.setAddress(distributorModel.getAddress());
         distributor.setPhoneNumber(distributorModel.getPhoneNumber());
         return distributorRepository.save(distributor);
+    }
+
+    public List<DistributorModel> getAllDistributor() {
+        List<Distributor> distributors = distributorRepository.findAll();
+        List<DistributorModel> distributorModels = new ArrayList<>();
+        distributors.forEach(distributor -> {
+            DistributorModel distributorModel = new DistributorModel();
+            distributorModel.setId(distributor.getId());
+            distributorModel.setUnitId(distributor.getUnit().getId());
+            distributorModel.setName(distributor.getName());
+            distributorModel.setAddress(distributor.getAddress());
+            distributorModel.setPhoneNumber(distributor.getPhoneNumber());
+            distributorModels.add(distributorModel);
+        });
+        return distributorModels;
     }
 
     @Autowired

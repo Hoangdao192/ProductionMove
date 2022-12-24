@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -44,6 +45,11 @@ public class FactoryController {
     public ResponseEntity<Factory> getFactoryById(@RequestParam Long factoryId) throws InvalidArgumentException {
         Factory factory = factoryService.getFactoryById(factoryId);
         return ResponseEntity.ok(factory);
+    }
+
+    @GetMapping(path = "list")
+    public ResponseEntity<List<FactoryModel>> getAllFactory() {
+        return ResponseEntity.ok(factoryService.getAllFactory());
     }
 
     @DeleteMapping(path = "delete")

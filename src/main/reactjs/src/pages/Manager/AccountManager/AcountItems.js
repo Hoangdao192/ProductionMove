@@ -47,11 +47,15 @@ const acounts = [
 ];
 
 const typeAccounts = [
-    { key: "Manufacture", value: "Nhà sản xuất"},
-    { key: "Admin", value: "Ban quản lý"}
+    { key: "Manufacture", value: "Cơ sở sản xuất"},
+    { key: "Admin", value: "Ban quản lý"},
+    { key: "Distributor", value: "Đại lý"},
+    { key: "Warranty center", value: "Trung tâm bảo hành"}
 ];
-typeAccounts["Manufacture"] = "Nhà sản xuất";
+typeAccounts["Manufacture"] = "Cơ sở sản xuất";
 typeAccounts["Admin"] = "Ban quản lý";
+typeAccounts["Distributor"] = "Đại lý";
+typeAccounts["Warranty center"] = "Trung tâm bảo hành";
 
 
 export { acounts, typeAccounts };

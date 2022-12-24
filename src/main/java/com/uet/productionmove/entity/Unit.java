@@ -1,5 +1,7 @@
 package com.uet.productionmove.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uet.productionmove.validator.RoleConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,15 +28,19 @@ public class Unit {
     @Column(nullable = false)
     private String type;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
     private Factory factory;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
     private Distributor distributor;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
     private WarrantyCenter warrantyCenter;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     private List<User> users;
 }

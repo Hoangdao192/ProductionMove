@@ -1,5 +1,6 @@
 package com.uet.productionmove.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.uet.productionmove.validator.UniqueUsername;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,6 +46,7 @@ public class User {
     private String role;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
+    @JsonBackReference
     @JoinColumn(
             name = "unit_id", updatable = false, nullable = false,
             foreignKey = @ForeignKey(name = "unit_foreign_key")

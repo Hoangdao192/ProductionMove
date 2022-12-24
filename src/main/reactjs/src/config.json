@@ -23,6 +23,9 @@
                 },
                 "get" : {
                     "url" : "http://localhost:5000/api/distributor/get"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/distributor/list"
                 }
             },
             "factory" : {
@@ -34,6 +37,9 @@
                 },
                 "get" : {
                     "url" : "http://localhost:5000/api/factory/get"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/factory/list"
                 }
             },
             "warranty" : {
@@ -45,6 +51,9 @@
                 },
                 "get" : {
                     "url" : "http://localhost:5000/api/warranty/get"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/warranty/list"
                 }
             }
         }
