@@ -1,0 +1,123 @@
+.container {
+    width: 80%;
+    max-width: 50rem;
+    margin: 30px auto;
+    padding: 15px 10px;
+    border-radius: 0.75rem;
+    background-color: white;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -70%);
+    display: inline-block;
+}
+
+.title {
+    text-align: center;
+}
+
+.form {
+    width: 100%;
+    margin: 0 1rem;
+    /* border: 1px solid black; */
+}
+
+.form input::placeholder {
+    opacity: 0.5;
+}
+
+.form input:focus {
+    border: 2px solid black;
+}
+
+.form>div {
+    display: flex;
+    /* border: 1px solid black; */
+    flex-direction: column;
+}
+
+.form>div>div {
+    display: flex;
+    padding: 10px 5%;
+    align-items: center;
+}
+
+.form>div label {
+    min-width: 25%;
+    padding-right: 2rem;
+}
+
+.form>div input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+    transition: 0.3s;
+}
+
+.form>div select {
+    flex: 1;
+    background-color: white;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+}
+
+.form select>option {
+    padding: 8px 20px;
+    color: black;
+}
+
+.submitButton {
+    padding: 10px 5%;
+    display: flex;
+    /* border: 1px solid black; */
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.submitButton button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    cursor: pointer;
+    padding: 8px 20px;
+    width: 60%;
+    border-radius: 5px;
+    border: none;
+    background-color: #d3f36b;
+}
+
+.submitButton button .icon {
+    transition: inherit;
+    margin-right: 1rem;
+    width: 1rem;
+}
+
+.submitButton button:hover {
+    background-color: #fed337;
+
+    .icon {
+        transform: rotate(90deg);
+    }
+
+    span {
+        font-weight: bold;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    .submitButton button {
+        display: block;
+    }
+
+    .form>div>div {
+        flex-direction: column;
+    }
+
+    .form>div>div label {
+        margin-bottom: 5px;
+        width: 50%;
+    }
+}

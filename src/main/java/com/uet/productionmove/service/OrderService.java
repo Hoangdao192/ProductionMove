@@ -14,6 +14,7 @@ import com.uet.productionmove.repository.ProductLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,26 @@ public class OrderService {
         order.setId(null);
         order.setOrderDate(orderModel.getOrderDate());
         order.setCustomer(customerOptional.get());
-        return orderRepository.save(order);
+        order = orderRepository.save(order);
+
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (int i = 0; i < orderModel.getOrderDetailList().size(); ++i) {
+            OrderDetailModel orderDetailModel = orderModel.getOrderDetailList().get(i);
+            Optional<ProductLine> productLineOptional = productLineRepository
+                    .findById(orderDetailModel.getProductLineId());
+            if (productLineOptional.isEmpty()) {
+                throw new InvalidArgumentException("Product line with ID not exists.");
+            }
+
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setProductLine(productLineOptional.get());
+            orderDetail.setQuantity(orderDetailModel.getQuantity());
+            orderDetail.setOrder(order);
+            orderDetail = orderDetailRepository.save(orderDetail);
+            orderDetails.add(orderDetail);
+        }
+        order.setOrderDetails(orderDetails);
+        return order;
     }
 
     public Order updateOrder(OrderModel orderModel) throws InvalidArgumentException {
@@ -60,7 +80,6 @@ public class OrderService {
 
     public void deleteOrder(Long orderId) throws InvalidArgumentException {
         if (orderRepository.existsById(orderId)) {
-            orderDetailRepository.deleteByOrderId(orderId);
             orderRepository.deleteById(orderId);
         } else {
             throw new InvalidArgumentException("Order with ID not exists.");
@@ -99,8 +118,7 @@ public class OrderService {
     public OrderDetail createOrderDetail(OrderDetailModel orderDetailModel)
             throws InvalidArgumentException {
         Optional<Order> orderOptional = orderRepository.findById(orderDetailModel.getOrderId());
-        Optional<ProductLine> productLineOptional =
-                productLineRepository.findById(orderDetailModel.getProductLineId());
+        Optional<ProductLine> productLineOptional = productLineRepository.findById(orderDetailModel.getProductLineId());
         if (orderOptional.isEmpty()) {
             throw new InvalidArgumentException("Order with ID not exists.");
         }
@@ -108,8 +126,7 @@ public class OrderService {
             throw new InvalidArgumentException("Product line with ID not exists.");
         }
         if (orderDetailRepository.existsByOrderIdAndProductLineId(
-                orderDetailModel.getOrderId(), orderDetailModel.getProductLineId()
-        )) {
+                orderDetailModel.getOrderId(), orderDetailModel.getProductLineId())) {
             throw new InvalidArgumentException("Order detail with Order and Product line exists.");
         }
 
@@ -123,11 +140,9 @@ public class OrderService {
 
     public OrderDetail updateOrderDetail(OrderDetailModel orderDetailModel)
             throws InvalidArgumentException {
-        Optional<OrderDetail> orderDetailOptional =
-                orderDetailRepository.findById(orderDetailModel.getId());
+        Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findById(orderDetailModel.getId());
         Optional<Order> orderOptional = orderRepository.findById(orderDetailModel.getOrderId());
-        Optional<ProductLine> productLineOptional =
-                productLineRepository.findById(orderDetailModel.getProductLineId());
+        Optional<ProductLine> productLineOptional = productLineRepository.findById(orderDetailModel.getProductLineId());
         if (orderDetailOptional.isEmpty()) {
             throw new InvalidArgumentException("Order detail with ID not exists.");
         }
@@ -137,10 +152,9 @@ public class OrderService {
         if (productLineOptional.isEmpty()) {
             throw new InvalidArgumentException("Product line with ID not exists.");
         }
-        Optional<OrderDetail> orderDetailByOrderProductLineOptional =
-                orderDetailRepository.getOrderDetailByOrderIdAndProductLineId(
-                orderDetailModel.getOrderId(), orderDetailModel.getProductLineId()
-        );
+        Optional<OrderDetail> orderDetailByOrderProductLineOptional = orderDetailRepository
+                .getOrderDetailByOrderIdAndProductLineId(
+                        orderDetailModel.getOrderId(), orderDetailModel.getProductLineId());
 
         if (orderDetailByOrderProductLineOptional.isPresent() &&
                 orderDetailOptional.get().getId() != orderDetailByOrderProductLineOptional.get().getId()) {

@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 public class OrderDetailModel {
     private Long id;
 
-    @NotNull(message = "orderId cannot be null.")
     private Long orderId;
 
     @NotNull(message = "productLineId cannot be null.")

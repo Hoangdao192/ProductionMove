@@ -16,7 +16,8 @@ import { useLocation } from "react-router-dom";
 import ReactModal from "react-modal";
 
 export default function EditAcount(props) {
-    const { account } = useLocation().state;
+    // const { account } = useLocation().state;
+    let account = {}
     const [userData, setUserData] = useState({});
     const [username, setUsername] = useState("");
     const [address, setAddress] = useState("");

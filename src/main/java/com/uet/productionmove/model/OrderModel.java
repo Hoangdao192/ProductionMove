@@ -1,11 +1,15 @@
 package com.uet.productionmove.model;
 
+import com.uet.productionmove.validator.NotEmptyList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +22,9 @@ public class OrderModel {
 
     @NotNull(message = "customerId cannot be null")
     private Long customerId;
+
+    @NotNull(message = "order details cannot be null.")
+    @Valid
+    @NotEmptyList
+    private List<OrderDetailModel> orderDetailList;
 }

@@ -77,7 +77,7 @@ const Sidebar = ({ itemList, className }) => {
                                                 item.children.map((child, index) => {
                                                     return (
                                                         <Link to={child.action}
-                                                
+                                                            key={index}
                                                             className={selectedChild === index ? style.activeChild : ""}
                                                             onClick={()=>setSeclectedChild(index)}
                                                         >{child.heading}</Link>
@@ -119,7 +119,7 @@ const Sidebar = ({ itemList, className }) => {
                                                 item.children.map((child, index) => {
                                                     return (
                                                         <Link to={child.action}
-                                                
+                                                            key={index}
                                                             className={selectedChild === index ? style.activeChild : ""}
                                                             onClick={()=>setSeclectedChild(index)}
                                                         >{child.heading}</Link>

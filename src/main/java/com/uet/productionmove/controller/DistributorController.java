@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "/api/distributor")
 public class DistributorController {
 
@@ -24,8 +25,7 @@ public class DistributorController {
 
         Distributor distributor = distributorService.createDistributor(distributorModel);
         return ResponseEntity.ok(Map.of("message", "Create distributor successful",
-                    "distributor", distributor
-                ));
+                "distributor", distributor));
     }
 
     @PostMapping(path = "/update")
@@ -41,6 +41,15 @@ public class DistributorController {
     @GetMapping(path = "/list")
     public ResponseEntity<List<DistributorModel>> getAllDistributor() {
         return ResponseEntity.ok(distributorService.getAllDistributor());
+    }
+
+    @DeleteMapping(path = "delete")
+    public ResponseEntity<Map<String, Object>> deleteDistributor(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        distributorService.deleteDistributor(distributorId);
+        return ResponseEntity.ok(Map.of(
+                "message", "Delete warranty center successful.",
+                "content", Map.of("id", distributorId)));
     }
 
     @Autowired

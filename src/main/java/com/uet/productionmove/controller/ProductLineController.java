@@ -1,9 +1,16 @@
 package com.uet.productionmove.controller;
 
 import com.uet.productionmove.entity.ProductLine;
+import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.service.ProductLineService;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,24 +20,30 @@ public class ProductLineController {
     @Autowired
     private ProductLineService productLineService;
 
+    // @GetMapping(path = "/list")
+    // public Page<ProductLine> getAllProductLine(
+    // @RequestParam(defaultValue = "0") int page,
+    // @RequestParam(defaultValue = "10") int perPage
+    // ) {
+    // return productLineService.getAllProductLine(page, perPage);
+    // }
+
     @GetMapping(path = "/list")
-    public Page<ProductLine> getAllProductLine(
-            @RequestParam int page,
-            @RequestParam int perPage
-    ) {
-        return productLineService.getAllProductLine(page, perPage);
+    public ResponseEntity<List<ProductLine>> getAllProductLine() {
+        return ResponseEntity.ok(productLineService.getAllProductLine());
     }
 
     @PostMapping(path = "/create")
-    public String createProductLine(@RequestBody ProductLine productLine) {
-        productLineService.insertProductLine(productLine);
-        return "";
+    public ResponseEntity<ProductLine> createProductLine(@RequestBody @Valid ProductLine productLine)
+            throws InvalidArgumentException {
+        productLine = productLineService.createProductLine(productLine);
+        return ResponseEntity.ok(productLine);
     }
 
     @PostMapping(path = "/delete")
     public String deleteProductLine(@RequestParam Long productLineId) {
         productLineService.deleteProductLine(productLineId);
-//        System.out.println(productLineId);
+        // System.out.println(productLineId);
         return "";
     }
 

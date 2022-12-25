@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 @RequestMapping(path = "api/order")
 public class OrderController {
 
@@ -27,8 +28,7 @@ public class OrderController {
         Order order = orderService.createOrder(orderModel);
         return ResponseEntity.ok(
                 Map.of("message", "Create order successful",
-                "content", Map.of("order", order))
-        );
+                        "content", Map.of("order", order)));
     }
 
     @PostMapping(path = "update")
@@ -37,8 +37,7 @@ public class OrderController {
         Order order = orderService.updateOrder(orderModel);
         return ResponseEntity.ok(
                 Map.of("message", "Update order successful",
-                        "content", Map.of("order", order))
-        );
+                        "content", Map.of("order", order)));
     }
 
     @DeleteMapping(path = "delete/{orderId}")
@@ -47,8 +46,7 @@ public class OrderController {
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok(
                 Map.of("message", "Delete order successful",
-                        "content", Map.of("id", orderId))
-        );
+                        "content", Map.of("id", orderId)));
     }
 
     @GetMapping(path = "get")
@@ -57,17 +55,13 @@ public class OrderController {
         Order order = orderService.getOrder(orderId);
         return ResponseEntity.ok(
                 Map.of("message", "Get order successful",
-                        "content", Map.of("order", order))
-        );
+                        "content", Map.of("order", order)));
     }
 
     @GetMapping(path = "list")
-    public ResponseEntity<Map<String, Object>> getOrder() {
+    public ResponseEntity<List<Order>> getOrder() {
         List<Order> orders = orderService.getAllOrder();
-        return ResponseEntity.ok(
-                Map.of("message", "List order successful",
-                        "content", Map.of("orders", orders))
-        );
+        return ResponseEntity.ok(orders);
     }
 
     @PostMapping(path = "/detail/create")
@@ -76,19 +70,16 @@ public class OrderController {
         OrderDetail orderDetail = orderService.createOrderDetail(orderDetailModel);
         return ResponseEntity.ok(Map.of(
                 "message", "Create order detail successful",
-                "content", Map.of("orderDetail", orderDetail))
-        );
+                "content", Map.of("orderDetail", orderDetail)));
     }
 
     @PostMapping(path = "/detail/update")
     public ResponseEntity<Map<String, Object>> updateOrderDetail(
-            @RequestBody @Valid OrderDetailModel orderDetailModel
-    ) throws InvalidArgumentException {
+            @RequestBody @Valid OrderDetailModel orderDetailModel) throws InvalidArgumentException {
         OrderDetail orderDetail = orderService.updateOrderDetail(orderDetailModel);
         return ResponseEntity.ok(Map.of(
                 "message", "Update order detail successful",
-                "content", Map.of("orderDetail", orderDetail)
-        ));
+                "content", Map.of("orderDetail", orderDetail)));
     }
 
     @GetMapping(path = "/detail/get")
@@ -105,8 +96,7 @@ public class OrderController {
         return ResponseEntity.ok(Map.of(
                 "status", "success",
                 "message", "Delete order detail successful",
-                "content", Map.of("id", orderDetailId)
-        ));
+                "content", Map.of("id", orderDetailId)));
     }
 
     @Autowired

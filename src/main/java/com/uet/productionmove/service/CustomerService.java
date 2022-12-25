@@ -3,7 +3,6 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.Customer;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.repository.CustomerRepository;
-import com.uet.productionmove.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

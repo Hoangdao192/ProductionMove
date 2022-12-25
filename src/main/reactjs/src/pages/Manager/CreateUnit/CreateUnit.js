@@ -4,6 +4,7 @@ import { css, Input } from '@nextui-org/react'
 import { InputLabel, Select, MenuItem, FormControl } from '@mui/material'
 import { useState } from 'react'
 import config from '../../../config.json'
+import { typeAccounts } from '../AccountManager/AcountItems'
 
 export default function CreateUnit() {
 
@@ -115,7 +116,7 @@ export default function CreateUnit() {
                 </div>
                 <div>
                     <label htmlFor={style.nameInput}>
-                        Tên đơn vị
+                        Tên {data.type !== "None" ? typeAccounts[data.type] : "đơn vị"}
                     </label>
                     <input type="text" required
                         value={data.name}

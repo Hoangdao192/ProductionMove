@@ -1,7 +1,6 @@
 package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.Unit;
-import com.uet.productionmove.entity.User;
 import com.uet.productionmove.entity.UserType;
 import com.uet.productionmove.entity.WarrantyCenter;
 import com.uet.productionmove.exception.InvalidArgumentException;
@@ -12,13 +11,12 @@ import com.uet.productionmove.repository.WarrantyCenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class WarrantyCenterService {
-
 
     private WarrantyCenterRepository warrantyCenterRepository;
 
@@ -36,15 +34,14 @@ public class WarrantyCenterService {
                 unit,
                 warrantyCenterModel.getName(),
                 warrantyCenterModel.getPhoneNumber(),
-                warrantyCenterModel.getAddress()
-        );
+                warrantyCenterModel.getAddress());
         return warrantyCenterRepository.save(warrantyCenter);
     }
 
     public WarrantyCenter updateWarrantyCenter(WarrantyCenterModel warrantyCenterModel)
-        throws InvalidArgumentException {
-        Optional<WarrantyCenter> warrantyCenterOptional =
-                warrantyCenterRepository.findById(warrantyCenterModel.getId());
+            throws InvalidArgumentException {
+        Optional<WarrantyCenter> warrantyCenterOptional = warrantyCenterRepository
+                .findById(warrantyCenterModel.getId());
 
         if (warrantyCenterOptional.isEmpty()) {
             throw new InvalidArgumentException("Warranty center with ID not exists.");
@@ -55,6 +52,29 @@ public class WarrantyCenterService {
         warrantyCenter.setAddress(warrantyCenterModel.getAddress());
         warrantyCenter.setPhoneNumber(warrantyCenterModel.getPhoneNumber());
         return warrantyCenterRepository.save(warrantyCenter);
+    }
+
+    public void deleteWarrantyCenter(Long warrantyCenterId) throws InvalidArgumentException {
+        Optional<WarrantyCenter> warrantyCenterOptional = warrantyCenterRepository.findById(warrantyCenterId);
+        if (warrantyCenterOptional.isEmpty()) {
+            throw new InvalidArgumentException("Warranty center with ID not exists.");
+        }
+
+        warrantyCenterRepository.delete(warrantyCenterOptional.get());
+    }
+
+    public List<WarrantyCenterModel> getAllWarrantyCenter() {
+        List<WarrantyCenterModel> warrantyCenterModels = new ArrayList<>();
+        warrantyCenterRepository.findAll().forEach(warrantyCenter -> {
+            WarrantyCenterModel warrantyCenterModel = new WarrantyCenterModel();
+            warrantyCenterModel.setId(warrantyCenter.getId());
+            warrantyCenterModel.setUnitId(warrantyCenter.getUnit().getId());
+            warrantyCenterModel.setName(warrantyCenter.getName());
+            warrantyCenterModel.setAddress(warrantyCenter.getAddress());
+            warrantyCenterModel.setPhoneNumber(warrantyCenter.getPhoneNumber());
+            warrantyCenterModels.add(warrantyCenterModel);
+        });
+        return warrantyCenterModels;
     }
 
     @Autowired

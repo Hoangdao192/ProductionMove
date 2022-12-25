@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ProductLineRepository extends JpaRepository<ProductLine, Long> {
     @Override
     void deleteById(Long id);
+
+    boolean existsByProductName(String productLineName);
 }

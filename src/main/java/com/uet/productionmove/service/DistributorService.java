@@ -2,20 +2,17 @@ package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.Distributor;
 import com.uet.productionmove.entity.Unit;
-import com.uet.productionmove.entity.User;
 import com.uet.productionmove.entity.UserType;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.repository.DistributorRepository;
 import com.uet.productionmove.repository.UnitRepository;
-import com.uet.productionmove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class DistributorService {
@@ -35,8 +32,7 @@ public class DistributorService {
                 unit,
                 distributorModel.getName(),
                 distributorModel.getAddress(),
-                distributorModel.getPhoneNumber()
-        );
+                distributorModel.getPhoneNumber());
 
         return distributorRepository.save(distributor);
     }
@@ -69,6 +65,14 @@ public class DistributorService {
             distributorModels.add(distributorModel);
         });
         return distributorModels;
+    }
+
+    public void deleteDistributor(Long distributorId) throws InvalidArgumentException {
+        Optional<Distributor> distributorOptional = distributorRepository.findById(distributorId);
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with ID not exists.");
+        }
+        distributorRepository.delete(distributorOptional.get());
     }
 
     @Autowired

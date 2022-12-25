@@ -2,6 +2,33 @@
     "server" : {
         "url" : "http://localhost:5000",
         "api" : {
+            "productLine" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/product_line/create"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/product_line/delete"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/product_line/list"
+                }
+            },
+            "order" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/order/create"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/order/list"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/order/delete"
+                }
+            },
+            "customer" : {
+                "get" : {
+                    "url" : "http://localhost:5000/api/customer/get"
+                }
+            },
             "account" : {
                 "create" : {
                     "url" : "http://localhost:5000/api/account/create"
@@ -11,6 +38,9 @@
                 },
                 "get" : {
                     "url" : "http://localhost:5000/api/account/get"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/account/delete"
                 }
             },
             "distributor" : {
@@ -26,6 +56,9 @@
                 },
                 "list" : {
                     "url" : "http://localhost:5000/api/distributor/list"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/distributor/delete"
                 }
             },
             "factory" : {
@@ -40,6 +73,9 @@
                 },
                 "list" : {
                     "url" : "http://localhost:5000/api/factory/list"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/factory/delete"
                 }
             },
             "warranty" : {
@@ -54,6 +90,9 @@
                 },
                 "list" : {
                     "url" : "http://localhost:5000/api/warranty/list"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/warranty/delete"
                 }
             }
         }

@@ -1,0 +1,216 @@
+.form {
+    background-color: white;
+    display: inline-block;
+    padding: 1.5rem;
+    border-radius: 15px;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+
+
+.input {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+    transition: 0.3s;
+    width: 20rem;
+}
+
+.input:focus {
+    border: 2px solid black;
+}
+
+.label {
+    display: block;
+    padding: 10px;
+    padding-left: 0;
+    border-radius: 0.75rem;
+    // border: 2px solid gray;
+    margin-right: 1rem;
+}
+
+.orderDetailTitle {
+    margin-top: 2rem;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.addProductButton {
+    cursor: pointer;
+    padding: 0.4rem 1rem;
+    background-color: blueviolet;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+
+    .icon {
+        width: 1rem;
+        margin-right: 0.5rem;
+        transition: 0.3s;
+    }
+
+    &:hover {
+        background-color: blue;
+
+        .icon {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.addProduct {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    .input {
+        width: 10rem;
+    }
+
+    button {
+        height: fit-content;
+        align-self: flex-end;
+        padding: 0.4rem 1rem;
+        cursor: pointer;
+        background-color: blueviolet;
+        border: none;
+        border-radius: 5px;
+        position: relative;
+        bottom: 0.4rem;
+        color: white;
+
+        &:hover {
+            background-color: blue;
+        }
+    }
+}
+
+.select {
+    box-shadow: none;
+    background-color: white;
+    padding: 12px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+    width: max-content;
+}
+
+.table {
+    width: 100%;
+    border-collapse:collapse;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
+    margin-top: 1rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.table thead {
+    width: 100%;
+}
+
+.table thead tr {
+    
+    width: 100%;
+    color: black;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+}
+
+.table tr {
+    width: 100%;
+    text-align: center;
+}
+
+.table th,
+.table td {
+    padding: 20px 15px;
+    
+}
+
+.table tbody tr {
+    cursor: pointer;
+    border-bottom: 1px solid #dddddd;
+}
+
+.table tbody tr:last-of-type {
+    // border-bottom: 2px solid #009879;
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f6fb;
+    // font-weight: bold;
+    color: black;
+}
+
+.table tbody tr td button {
+    padding: 3px 15px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.table tbody tr td button:hover {
+    background-color: #d3f36b;
+}
+
+.createOrderButton {
+    cursor: pointer;
+    padding: 0.4rem 1rem;
+    background-color: var(--secondaryColor);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+
+    .icon {
+        width: 1rem;
+        margin-right: 0.5rem;
+        transition: 0.3s;
+    }
+
+    &:hover {
+        background-color: var(--secondaryColorDarker);
+
+        .icon {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.customerInfo {
+    margin-top: 1rem;
+    display: none;
+
+    span {
+        display: inline-block;
+        width: 8rem;
+        font-weight: 600;
+    }
+}
+
+.customerInfo.show {
+    display: block !important;
+}
+
+.show{}

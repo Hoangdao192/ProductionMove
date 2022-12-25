@@ -3,6 +3,8 @@ import { typeAccounts } from '../AccountManager/AcountItems'
 import { useState } from 'react'
 import config from '../../../config.json'
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useReducer } from 'react';
 
 export default function ShowUnit () {
 
@@ -10,6 +12,7 @@ export default function ShowUnit () {
     const [distributors, setDistributors] = useState([]);
     const [warrantyCenters, setwarrantyCenters] = useState([]);
     const [unitType, setUnitType] = useState('Manufacture');
+    const [ignore, forceUpdate] = useReducer(x => x + 1, 0);
 
     function onUnitTypeSelect(e) {
         setUnitType(e.target.value)
@@ -44,6 +47,41 @@ export default function ShowUnit () {
         })
     }
 
+    function deleteUnit(unit) {
+        let url = "";
+
+        let formData = new FormData();
+        switch(unitType) {
+            case 'Manufacture': 
+                url = config.server.api.factory.delete.url; 
+                formData.append('factoryId', unit.id);
+                break;
+            case 'Distributor':
+                url = config.server.api.distributor.delete.url;
+                formData.append('distributorId', unit.id);
+                break;
+            case 'Warranty':
+                url = config.server.api.warranty.delete.url;
+                formData.append('warrantyCenterId', unit.id);
+                break;
+        }
+
+        if (url !== "") {
+
+            fetch(url, {
+                method: "DELETE",
+                body: formData
+            }).then((response) => {
+                if (response.status == 200) {
+                    forceUpdate();
+                }
+                return response.text();
+            }).then((response) => {
+                console.log(response)
+            })
+        }
+    }
+
     useEffect(() => {
 
         let url = "";
@@ -70,7 +108,7 @@ export default function ShowUnit () {
             console.log(data)
             if (data != undefined) setFactories(data)
         })
-    },[])
+    },[ignore])
 
     let Thead = () => {
         return (
@@ -93,15 +131,19 @@ export default function ShowUnit () {
                 {
                     factories.map((factory, index) => {
                         return (
-                            <tr>
+                            <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{factory.id}</td>
                                 <td>{factory.name}</td>
                                 <td>{factory.address}</td>
                                 <td>{factory.phoneNumber}</td>
                                 <td>
-                                    <button className={style.editButton}>Sửa</button>
-                                    <button className={style.deleteButton}>Xóa</button>
+                                    <Link to="/manager/unit/edit" state={{unit: {...factory, type: unitType}}}>
+                                        <button className={style.editButton}>Sửa</button>
+                                    </Link>
+                                    <button className={style.deleteButton} onClick={(e) => {
+                                        deleteUnit(factory)
+                                    }}>Xóa</button>
                                 </td>
                             </tr>
                         )

@@ -20,7 +20,17 @@ function ManagerLayout ({ children }) {
         },
         {
             icon: UilClipboardAlt,
-            heading: "Orders"
+            heading: "Đơn hàng",
+            children: [
+                {
+                    heading: "Tạo mới",
+                    action: "/distributor/order/create"
+                },
+                {
+                    heading: "Quản lý đơn hàng",
+                    action: "/distributor/order/list"
+                }
+            ]
         },
         {
             icon: UilBuilding,
@@ -56,11 +66,11 @@ function ManagerLayout ({ children }) {
             children: [
                 { 
                     heading: "Tạo mới", 
-                    action: "b"
+                    action: "/manager/product_line/create"
                 },
                 { 
                     heading: "Xem danh sách", 
-                    action: "b"
+                    action: "/manager/product_line/list"
                 }
             ]
         },
