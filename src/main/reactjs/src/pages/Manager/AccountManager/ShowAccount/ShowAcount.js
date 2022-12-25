@@ -7,6 +7,8 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import userAvatar from "./user.jpg";
 import config from "../../../../config.json";
 
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+
 import EditAcount from "../Edit/EditAcount";
 import { useReducer } from "react";
 
@@ -49,37 +51,41 @@ function ShowAcount() {
             <p className={style.title}>
                 Danh sách tài khoản
             </p>
-            <table className={style.table}>
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>ID</th>
-                        <th>Tên tài khoản</th>
-                        <th>Loại tài khoản</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
-                    users.map((user, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{user.id}</td>
-                                <td>{user.username}</td>
-                                <td>{typeAccounts[user.role]}</td>
-                                <td>
+
+            <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                    <TableRow>
+                        <TableCell align="center">STT</TableCell>
+                        <TableCell align="center">Mã tài khoản</TableCell>
+                        <TableCell align="center">Tên tài khoản</TableCell>
+                        <TableCell align="center">Loại tài khoản</TableCell>
+                        <TableCell align="center">Tùy chọn</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {users.map((user, index) => (
+                        <TableRow
+                            key={index}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                            <TableCell align="center">{index}</TableCell>
+                            <TableCell align="center">{user.id}</TableCell>
+                            <TableCell align="center">{user.username}</TableCell>
+                            <TableCell align="center">{typeAccounts[user.role]}</TableCell>
+                            <TableCell align="center">
+                                <div className={style.action}>
                                     <Link to="/manager/account/edit" state={{user: user}}>
                                         <button className={style.editButton}>Sửa</button>
                                     </Link>
                                     <button className={style.deleteButton} onClick={(e) => deleteAccount(user.id)}>Xóa</button>
-                                </td>
-                            </tr>
-                        )
-                    })
-                }
-                </tbody>
-            </table>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 }

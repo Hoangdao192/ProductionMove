@@ -1,3 +1,12 @@
+.showOrder {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+}
+
 .table {
     width: 100%;
     border-collapse:collapse;
@@ -54,18 +63,18 @@
     color: black;
 }
 
-.table tbody tr td button {
+.action button {
     padding: 3px 15px;
     border-radius: 15px;
     border: none;
     cursor: pointer;
 }
 
-.table tbody tr td button:hover {
+.action button:hover {
     background-color: #d3f36b;
 }
 
-.table tbody tr .action {
+.action {
     display: flex;
     justify-content: center;
     gap: 0.5rem;

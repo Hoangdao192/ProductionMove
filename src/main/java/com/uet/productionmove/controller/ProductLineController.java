@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 @RequestMapping(path = "/api/product_line")
 public class ProductLineController {
 
@@ -40,8 +41,8 @@ public class ProductLineController {
         return ResponseEntity.ok(productLine);
     }
 
-    @PostMapping(path = "/delete")
-    public String deleteProductLine(@RequestParam Long productLineId) {
+    @DeleteMapping(path = "/delete/{productLineId}")
+    public String deleteProductLine(@PathVariable Long productLineId) {
         productLineService.deleteProductLine(productLineId);
         // System.out.println(productLineId);
         return "";

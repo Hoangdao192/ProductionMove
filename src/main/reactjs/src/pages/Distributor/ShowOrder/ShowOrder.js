@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import style from './ShowOrder.module.scss';
 import config from '../../../config.json';
 import { useReducer } from 'react';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 
 export default function ShowOrder() {
     const [orders, setOrders] = useState([]);
@@ -45,41 +46,43 @@ export default function ShowOrder() {
             <p className={style.title}>
                 Danh sách đơn hàng
             </p>
-            <table className={style.table}>
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Mã đơn hàng</th>
-                        <th>Ngày mua hàng</th>
-                        <th>Mã khách hàng</th>
-                        <th>Tên khách hàng</th>
-                        <th>Tùy chọn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        orders.map((order, index) => {
-                            return (
-                                <tr>
-                                    <td>{index}</td>
-                                    <td>{order.id}</td>
-                                    <td>{formatDate(order.orderDate)}</td>
-                                    <td>{order.customer.id}</td>
-                                    <td>{order.customer.firstName + " " + order.customer.lastName}</td>
-                                    <td className={style.action}>
-                                        {/* <Link to="/manager/unit/edit" state={{unit: {...factory, type: unitType}}}>
-                                            <button className={style.editButton}>Sửa</button>
-                                        </Link> */}
-                                        <button className={style.button}>Sửa</button>
-                                        <button onClick={(e) => sendDeleteOrderRequest(order.id)} 
-                                            className={style.button}>Xóa</button>
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
+
+            <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                    <TableRow>
+                        <TableCell align="center">STT</TableCell>
+                        <TableCell align="center">Mã đơn hàng</TableCell>
+                        <TableCell align="center">Ngày mua hàng</TableCell>
+                        <TableCell align="center">Mã khách hàng</TableCell>
+                        <TableCell align="center">Tên khách hàng</TableCell>
+                        <TableCell align="center">Tùy chọn</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {orders.map((order, index) => (
+                        <TableRow
+                            key={index}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                            <TableCell align="center">{index}</TableCell>
+                            <TableCell align="center">{order.id}</TableCell>
+                            <TableCell align="center">{formatDate(order.orderDate)}</TableCell>
+                            <TableCell align="center">{order.customer.id}</TableCell>
+                            <TableCell align="center">{order.customer.firstName + " " + order.customer.lastName}</TableCell>
+                            <TableCell align="center">
+                                <div className={style.action}>
+                                    <button className={style.button}>Xem chi tiết</button>
+                                    <button className={style.button}>Sửa</button>
+                                    <button onClick={(e) => sendDeleteOrderRequest(order.id)} 
+                                        className={style.button}>Xóa</button>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     )
 }

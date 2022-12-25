@@ -43,7 +43,7 @@ export default function ListProductLine() {
         <div className={style.showProductLine}>
             <p className={style.title}>Danh sách dòng sản phẩm</p>
             
-            <TableContainer component={Paper}>
+            <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
@@ -77,37 +77,6 @@ export default function ListProductLine() {
                     </TableBody>
                 </Table>
             </TableContainer>
-
-            <table className={style.table}>
-                <thead>
-                    <tr>
-                        <td>STT</td>
-                        <td>Mã dòng sản phẩm</td>
-                        <td>Tên dòng sản phẩm</td>
-                        <td>Tùy chọn</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        productLines.map((productLine, index) => {
-                            return (
-                                <tr>
-                                    <td>{index}</td>
-                                    <td>{productLine.id}</td>
-                                    <td>{productLine.productName}</td>
-                                    <td className={style.action}>
-                                        <Link to={'/manager/product_line/show'} state={{productLine: productLine}}>
-                                            <button>Xem chi tiết</button>
-                                        </Link>
-                                        <button>Sửa</button>
-                                        <button onClick={(e) => sendDeleteProductLineRequest(productLine.id)}>Xóa</button>
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
         </div>
     )
 }

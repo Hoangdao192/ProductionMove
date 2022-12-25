@@ -1,9 +1,10 @@
 .showAccount {
+    width: 100%;
+    display: inline-block;
     position: relative;
-    width: 90%;
-    left: 50%;
-    top: 10%;
-    transform: translateX(-50%);
+    background-color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
 }
 
 .table {
@@ -62,17 +63,19 @@
     color: black;
 }
 
-.table tbody tr td button {
+.action button {
     padding: 3px 15px;
     border-radius: 15px;
     border: none;
     cursor: pointer;
 }
 
-.table tbody tr td button:hover {
+.action button:hover {
     background-color: #d3f36b;
 }
 
-.deleteButton {
-    margin-left: 0.5rem;
+.action {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
 }

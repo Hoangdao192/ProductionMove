@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useReducer } from 'react';
 
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+
 export default function ShowUnit () {
 
     const [factories, setFactories] = useState([]);
@@ -110,55 +112,6 @@ export default function ShowUnit () {
         })
     },[ignore])
 
-    let Thead = () => {
-        return (
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>ID</th>
-                    <th>Tên {typeAccounts[unitType]}</th>
-                    <th>Địa chỉ</th>
-                    <th>Số điện thoại</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-        )
-    }
-
-    let Tbody = () => {
-        return (
-            <tbody>
-                {
-                    factories.map((factory, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{factory.id}</td>
-                                <td>{factory.name}</td>
-                                <td>{factory.address}</td>
-                                <td>{factory.phoneNumber}</td>
-                                <td>
-                                    <Link to="/manager/unit/edit" state={{unit: {...factory, type: unitType}}}>
-                                        <button className={style.editButton}>Sửa</button>
-                                    </Link>
-                                    <button className={style.deleteButton} onClick={(e) => {
-                                        deleteUnit(factory)
-                                    }}>Xóa</button>
-                                </td>
-                            </tr>
-                        )
-                    })
-                }
-            </tbody>
-        )
-    }
-
-    let Table = () => {
-        return (<table className={style.table}>
-                    <Thead/>
-                    <Tbody/>
-                </table>)}
-
     return (
         <div className={style.showUnit}>
             <p className={style.title}>
@@ -175,7 +128,45 @@ export default function ShowUnit () {
                     })
                 }
             </select>
-            <Table/>
+
+            <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                    <TableRow>
+                        <TableCell align="center">STT</TableCell>
+                        <TableCell align="center">{`Mã ${typeAccounts[unitType].toLowerCase()}`}</TableCell>
+                        <TableCell align="center">{`Tên ${typeAccounts[unitType].toLowerCase()}`}</TableCell>
+                        <TableCell align="center">Địa chỉ</TableCell>
+                        <TableCell align="center">Số điện thoại</TableCell>
+                        <TableCell align="center">Tùy chọn</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {factories.map((unit, index) => (
+                        <TableRow
+                            key={index}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                            <TableCell align="center">{index}</TableCell>
+                            <TableCell align="center">{unit.id}</TableCell>
+                            <TableCell align="center">{unit.name}</TableCell>
+                            <TableCell align="center">{unit.address}</TableCell>
+                            <TableCell align="center">{unit.phoneNumber}</TableCell>
+                            <TableCell align="center">
+                                <div className={style.action}>
+                                    <Link to="/manager/unit/edit" state={{unit: {...unit, type: unitType}}}>
+                                        <button className={style.editButton}>Sửa</button>
+                                    </Link>
+                                    <button className={style.deleteButton} onClick={(e) => {
+                                        deleteUnit(unit)
+                                    }}>Xóa</button>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     )
 }
