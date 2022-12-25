@@ -11,7 +11,8 @@ import EditUnit from "../pages/Manager/EditUnit";
 import CreateOrder from "../pages/Distributor/CreateOrder";
 import ShowOrder from "../pages/Distributor/ShowOrder";
 import CreateProductLine from "../pages/Manager/ProductLine/CreateProductLine";
-import ShowProductLine from "../pages/Manager/ProductLine/ShowProductLine";
+import ListProductLine from "../pages/Manager/ProductLine/ListProductLine";
+import ShowProductLine from "../pages/Manager/ProductLine/ShowProductLine/ShowProductLine";
 
 const publicRoutes = [
     // {path: '/login', component: Login},
@@ -23,7 +24,8 @@ const publicRoutes = [
     {path: '/manager/unit/list', layout: ManagerLayout, component: ShowUnit},
     {path: '/manager/unit/edit', layout: ManagerLayout, component: EditUnit},
     {path: '/manager/product_line/create', layout: ManagerLayout, component: CreateProductLine},
-    {path: '/manager/product_line/list', layout: ManagerLayout, component: ShowProductLine},
+    {path: '/manager/product_line/list', layout: ManagerLayout, component: ListProductLine},
+    {path: '/manager/product_line/show', layout: ManagerLayout, component: ShowProductLine},
     {path: '/distributor/order/create', layout: ManagerLayout, component: CreateOrder},
     {path: '/distributor/order/list', layout: ManagerLayout, component: ShowOrder}
 ];

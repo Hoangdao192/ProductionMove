@@ -1,72 +1,75 @@
-.table {
+.showProductLine {
     width: 100%;
-    border-collapse:collapse;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    border-radius: 10px;
-    overflow: hidden;
+    display: inline-block;
+    position: relative;
     background-color: white;
-    margin-top: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
+    margin: 0;
+    padding: 0;
 }
 
-.table thead {
-    width: 100%;
+.productLineName {
+    font-size: 2.5rem;
 }
 
-.table thead tr {
-    
-    width: 100%;
-    color: black;
-    text-align: center;
-    border-bottom: 1px solid #dddddd;
+.productLineImage {
+    width: 20rem;
 }
 
-.table tr {
-    width: 100%;
-    text-align: center;
-}
-
-.table th,
-.table td {
-    padding: 20px 15px;
-    
-}
-
-.table tbody tr {
-    cursor: pointer;
-    border-bottom: 1px solid #dddddd;
-}
-
-.table tbody tr:last-of-type {
-    // border-bottom: 2px solid #009879;
-    border-bottom: none;
-}
-
-.table tbody tr:hover {
-    background-color: #f5f6fb;
-    // font-weight: bold;
-    color: black;
-}
-
-.table tbody tr td button {
-    padding: 3px 15px;
-    border-radius: 15px;
-    border: none;
-    cursor: pointer;
-}
-
-.table tbody tr td button:hover {
-    background-color: #d3f36b;
-}
-
-.table tbody tr .action {
-    display: flex;
+.productLine {
+    display: block;
     justify-content: center;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+
+    .head {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        flex-wrap: wrap;
+
+        p {
+            // flex: 1;
+            flex-basis: 100%;
+            display: inline-block;
+            text-align: center;
+        }
+    }
+}
+
+.productLineInfo {
+
+    .info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1.5fr));
+        // gap: 2rem;
+        column-gap: 2rem;
+        row-gap: 1rem;
+        // grid-auto-rows: 250px;
+        grid-auto-flow: dense;
+
+        // display: flex;
+        // flex-wrap: wrap;
+        // gap: 1rem;
+        // column-gap: 2rem;
+
+        .infoTitle {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    }
+
+    &>p {
+        align-self: flex-start;
+        font-size: 1.7rem;
+    }
 }
