@@ -49,6 +49,15 @@
   /* color: #DBE400; */
 }
 
+@media only screen and (max-width: 750px) {
+  .name {
+    display: none;
+  }
+  .barBtn {
+    display: block;
+  }
+}
+
 /* Icon */
 .UisStar {
   display: flex;
@@ -61,11 +70,14 @@
   justify-items: center
 }
 
-@media only screen and (max-width: 750px) {
-  .name {
-    display: none;
-  }
-  .barBtn {
-    display: block;
-  }
+.UisAnalytics {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 2px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
 }

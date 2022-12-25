@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import styles from "./Title.module.css";
 import { UilBars } from "@iconscout/react-unicons";
 
@@ -16,7 +16,11 @@ function Title({ icon, title, name, avatar }) {
           const name = item.icon.name;
           return (
             <div className={styles[name]} key={index}>
-              <item.icon size={12} />
+              <item.icon
+                size={
+                  name === "UisStar" ? 12 : name === "UisAnalytics" ? 30 : 0
+                }
+              />
             </div>
           );
         })}

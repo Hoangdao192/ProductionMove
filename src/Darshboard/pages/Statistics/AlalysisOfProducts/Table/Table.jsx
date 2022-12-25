@@ -2,49 +2,36 @@ import React, { useState, useEffect } from "react";
 import styles from "./Table.module.css";
 
 import { TbHead } from "../../../../components/common/Table/TableReport";
-import { headDataProductByLine, dataProductByLine } from "../data";
-import { DoughnutChart } from "../../../../components/common/Chart";
-import Order from "../Order/Order";
+import { headDataProduct, dataProduct } from "../data";
+import LineChartOrder from "../LineChartOrder/LineChartOrder";
 
 function Table() {
   const [tbOption, setTbOption] = useState("mounth");
-  const [headData] = useState(headDataProductByLine.status);
-  const [dataChart, setDataChart] = useState(
-    dataProductByLine.map((item) => {
-      return item.quarter;
+  const [headData, setHeadData] = useState(headDataProduct.mounth);
+  const [dataChartLine, setDataChartLine] = useState(
+    dataProduct.map((item) => {
+      return item.mounth;
     })
   );
-  const [labelChart] = useState(headDataProductByLine.status.slice(3, 15));
-  const [indexChart, setIndextChart] = useState(0);
+  const [labelChartLine, setLabelChartLine] = useState(
+    headDataProduct.mounth.slice(3, 15)
+  );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndextChart((indexChart) => {
-        if (indexChart + 1 === dataProductByLine.length) {
-          return 0;
-        }
-        return indexChart + 1;
-      });
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    console.log(indexChart);
-  }, [indexChart]);
-
+  // useEffect(() => {
+  //   console.log(dataChartLine);
+  // }, [dataChartLine]);
   return (
     <div className={styles.container}>
       <div className={styles.firstView}>
-        <div className={styles.chartItem}>
-          <DoughnutChart dataChart={dataChart[indexChart]} label={labelChart} />
-          <div className={styles.titleChart}>
-            {dataProductByLine[indexChart].name}
-          </div>
+        <div className={styles.charLine}>
+          <LineChartOrder
+            title="Top 3 dòng sản phẩm"
+            labelList={labelChartLine}
+            dataList={dataChartLine}
+            nameList={["product line 0", "product line 1", "product line 2"]}
+          />
         </div>
-        <Order />
       </div>
-
       <div className={styles.tbOption}>
         <label htmlFor="op">Tùy chọn</label>
         <select
@@ -54,23 +41,45 @@ function Table() {
           onChange={(e) => {
             setTbOption(e.target.value);
             if (e.target.value === "mounth") {
-              setDataChart(
-                dataProductByLine.map((item) => {
-                  return item.mounth;
-                })
-              );
+              setHeadData(headDataProduct.mounth);
+              setLabelChartLine(headDataProduct.mounth.slice(3, 15));
+              let chartLine = [];
+              dataProduct.forEach((item, index) => {
+                chartLine.push(item.mounth);
+              });
+              console.log(chartLine.slice(0, 3));
+              setDataChartLine(chartLine);
+              // console.log(dataProduct);
             } else if (e.target.value === "year") {
-              setDataChart(
-                dataProductByLine.map((item) => {
-                  return item.year;
-                })
-              );
+              let arr = [];
+              const currentYear = new Date().getFullYear();
+              headDataProduct.year.forEach((item, index) => {
+                if (isNaN(parseInt(item))) {
+                  arr = [...arr, item];
+                } else {
+                  let value = currentYear - (5 - parseInt(item));
+                  arr = [...arr, value];
+                }
+              });
+              setHeadData(arr);
+              setLabelChartLine(arr.slice(3, 8));
+              let chartLine = [];
+              dataProduct.forEach((item, index) => {
+                chartLine.push(item.year);
+              });
+              console.log(chartLine.slice(0, 3));
+              setDataChartLine(chartLine);
+              // console.log(dataProduct);
             } else if (e.target.value === "quarter") {
-              setDataChart(
-                dataProductByLine.map((item) => {
-                  return item.quarter;
-                })
-              );
+              setHeadData(headDataProduct.quarter);
+              setLabelChartLine(headDataProduct.mounth.slice(3, 7));
+              let chartLine = [];
+              dataProduct.forEach((item, index) => {
+                chartLine.push(item.quarter);
+              });
+              console.log(chartLine.slice(0, 3));
+              setDataChartLine(chartLine);
+              // console.log(dataProduct);
             }
           }}
         >
@@ -84,8 +93,8 @@ function Table() {
         <thead>
           <TbHead data={headData} />
         </thead>
-
-        {dataProductByLine.map((item, index) => {
+        {/* {console.log(dataProduct)} */}
+        {dataProduct.map((item, index) => {
           return (
             <tbody key={index}>
               {tbOption === "quarter" ? (
