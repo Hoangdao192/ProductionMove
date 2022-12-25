@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Table.module.css";
 
-import { TbHead, TbRow } from "../../../../components/common/Table/TableReport";
+import { TbHead } from "../../../../components/common/Table/TableReport";
 import { headDataProductByLine, dataProductByLine } from "../data";
 import { DoughnutChart } from "../../../../components/common/Chart";
 import Order from "../Order/Order";
 
 function Table() {
-  const [tbOption, setTbOption] = useState("status");
+  const [tbOption, setTbOption] = useState("mounth");
   const [headData, setHeadData] = useState(headDataProductByLine.status);
   const [dataChart, setDataChart] = useState(
     dataProductByLine.map((item) => {
-      return item.status;
+      return item.quarter;
     })
   );
   const [labelChart, setLabelChart] = useState(
@@ -56,43 +56,28 @@ function Table() {
           onChange={(e) => {
             setTbOption(e.target.value);
             if (e.target.value === "mounth") {
-              setHeadData(headDataProductByLine.mounth);
-              setLabelChart(headDataProductByLine.mounth.slice(3, 15));
               setDataChart(
                 dataProductByLine.map((item) => {
                   return item.mounth;
                 })
               );
             } else if (e.target.value === "year") {
-              const currentYear = new Date().getFullYear();
-              let arr = [];
-              headDataProductByLine.year.forEach((item, index) => {
-                if (!isNaN(parseInt(item))) {
-                  arr = [...arr, currentYear - parseInt(item)];
-                } else {
-                  arr = [...arr, item];
-                }
-              });
-              setHeadData(arr);
-              setLabelChart(arr.slice(3, 15));
               setDataChart(
                 dataProductByLine.map((item) => {
                   return item.year;
                 })
               );
-            } else if (e.target.value === "status") {
-              setHeadData(headDataProductByLine.status);
-              setLabelChart(headDataProductByLine.status.slice(3, 15));
+            } else if (e.target.value === "quarter") {
               setDataChart(
                 dataProductByLine.map((item) => {
-                  return item.status;
+                  return item.quarter;
                 })
               );
             }
           }}
         >
-          <option value="status">Trạng thái</option>
           <option value="mounth">Tháng</option>
+          <option value="quarter">Quý</option>
           <option value="year">Năm</option>
         </select>
       </div>
@@ -105,15 +90,15 @@ function Table() {
         {dataProductByLine.map((item, index) => {
           return (
             <tbody key={index}>
-              {tbOption === "status" ? (
+              {tbOption === "quarter" ? (
                 <tr key={index} className={styles.rowData}>
                   <td>{index + 1}</td>
                   <td>{item.productId}</td>
                   <td className={styles.name}>{item.name}</td>
-                  {item.status.map((item, index) => {
+                  {item.quarter.map((item, index) => {
                     return <td key={index}>{item}</td>;
                   })}
-                  <td>{item.quantity.status}</td>
+                  <td>{item.quantity.quarter}</td>
                 </tr>
               ) : tbOption === "mounth" ? (
                 <tr key={index} className={styles.rowData}>
