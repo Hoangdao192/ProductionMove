@@ -1,0 +1,76 @@
+.container {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    // background-color: white;
+    border-radius: 0.75rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.orderId {
+    font-weight: 700;
+    font-size: 1.5rem;
+
+    span {
+        font-style: italic;
+        color: red;
+        font-weight: bold;
+    }
+}
+
+.customerTitle {
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+
+.customerValue {
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+}
+
+.customerInfo {
+    font-size: 1.5rem;
+}
+
+.tableContainer {
+    display: flex;
+    // justify-content: center;
+    column-gap: 2rem;
+    row-gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+
+    &>div {
+        min-width: 40%;
+        background-color: white;
+        display: inline-block;
+        height: fit-content;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        // border: 1px solid gray;
+    }
+}
+
+.actionButton {
+    white-space: nowrap;
+    padding: 3px 15px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.actionButton:hover {
+    background-color: #d3f36b;
+}
+
+@media screen and (max-width: 600px) {
+    .tableContainer>div {
+        width: 100%;
+    }
+}

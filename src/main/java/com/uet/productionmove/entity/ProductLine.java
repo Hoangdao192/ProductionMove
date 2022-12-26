@@ -2,9 +2,14 @@ package com.uet.productionmove.entity;
 
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Table(name = "product_lines")
 @Entity
@@ -70,6 +75,10 @@ public class ProductLine {
     @NotEmpty(message = "battery cannot be empty.")
     @Column(nullable = false)
     private String battery;
+
+    @OneToMany(mappedBy = "productLine", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<ProductBatch> productBatchs = new ArrayList<>();
 
     public ProductLine(
             String productName, String processor, String operatingSystem,

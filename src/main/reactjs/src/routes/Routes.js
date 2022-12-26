@@ -2,6 +2,8 @@ import Login from "../pages/Login";
 import Home from "../pages/Home";
 import ManagerHome from "../pages/Manager/Home";
 import ManagerLayout from "../components/Layouts/ManagerLayout";
+import FactoryLayout from "../components/Layouts/FactoryLayout";
+
 import ShowAcount from "../pages/Manager/AccountManager/ShowAccount";
 import CreateAccount from "../pages/Manager/AccountManager/CreateAccount";
 import EditAccount from "../pages/Manager/AccountManager/EditAccount/EditAccount";
@@ -13,6 +15,8 @@ import ShowOrder from "../pages/Distributor/ShowOrder";
 import CreateProductLine from "../pages/Manager/ProductLine/CreateProductLine";
 import ListProductLine from "../pages/Manager/ProductLine/ListProductLine";
 import ShowProductLine from "../pages/Manager/ProductLine/ShowProductLine/ShowProductLine";
+import ShowOrderDetail from "../pages/Distributor/ShowOrderDetail";
+import CreateBatch from "../pages/Factory/CreateBatch";
 
 const publicRoutes = [
     // {path: '/login', component: Login},
@@ -27,7 +31,9 @@ const publicRoutes = [
     {path: '/manager/product_line/list', layout: ManagerLayout, component: ListProductLine},
     {path: '/manager/product_line/show', layout: ManagerLayout, component: ShowProductLine},
     {path: '/distributor/order/create', layout: ManagerLayout, component: CreateOrder},
-    {path: '/distributor/order/list', layout: ManagerLayout, component: ShowOrder}
+    {path: '/distributor/order/list', layout: ManagerLayout, component: ShowOrder},
+    {path: '/distributor/order_detail/get', layout: ManagerLayout, component: ShowOrderDetail},
+    {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch}
 ];
 
 const privateRoutes = [

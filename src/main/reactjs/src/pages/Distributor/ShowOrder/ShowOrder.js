@@ -4,6 +4,7 @@ import style from './ShowOrder.module.scss';
 import config from '../../../config.json';
 import { useReducer } from 'react';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export default function ShowOrder() {
     const [orders, setOrders] = useState([]);
@@ -72,7 +73,9 @@ export default function ShowOrder() {
                             <TableCell align="center">{order.customer.firstName + " " + order.customer.lastName}</TableCell>
                             <TableCell align="center">
                                 <div className={style.action}>
-                                    <button className={style.button}>Xem chi tiết</button>
+                                    <Link to={'/distributor/order_detail/get'} state={{order: order}}>
+                                        <button className={style.button}>Xem chi tiết</button>
+                                    </Link>
                                     <button className={style.button}>Sửa</button>
                                     <button onClick={(e) => sendDeleteOrderRequest(order.id)} 
                                         className={style.button}>Xóa</button>

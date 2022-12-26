@@ -1,9 +1,14 @@
 package com.uet.productionmove.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -19,14 +24,16 @@ public class Factory {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JsonBackReference
-    @JoinColumn(
-            name = "unit_id", nullable = false, updatable = false,
-            foreignKey = @ForeignKey(name = "unit_foreign_key"))
+    @JoinColumn(name = "unit_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "unit_foreign_key"))
     private Unit unit;
 
     private String name;
     private String phoneNumber;
     private String address;
+
+    @OneToMany(mappedBy = "factory", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<ProductBatch> createdProductBatchs = new ArrayList<>();
 
     public Factory(Unit unit, String name, String phoneNumber, String address) {
         this.unit = unit;

@@ -4,7 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Table(name = "stock")
 @Entity
@@ -22,6 +27,10 @@ public class Stock {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")
     private User stockOwner;
+
+    @OneToMany(mappedBy = "stock")
+    @JsonManagedReference
+    private List<ProductBatch> productBatchs = new ArrayList<>();
 
     public Stock(String name, String address, User stockOwner) {
         this.name = name;

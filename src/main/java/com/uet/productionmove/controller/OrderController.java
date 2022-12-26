@@ -50,12 +50,10 @@ public class OrderController {
     }
 
     @GetMapping(path = "get")
-    public ResponseEntity<Map<String, Object>> getOrder(@RequestParam @Valid @NotNull Long orderId)
+    public ResponseEntity<Order> getOrder(@RequestParam @Valid @NotNull Long orderId)
             throws InvalidArgumentException {
         Order order = orderService.getOrder(orderId);
-        return ResponseEntity.ok(
-                Map.of("message", "Get order successful",
-                        "content", Map.of("order", order)));
+        return ResponseEntity.ok(order);
     }
 
     @GetMapping(path = "list")

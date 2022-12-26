@@ -17,19 +17,24 @@ public class ProductBatch {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "stock_id")
     private Stock stock;
 
     private LocalDate manufacturingDate;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @Column(nullable = false, updatable = false)
     @JoinColumn(name = "factory_id")
     private Factory factory;
 
-    @OneToOne
+    @ManyToOne
+    @Column(nullable = false, updatable = false)
     @JoinColumn(name = "product_line_id")
     private ProductLine productLine;
+
+    @Column(nullable = false)
+    private Long productQuantity;
 
     public ProductBatch(
             Stock stock,
