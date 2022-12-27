@@ -4,27 +4,63 @@ import { useReducer } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { UilPlus } from '@iconscout/react-unicons'
+import Authentication from '../../../services/Authentication/Authentication';
 
 export default function CreateBatch() {
     const [reducer, setReducer] = useReducer(x => x + 1, 0)
     const [productLines, setProductLines] = useState([]);
     const [productBatch, setProductBatch] = useState({
         productLineId: "None",
-        factoryId: 35,
+        factoryId: "",
         manufactureDate: "",
         productQuantity: "",
         warrantyPeriod: ""
     });
 
+    const [factory, setFactory] = useState();
+    const user = Authentication.getCurrentUser();
+
+    function loadFactory() {
+        return new Promise((resolve, reject) => {
+            let url = config.server.api.factory.get.url + "?unitId=" + user.unit.id;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                }
+            }).then((factory) => {
+                if (factory != undefined) {
+                    resolve(factory);
+                }
+            })
+        })
+    }
+
     useEffect(() => {
-        let url = config.server.api.productLine.list.url;
-        fetch(url)
-        .then((response) => {
-            if (response.status == 200) {
-                return response.json()
-            }
-        }).then((data) => {
-            if (data != undefined) setProductLines(data)
+        loadFactory().then((factory) => {
+            setFactory(factory)
+            setProductBatch({
+                ...productBatch,
+                factoryId: factory.id
+            })
+            let url = config.server.api.productLine.list.url;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            })
+            .then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                }
+            }).then((data) => {
+                if (data != undefined) setProductLines(data)
+            })
         })
     }, [reducer])
 
@@ -80,7 +116,8 @@ export default function CreateBatch() {
             fetch(url, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Authorization': Authentication.generateAuthorizationHeader()
                 },
                 body: JSON.stringify({
                     productLineId: productBatch.productLineId,

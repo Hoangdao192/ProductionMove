@@ -16,17 +16,20 @@ public class StockTransaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "batch_id")
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "batch_id", nullable = false)
     private ProductBatch batch;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "export_stock_id")
     private Stock exportStock;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "import_stock_id")
     private Stock importStock;
+
+    @Column(nullable = false)
+    private String transactionStatus;
 
     public StockTransaction(ProductBatch batch, Stock exportStock, Stock importStock) {
         this.batch = batch;

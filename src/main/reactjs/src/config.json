@@ -55,6 +55,9 @@
                 },
                 "delete" : {
                     "url" : "http://localhost:5000/api/account/delete"
+                },
+                "data" : {
+                    "url" : "http://localhost:5000/api/account/getCurrent"
                 }
             },
             "distributor" : {
@@ -98,6 +101,9 @@
                     "batch" : {
                         "list": {
                             "url" : "http://localhost:5000/api/factory/stock/batch/list"
+                        },
+                        "notImport" : {
+                            "url" : "http://localhost:5000/api/factory/stock/batch/notImport"
                         }
                     }
                 }

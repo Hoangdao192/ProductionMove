@@ -49,19 +49,11 @@ public class User implements UserDetails {
     private String role;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference
-    @JoinColumn(
-            name = "unit_id", updatable = false, nullable = false,
-            foreignKey = @ForeignKey(name = "unit_foreign_key")
-    )
+    @JoinColumn(name = "unit_id", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "unit_foreign_key"))
     private Unit unit;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role) {

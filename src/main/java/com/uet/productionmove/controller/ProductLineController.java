@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping(path = "/api/product_line")
-@PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
 public class ProductLineController {
 
     @Autowired
@@ -37,6 +37,7 @@ public class ProductLineController {
     }
 
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<ProductLine> createProductLine(@RequestBody @Valid ProductLine productLine)
             throws InvalidArgumentException {
         productLine = productLineService.createProductLine(productLine);
@@ -44,6 +45,7 @@ public class ProductLineController {
     }
 
     @DeleteMapping(path = "/delete/{productLineId}")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public String deleteProductLine(@PathVariable Long productLineId) {
         productLineService.deleteProductLine(productLineId);
         // System.out.println(productLineId);
@@ -51,6 +53,7 @@ public class ProductLineController {
     }
 
     @PostMapping(path = "/update")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public String updateProductLine(@RequestBody ProductLine productLine) {
         productLineService.updateProductLine(productLine);
         return "";

@@ -7,6 +7,7 @@ import { useState } from 'react'
 import config from '../../../config.json'
 import { typeAccounts } from '../AccountManager/AcountItems'
 import { useLocation } from 'react-router-dom'
+import Authentication from '../../../services/Authentication/Authentication';
 
 export default function EditUnit() {
 
@@ -77,7 +78,8 @@ export default function EditUnit() {
         fetch (url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': Authentication.generateAuthorizationHeader()
             },
             body: JSON.stringify({
                 id: data.id,

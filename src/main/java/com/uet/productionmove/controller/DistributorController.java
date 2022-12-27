@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "/api/distributor")
-@PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('Admin', 'Distributor', 'Manufacture') and isAuthenticated()")
 public class DistributorController {
 
     private DistributorService distributorService;
@@ -43,7 +43,7 @@ public class DistributorController {
     }
 
     @GetMapping(path = "/list")
-    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
     public ResponseEntity<List<DistributorModel>> getAllDistributor() {
         return ResponseEntity.ok(distributorService.getAllDistributor());
     }

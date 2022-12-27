@@ -5,6 +5,7 @@ import config from '../../../config.json';
 import { useReducer } from 'react';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import { Link } from 'react-router-dom';
+import Authentication from '../../../services/Authentication/Authentication';
 
 export default function ShowOrder() {
     const [orders, setOrders] = useState([]);
@@ -12,7 +13,12 @@ export default function ShowOrder() {
 
     useEffect(() => {
         let url = config.server.api.order.list.url;
-        fetch(url)
+        fetch(url, {
+            method: "GET",
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        })
         .then((response) => {
             if (response.status == 200) {
                 return response.json();
@@ -31,7 +37,10 @@ export default function ShowOrder() {
     function sendDeleteOrderRequest(orderId) {
         let url = config.server.api.order.delete.url + "/" + orderId;
         fetch(url, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
         }).then((response) => {
             if (response.status == 200) {
                 alert("OK")

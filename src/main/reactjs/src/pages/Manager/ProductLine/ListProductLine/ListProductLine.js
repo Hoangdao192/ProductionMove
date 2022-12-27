@@ -6,6 +6,7 @@ import { useReducer } from 'react';
 import { Link } from 'react-router-dom';
 
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import Authentication from '../../../../services/Authentication/Authentication';
 
 export default function ListProductLine() {
     const [productLines, setProductLines] = useState([])
@@ -14,7 +15,11 @@ export default function ListProductLine() {
 
     useEffect(() => {
         let url = config.server.api.productLine.list.url;
-        fetch(url)
+        fetch(url, {
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        })
         .then((response) => {
             if (response.status == 200) {
                 return response.json()
@@ -27,7 +32,10 @@ export default function ListProductLine() {
     function sendDeleteProductLineRequest(productLineId) {
         let url = `${config.server.api.productLine.delete.url}/${productLineId}`;
         fetch(url, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
         }).then((response) => {
             if (response.status == 200) {
                 alert("OK")

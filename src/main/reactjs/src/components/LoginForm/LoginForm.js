@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import Authentication from "../../services/Authentication/Authentication";
 import "./LoginForm.css";
 import img1 from "../img/log.svg";
+import { Navigate } from "react-router-dom";
 
 function LoginForm() {
     const [details, setDetails] = useState({ name: "", password: "" });
+    const [loginSuccess, setLoginSuccess] = useState(false);
 
     const submitHandler = e => {
         e.preventDefault();
-        Authentication.login(details.name, details.password)
+        Authentication.login(details.name, details.password).then(() => setLoginSuccess(true))
     }
 
     return (
-        <form onSubmit={submitHandler}>
+        !loginSuccess ? <form onSubmit={submitHandler}>
             <div className="form-inner">
                 <div className="forms-container">
                     <div className="signin-signup">
@@ -53,6 +55,7 @@ function LoginForm() {
                 </div>
             </div>
         </form>
+        : <Navigate to="/home" />
     )
 }
 

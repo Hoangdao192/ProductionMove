@@ -4,6 +4,7 @@ import { useState } from 'react';
 import config from '../../../config.json';
 import { useEffect } from 'react';
 import { useReducer } from 'react';
+import Authentication from "../../../services/Authentication/Authentication";
 
 export default function CreateOrder() {
     const [reducer, setReducer] = useReducer(x => x + 1, 0)
@@ -62,7 +63,8 @@ export default function CreateOrder() {
             fetch(url, {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': Authentication.generateAuthorizationHeader()
                 },
                 body: JSON.stringify({
                     orderDate: order.orderDate,
@@ -95,7 +97,10 @@ export default function CreateOrder() {
 
         let url = `${config.server.api.customer.get.url}?customerId=${order.customerId}`
         fetch(url, {
-            method: "GET"
+            method: "GET",
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
         }).then((response) => {
             console.log(response.body)
             if (response.status == 200) {
@@ -109,7 +114,12 @@ export default function CreateOrder() {
 
     function loadProductLine() {
         let url = config.server.api.productLine.list.url;
-        fetch(url).then((response) => {
+        fetch(url, {
+            method: "GET",
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        }).then((response) => {
             return response.json();
         }).then((data) => {
             if (data != undefined) setProducts(data)

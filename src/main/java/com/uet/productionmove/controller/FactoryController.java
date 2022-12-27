@@ -58,10 +58,15 @@ public class FactoryController {
         return ResponseEntity.ok("Export successful");
     }
 
-    @GetMapping(path = "get", params = "factoryId")
+    @GetMapping(path = "/get", params = "factoryId")
     public ResponseEntity<Factory> getFactoryById(@RequestParam Long factoryId) throws InvalidArgumentException {
         Factory factory = factoryService.getFactoryById(factoryId);
         return ResponseEntity.ok(factory);
+    }
+
+    @GetMapping(path = "/get", params = "unitId")
+    public ResponseEntity<Factory> getByUnitId(@RequestParam Long unitId) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getFactoryByUnitId(unitId));
     }
 
     @GetMapping(path = "/stock/batch/list", params = "factoryId")
@@ -69,6 +74,12 @@ public class FactoryController {
             throws InvalidArgumentException {
         List<ProductBatch> productBatchs = factoryService.getAllProductBatchInStock(factoryId);
         return ResponseEntity.ok(productBatchs);
+    }
+    
+    @GetMapping(path = "/stock/batch/notImport")
+    public ResponseEntity<List<ProductBatch>> getProductBatchNotImport(@RequestParam Long factoryId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getAllProductBatchNotImport(factoryId));
     }
 
     @GetMapping(path = "list")

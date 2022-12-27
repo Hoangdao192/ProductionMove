@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +28,9 @@ public class UserService {
     private FactoryRepository factoryRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-//    @Autowired
+    // @Autowired
     private UnitRepository unitRepository;
     private RoleRepository roleRepository;
-
 
     @Autowired
     public UserService(
@@ -62,6 +63,7 @@ public class UserService {
         user.setUnit(unitOptional.get());
         user.setUsername(userModel.getUsername());
         user.setRole(userModel.getRole());
+        user.addRole(roleRepository.findByName(userModel.getRole()).get());
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         return userRepository.save(user);
     }
@@ -111,6 +113,14 @@ public class UserService {
             roleRepository.save(new Role(UserType.WARRANTY_CENTER));
         }
         roleRepository.flush();
+    }
+
+    public User getCurrentLoggedInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth.getPrincipal());
+        User user = (User) auth.getPrincipal();
+        user.setPassword(null);
+        return user;
     }
 
     @Transactional

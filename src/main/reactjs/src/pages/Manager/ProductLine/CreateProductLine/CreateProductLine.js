@@ -2,6 +2,7 @@ import style from './CreateProductLine.module.scss'
 import { UilPlus } from '@iconscout/react-unicons'
 import { useState } from 'react'
 import config from '../../../../config.json';
+import Authentication from '../../../../services/Authentication/Authentication';
 
 export default function CreateProductLine() {
     const [productLine, setProductLine] = useState({
@@ -87,7 +88,8 @@ export default function CreateProductLine() {
         fetch(url, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': Authentication.generateAuthorizationHeader()
             },
             body: JSON.stringify(productLine)
         }).then((response) => {

@@ -18,4 +18,6 @@ public interface FactoryRepository extends JpaRepository<Factory, Long> {
     @Query(value = "DELETE FROM factory WHERE id = ?1", nativeQuery = true)
     void deleteById(Long factoryId);
 
+    Optional<Factory> findByUnitId(Long unitId);
+
 }

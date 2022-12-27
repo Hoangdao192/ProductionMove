@@ -7,6 +7,7 @@ import com.uet.productionmove.model.UserModel;
 import com.uet.productionmove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping(path = "/getCurrent")
+    public ResponseEntity<User> getUserRole() {
+        return ResponseEntity.ok(userService.getCurrentLoggedInUser());
+    }
 
     @PostMapping(path = "create")
     @PreAuthorize("hasAnyAuthority('Admin')")

@@ -1,5 +1,5 @@
 export default function Home() {
     return (
-        <div>Manager home</div>
+        <div>Warranty center home</div>
     )
 }

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ public class Role implements Serializable {
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     @ToString.Exclude
+    @JsonIgnore
     private List<User> users = new ArrayList<>();
 
     public Role(String name) {

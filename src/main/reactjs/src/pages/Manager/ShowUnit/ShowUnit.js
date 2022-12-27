@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useReducer } from 'react';
 
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import Authentication from '../../../services/Authentication/Authentication';
 
 export default function ShowUnit () {
 
@@ -38,7 +39,10 @@ export default function ShowUnit () {
         }
 
         fetch(url, {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
         }).then((response) => {
             if (response.status == 200) {
                 return response.json()
@@ -72,6 +76,9 @@ export default function ShowUnit () {
 
             fetch(url, {
                 method: "DELETE",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                },
                 body: formData
             }).then((response) => {
                 if (response.status == 200) {
@@ -101,7 +108,10 @@ export default function ShowUnit () {
         }
 
         fetch(url, {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
         }).then((response) => {
             if (response.status == 200) {
                 return response.json()

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import config from "../../../../config.json";
 import { UilPlus } from '@iconscout/react-unicons'
 import { typeAccounts } from "../AcountItems.js";
-
+import Authentication from '../../../../services/Authentication/Authentication'
 
 export default function CreateAccount(props) {
     const [user, setUser] = useState({
@@ -34,14 +34,17 @@ export default function CreateAccount(props) {
             case "Distributor":
                 url = config.server.api.distributor.list.url;
                 break;
-            case "Warranty center":
+            case "Warranty":
                 url = config.server.api.warranty.list.url;
                 break;
         }
         console.log(url)
         if (url !== "") {
             fetch(url, {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
             }).then((response) => {
                 return response.json()
             }).then((data) => {
@@ -67,13 +70,14 @@ export default function CreateAccount(props) {
             fetch(config.server.api.account.create.url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': Authentication.generateAuthorizationHeader()
                 }, 
                 body: JSON.stringify({
                     unitId: user.unitId,
                     username: user.username,
                     password: user.password,
-                    role: user.role
+                    role: user.role == "Warranty" ? "Warranty center" : user.role
                 })
             }).then((response) => {
                 if (response.ok) return response.json()

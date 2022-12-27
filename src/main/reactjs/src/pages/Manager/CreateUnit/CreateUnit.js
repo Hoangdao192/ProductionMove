@@ -5,6 +5,7 @@ import { InputLabel, Select, MenuItem, FormControl } from '@mui/material'
 import { useState } from 'react'
 import config from '../../../config.json'
 import { typeAccounts } from '../AccountManager/AcountItems'
+import Authentication from '../../../services/Authentication/Authentication';
 
 export default function CreateUnit() {
 
@@ -82,7 +83,8 @@ export default function CreateUnit() {
         fetch (url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': Authentication.generateAuthorizationHeader()
             },
             body: JSON.stringify({
                 name: data.name,

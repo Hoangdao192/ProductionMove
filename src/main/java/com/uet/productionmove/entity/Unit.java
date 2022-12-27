@@ -14,7 +14,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "units")
@@ -30,20 +29,23 @@ public class Unit {
     @Column(nullable = false)
     private String type;
 
-    @JsonManagedReference
+    @JsonIgnore
+    @ToString.Exclude
     @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
     private Factory factory;
 
-    @JsonManagedReference
+    @JsonIgnore
+    @ToString.Exclude
     @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
     private Distributor distributor;
 
-    @JsonManagedReference
+    @JsonIgnore
+    @ToString.Exclude
     @OneToOne(mappedBy = "unit", cascade = CascadeType.ALL)
     private WarrantyCenter warrantyCenter;
 
-    @JsonManagedReference
     @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     private List<User> users;
 }

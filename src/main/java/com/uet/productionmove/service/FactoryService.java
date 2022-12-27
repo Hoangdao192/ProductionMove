@@ -30,6 +30,8 @@ public class FactoryService {
     private UnitRepository unitRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private StockTransactionRepository stockTransactionRepository;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -73,6 +75,14 @@ public class FactoryService {
         Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
         if (factoryOptional.isEmpty()) {
             throw new InvalidArgumentException("Factory with ID not exists");
+        }
+        return factoryOptional.get();
+    }
+
+    public Factory getFactoryByUnitId(Long unitId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findByUnitId(unitId);
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with Unit ID not exists.");
         }
         return factoryOptional.get();
     }
@@ -131,9 +141,15 @@ public class FactoryService {
             throw new InvalidArgumentException("Distributor with ID not exists");
         }
 
-        Optional<Stock> stockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
-        if (stockOptional.isEmpty()) {
-            throw new InvalidArgumentException("Factory does not have ant stock.");
+        Optional<Stock> factoryStockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
+        if (factoryStockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory does not have any stock.");
+        }
+
+        Optional<Stock> distributorStockOptional = stockRepository
+                .findByStockOwner(distributorOptional.get().getUnit());
+        if (distributorStockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor does not have any stock.");
         }
 
         for (int i = 0; i < factoryExportModel.getExportBatchIds().size(); ++i) {
@@ -143,9 +159,21 @@ public class FactoryService {
                 throw new InvalidArgumentException("Product batch with ID not exists");
             }
             ProductBatch productBatch = productBatchOptional.get();
-            if (productBatch.getStock().getId() != stockOptional.get().getId()) {
+            if (productBatch.getStock() == null) {
+                throw new InvalidArgumentException("Product batch does not in any stock.");
+            }
+            if (productBatch.getStock().getId() != factoryStockOptional.get().getId()) {
                 throw new InvalidArgumentException("Product batch does not in Factory's stock.");
             }
+
+            productBatch.setStock(distributorStockOptional.get());
+            productBatch = batchRepository.save(productBatch);
+            StockTransaction stockTransaction = new StockTransaction();
+            stockTransaction.setBatch(productBatch);
+            stockTransaction.setExportStock(factoryStockOptional.get());
+            stockTransaction.setImportStock(distributorStockOptional.get());
+            stockTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
+            stockTransactionRepository.save(stockTransaction);
         }
     }
 
@@ -160,6 +188,18 @@ public class FactoryService {
         }
 
         return batchRepository.findAllByStock(stockOptional.get());
+    }
+
+    public List<ProductBatch> getAllProductBatchNotImport(Long factoryId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists.");
+        }
+        Optional<Stock> stockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory does not have any Stock.");
+        }
+        return batchRepository.findAllByFactoryAndStockIsNull(factoryOptional.get());
     }
 
     @Autowired

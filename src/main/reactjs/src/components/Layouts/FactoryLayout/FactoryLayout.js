@@ -17,7 +17,7 @@ function FactoryLayout ({ children }) {
         {
             icon: UilEstate,
             heading: "DashBoard",
-            action: "/manager/home"
+            action: "/factory/home"
         },
         {
             icon: UilArchive,
@@ -34,62 +34,6 @@ function FactoryLayout ({ children }) {
                 {
                     heading: "Xuất kho",
                     action: "/factory/warehouse/export"
-                }
-            ]
-        },
-        {
-            icon: UilClipboardAlt,
-            heading: "Đơn hàng",
-            children: [
-                {
-                    heading: "Tạo mới",
-                    action: "/distributor/order/create"
-                },
-                {
-                    heading: "Quản lý đơn hàng",
-                    action: "/distributor/order/list"
-                }
-            ]
-        },
-        {
-            icon: UilBuilding,
-            heading: "Đơn vị",
-            children: [
-                {
-                    heading: "Tạo mới",
-                    action: "/manager/unit/create"
-                },
-                {
-                    heading: "Quản lý đơn vị",
-                    action: "/manager/unit/list"
-                }
-            ]
-        },
-        {
-            icon: UilUser,
-            heading: "Tài khoản",
-            children: [
-                { 
-                    heading: "Quản lý tài khoản", 
-                    action: "/manager/account/list"
-                },
-                { 
-                    heading: "Cấp tài khoản", 
-                    action: "/manager/account/create"
-                }
-            ]
-        },
-        {
-            icon: UilPackage,
-            heading: "Dòng sản phẩm",
-            children: [
-                { 
-                    heading: "Tạo mới", 
-                    action: "/manager/product_line/create"
-                },
-                { 
-                    heading: "Xem danh sách", 
-                    action: "/manager/product_line/list"
                 }
             ]
         },

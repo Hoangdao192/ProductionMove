@@ -4,7 +4,7 @@ import config from "../../../../config.json";
 import { UilPlus } from '@iconscout/react-unicons'
 import { typeAccounts } from "../AcountItems.js";
 import { useLocation } from "react-router-dom";
-
+import Authentication from '../../../../services/Authentication/Authentication'
 
 export default function EditAccount() {
     const [user, setUser] = useState(useLocation().state.user);
@@ -17,7 +17,8 @@ export default function EditAccount() {
             fetch(config.server.api.account.update.url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': Authentication.generateAuthorizationHeader()
                 }, 
                 body: JSON.stringify({
                     id: user.id,
@@ -115,7 +116,7 @@ export default function EditAccount() {
                                 name="accountType"
                                 id={style.accountTypeInput}
                                 readOnly
-                                value={typeAccounts[user.role]}
+                                value={typeAccounts[user.role == "Warranty center" ? "Warranty" : user.role]}
                             />
                         </div>
                     </div>

@@ -11,6 +11,7 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper}
 
 import EditAcount from "../Edit/EditAcount";
 import { useReducer } from "react";
+import Authentication from "../../../../services/Authentication/Authentication";
 
 function ShowAcount() {
     const [users, setUsers] = useState([]);
@@ -21,6 +22,7 @@ function ShowAcount() {
     useEffect(() => {
         let request = new XMLHttpRequest();
         request.open("GET", "http://localhost:5000/api/account/list");
+        request.setRequestHeader('Authorization', Authentication.generateAuthorizationHeader());
         request.onload = () => {
             if (request.status == 200) {
                 console.log(JSON.parse(request.response));
@@ -35,6 +37,9 @@ function ShowAcount() {
         formData.append('userId', userId)
         fetch(config.server.api.account.delete.url, {
             method: 'POST',
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            },
             body: formData
         }).then((response) => {
             if (response.status == 200) {
@@ -72,7 +77,7 @@ function ShowAcount() {
                             <TableCell align="center">{index}</TableCell>
                             <TableCell align="center">{user.id}</TableCell>
                             <TableCell align="center">{user.username}</TableCell>
-                            <TableCell align="center">{typeAccounts[user.role]}</TableCell>
+                            <TableCell align="center">{typeAccounts[user.role == 'Warranty center' ? "Warranty" : user.role]}</TableCell>
                             <TableCell align="center">
                                 <div className={style.action}>
                                     <Link to="/manager/account/edit" state={{user: user}}>

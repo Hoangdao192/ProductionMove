@@ -1,5 +1,6 @@
 package com.uet.productionmove.repository;
 
+import com.uet.productionmove.entity.Factory;
 import com.uet.productionmove.entity.ProductBatch;
 import com.uet.productionmove.entity.Stock;
 
@@ -15,4 +16,6 @@ public interface BatchRepository extends JpaRepository<ProductBatch, Long> {
     List<ProductBatch> findAllByFactoryId(Long factoryId);
 
     List<ProductBatch> findAllByStock(Stock stock);
+
+    List<ProductBatch> findAllByFactoryAndStockIsNull(Factory factory);
 }

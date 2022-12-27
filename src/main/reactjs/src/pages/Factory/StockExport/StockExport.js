@@ -2,16 +2,49 @@ import { useEffect, useReducer, useState } from 'react'
 import style from './StockExport.module.scss'
 import config from '../../../config.json';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import Authentication from '../../../services/Authentication/Authentication';
 
 export default function StockExport() {
     const [distributors, setDistributor] = useState([]);
     const [reducer, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const [exportDistributor, setExportDistributor] = useState()
+    const [exportDistributor, setExportDistributor] = useState(-1)
     const [exportBatches, setExportBatches] = useState([])
 
     const [batches, setBatches] = useState([])
     const [selectedBatches, setSelectedBatches] = useState(new Map());
+
+    const [factory, setFactory] = useState();
+    const user = Authentication.getCurrentUser();
+
+    function loadFactory() {
+        return new Promise((resolve, reject) => {
+            let url = config.server.api.factory.get.url + "?unitId=" + user.unit.id;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                }
+            }).then((factory) => {
+                if (factory != undefined) {
+                    resolve(factory);
+                }
+            })
+        })
+    }
+    
+    function resetComponent() {
+        setDistributor([])
+        setExportDistributor(-1)
+        setExportBatches([])
+        setBatches([])
+        setSelectedBatches(new Map())
+        forceUpdate()
+    }
 
     function validation() {
         if (exportDistributor == -1) {
@@ -32,20 +65,30 @@ export default function StockExport() {
             fetch(url, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Authorization': Authentication.generateAuthorizationHeader()
                 },
                 body: JSON.stringify({
-                    factoryId: 35,
+                    factoryId: factory.id,
                     distributorId: exportDistributor,
                     exportBatchIds: exportBatches.map((batch) => {return batch.id})
                 })
+            }).then((response) => {
+                if (response.status == 200) {
+                    alert("OK")
+                    resetComponent()
+                } else alert("FAILED")
             })
         }
     }
 
     function loadDistributors() {
         let url = config.server.api.distributor.list.url;
-        fetch(url)
+        fetch(url, {
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        })
         .then((response) => {
             if (response.status == 200) {
                 return response.json()
@@ -57,9 +100,13 @@ export default function StockExport() {
         })
     }
 
-    function loadBatches() {
+    function loadBatches(factoryId) {
         let url = config.server.api.factory.stock.batch.list.url;
-        fetch(`${url}?factoryId=35`)
+        fetch(`${url}?factoryId=${factoryId}`, {
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        })
         .then((response) => {
             if (response.status == 200) {
                 return response.json();
@@ -100,8 +147,11 @@ export default function StockExport() {
     }
 
     useEffect(() => {
-        loadDistributors();
-        loadBatches();
+        loadFactory().then((factory) => {
+            setFactory(factory)    
+            loadDistributors();
+            loadBatches(factory.id);
+        })
     }, [reducer])
     
     function formatDate(date) {
