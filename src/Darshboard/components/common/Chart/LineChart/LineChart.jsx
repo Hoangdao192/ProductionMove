@@ -58,8 +58,6 @@ function LineChart({ title, dataList, labelList }) {
     datasets: [...dataList],
   };
 
-  // console.log(data.datasets);
-
   return <Line options={options} data={data} />;
 }
 

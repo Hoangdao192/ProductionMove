@@ -18,7 +18,15 @@ function Title({ icon, title, name, avatar }) {
             <div className={styles[name]} key={index}>
               <item.icon
                 size={
-                  name === "UisStar" ? 12 : name === "UisAnalytics" ? 30 : 0
+                  name === "UisStar"
+                    ? 12
+                    : name === "UisAnalytics"
+                    ? 30
+                    : name === "UilFileTimesAlt"
+                    ? 20
+                    : name === "UilFileExport"
+                    ? 20
+                    : 15
                 }
               />
             </div>

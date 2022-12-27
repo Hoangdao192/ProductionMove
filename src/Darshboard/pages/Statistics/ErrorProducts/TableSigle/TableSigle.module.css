@@ -1,0 +1,30 @@
+.container {
+  width: 30%;
+  /* border: 1px solid black; */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  color: #2b3b4c;
+}
+
+.title {
+  text-align: center;
+  font-weight: 500;
+  margin: 1rem 0 0 0;
+}
+
+tbody tr td {
+  border-top: 1px solid #d8d8d8;
+
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 100%;
+    border: 1px solid black;
+    min-width: 250px;
+  }
+}

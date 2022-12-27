@@ -1,0 +1,25 @@
+.container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  /* box-shadow: rgb(252,103,91) 0px 48px 100px 0px; */
+}
+
+.title {
+  font-size: 0.8rem
+}
+
+.value {
+  font-size: 2rem;
+}
+
+.value>div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.valueProduct {
+  font-size: 1rem;
+}

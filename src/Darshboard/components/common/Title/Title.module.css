@@ -81,3 +81,27 @@
   align-items: center;
   justify-items: center
 }
+
+.UilFileTimesAlt {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 5px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UilFileExport {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 5px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
