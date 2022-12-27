@@ -1,16 +1,15 @@
-
-.title {
-    font-size: 2rem;
-    font-weight: 700;
-}
-
 .container {
     width: 100%;
     display: inline-block;
     position: relative;
     background-color: white;
-    border-radius: 0.75rem;
     padding: 1rem 2rem;
+    border-radius: 0.75rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
 }
 
 .select {
@@ -31,22 +30,30 @@
     margin-right: 1rem;
 }
 
-.input {
-    display: inline-block;
-    padding: 10px;
-    border-radius: 0.75rem;
-    border: 2px solid gray;
-    transition: 0.3s;
-    width: 20rem;
+.exportLabel {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
 }
 
-.input:focus {
-    border: 2px solid black;
-}
-
-.actionButton {
+.action button {
+    padding: 3px 15px;
+    border-radius: 15px;
+    border: none;
     cursor: pointer;
-    padding: 0.4rem 1rem;
+}
+
+.action button:hover {
+    background-color: #d3f36b;
+}
+
+.action button:disabled:hover {
+    background-color: unset;
+}
+
+.exportButton {
+    cursor: pointer;
+    padding: 0.4rem 2rem;
     background-color: var(--secondaryColor);
     color: black;
     border: none;
@@ -55,6 +62,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 2rem;
+    margin-bottom: 1rem;
 
     .icon {
         width: 1rem;

@@ -17,6 +17,8 @@ import ListProductLine from "../pages/Manager/ProductLine/ListProductLine";
 import ShowProductLine from "../pages/Manager/ProductLine/ShowProductLine/ShowProductLine";
 import ShowOrderDetail from "../pages/Distributor/ShowOrderDetail";
 import CreateBatch from "../pages/Factory/CreateBatch";
+import ListBatch from "../pages/Factory/ListBatch";
+import StockExport from "../pages/Factory/StockExport";
 
 const publicRoutes = [
     // {path: '/login', component: Login},
@@ -33,7 +35,9 @@ const publicRoutes = [
     {path: '/distributor/order/create', layout: ManagerLayout, component: CreateOrder},
     {path: '/distributor/order/list', layout: ManagerLayout, component: ShowOrder},
     {path: '/distributor/order_detail/get', layout: ManagerLayout, component: ShowOrderDetail},
-    {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch}
+    {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch},
+    {path: '/factory/warehouse/list_batch', layout: FactoryLayout, component: ListBatch},
+    {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport}
 ];
 
 const privateRoutes = [

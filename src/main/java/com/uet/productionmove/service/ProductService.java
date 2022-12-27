@@ -30,9 +30,4 @@ public class ProductService {
 //                "3-cell, 55 Wh \"smart\" lithium-ion, integrated"
 //        ));
     }
-
-    public void insertProduct(ProductLine productLine) {
-        ProductLine p = productRepository.save(productLine);
-        System.out.println(p.getId());
-    }
 }

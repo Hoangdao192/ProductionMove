@@ -1,6 +1,7 @@
 package com.uet.productionmove.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +33,8 @@ public class Factory {
     private String address;
 
     @OneToMany(mappedBy = "factory", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
+    // @JsonBackReference
     private List<ProductBatch> createdProductBatchs = new ArrayList<>();
 
     public Factory(Unit unit, String name, String phoneNumber, String address) {

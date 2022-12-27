@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +19,9 @@ public class ProductBatchModel {
 
     @NotNull(message = "manufacturingDate không thể là null")
     private LocalDate manufacturingDate;
+
+    @NotNull(message = "warrantyPeriod cannot be null")
+    private Long warrantyPeriod;
 
     @NotNull(message = "productLineId không thể là null.")
     private Long productLineId;

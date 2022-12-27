@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Table(name = "product_lines")
@@ -77,7 +78,7 @@ public class ProductLine {
     private String battery;
 
     @OneToMany(mappedBy = "productLine", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<ProductBatch> productBatchs = new ArrayList<>();
 
     public ProductLine(

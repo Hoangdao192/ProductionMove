@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.time.LocalDate;
 
 @Table(name = "batch")
@@ -21,16 +24,20 @@ public class ProductBatch {
     @JoinColumn(name = "stock_id")
     private Stock stock;
 
+    @Column(nullable = false)
     private LocalDate manufacturingDate;
 
+    @Column(nullable = false)
+    private Long warrantyPeriod;
+
     @ManyToOne(cascade = CascadeType.MERGE)
-    @Column(nullable = false, updatable = false)
-    @JoinColumn(name = "factory_id")
+    // @JsonBackReference
+    @JoinColumn(name = "factory_id", nullable = false, updatable = false)
     private Factory factory;
 
     @ManyToOne
-    @Column(nullable = false, updatable = false)
-    @JoinColumn(name = "product_line_id")
+    // @JsonBackReference
+    @JoinColumn(name = "product_line_id", nullable = false, updatable = false)
     private ProductLine productLine;
 
     @Column(nullable = false)

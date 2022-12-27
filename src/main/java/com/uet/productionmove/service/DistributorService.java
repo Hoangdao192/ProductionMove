@@ -1,11 +1,10 @@
 package com.uet.productionmove.service;
 
-import com.uet.productionmove.entity.Distributor;
-import com.uet.productionmove.entity.Unit;
-import com.uet.productionmove.entity.UserType;
+import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.repository.DistributorRepository;
+import com.uet.productionmove.repository.StockRepository;
 import com.uet.productionmove.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,8 @@ public class DistributorService {
     private DistributorRepository distributorRepository;
     @Autowired
     private UnitRepository unitRepository;
+    @Autowired
+    private StockRepository stockRepository;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
@@ -34,7 +35,18 @@ public class DistributorService {
                 distributorModel.getAddress(),
                 distributorModel.getPhoneNumber());
 
-        return distributorRepository.save(distributor);
+        distributor = distributorRepository.save(distributor);
+        createDistributorStock(distributor);
+        return distributor;
+    }
+
+    private Stock createDistributorStock(Distributor distributor) {
+        Stock stock = new Stock();
+        stock.setStockOwner(distributor.getUnit());
+        stock.setName(distributor.getName());
+        stock.setAddress(distributor.getAddress());
+        stock = stockRepository.save(stock);
+        return stock;
     }
 
     public Distributor updateDistributor(DistributorModel distributorModel)

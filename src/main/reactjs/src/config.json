@@ -2,6 +2,20 @@
     "server" : {
         "url" : "http://localhost:5000",
         "api" : {
+            "productBatch" : {
+                "create" : {
+                    "url" : "http://localhost:5000/api/product_batch/create"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/product_batch/list",
+                    "notImport" : {
+                        "url" : "http://localhost:5000/api/product_batch/list/not_import"
+                    } 
+                },
+                "import" : {
+                    "url" : "http://localhost:5000/api/factory/stock/import"
+                }
+            },
             "productLine" : {
                 "create" : {
                     "url" : "http://localhost:5000/api/product_line/create"
@@ -76,6 +90,16 @@
                 },
                 "delete" : {
                     "url" : "http://localhost:5000/api/factory/delete"
+                },
+                "stock" : {
+                    "export" : {
+                        "url": "http://localhost:5000/api/factory/stock/export"
+                    },
+                    "batch" : {
+                        "list": {
+                            "url" : "http://localhost:5000/api/factory/stock/batch/list"
+                        }
+                    }
                 }
             },
             "warranty" : {

@@ -1,21 +1,17 @@
 package com.uet.productionmove.service;
 
-import com.uet.productionmove.entity.Factory;
-import com.uet.productionmove.entity.Unit;
-import com.uet.productionmove.entity.User;
-import com.uet.productionmove.entity.UserType;
+import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
+import com.uet.productionmove.model.FactoryExportModel;
 import com.uet.productionmove.model.FactoryModel;
 import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import javax.swing.text.html.Option;
+import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class FactoryService {
@@ -23,6 +19,10 @@ public class FactoryService {
     private ProductLineRepository productLineRepository;
     private BatchRepository batchRepository;
     private FactoryRepository factoryRepository;
+    @Autowired
+    private DistributorRepository distributorRepository;
+
+    @Autowired
     private StockRepository stockRepository;
     @Autowired
     private UserRepository userRepository;
@@ -40,9 +40,19 @@ public class FactoryService {
                 unit,
                 factoryModel.getName(),
                 factoryModel.getPhoneNumber(),
-                factoryModel.getAddress()
-        );
-        return factoryRepository.save(factory);
+                factoryModel.getAddress());
+        factory = factoryRepository.save(factory);
+        createFactoryStock(factory);
+        return factory;
+    }
+
+    private Stock createFactoryStock(Factory factory) {
+        Stock stock = new Stock();
+        stock.setStockOwner(factory.getUnit());
+        stock.setName(factory.getName());
+        stock.setAddress(factory.getAddress());
+        stock = stockRepository.save(stock);
+        return stock;
     }
 
     public Factory updateFactory(FactoryModel factoryModel) throws InvalidArgumentException {
@@ -87,6 +97,69 @@ public class FactoryService {
             factoryModels.add(factoryModel);
         });
         return factoryModels;
+    }
+
+    public void importProducedBatchIntoStock(Long factoryId, Long batchId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
+        Optional<ProductBatch> productBatchOptional = batchRepository.findById(batchId);
+        Optional<Stock> stockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
+
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists.");
+        }
+        if (productBatchOptional.isEmpty()) {
+            throw new InvalidArgumentException("Batch with ID not exists.");
+        }
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory does not have stock.");
+        }
+
+        ProductBatch productBatch = productBatchOptional.get();
+        productBatch.setStock(stockOptional.get());
+        batchRepository.save(productBatch);
+    }
+
+    public void exportBatchToDistributor(FactoryExportModel factoryExportModel) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryExportModel.getFactoryId());
+        Optional<Distributor> distributorOptional = distributorRepository
+                .findById(factoryExportModel.getDistributorId());
+
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists");
+        }
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with ID not exists");
+        }
+
+        Optional<Stock> stockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory does not have ant stock.");
+        }
+
+        for (int i = 0; i < factoryExportModel.getExportBatchIds().size(); ++i) {
+            Long batchId = factoryExportModel.getExportBatchIds().get(i);
+            Optional<ProductBatch> productBatchOptional = batchRepository.findById(batchId);
+            if (productBatchOptional.isEmpty()) {
+                throw new InvalidArgumentException("Product batch with ID not exists");
+            }
+            ProductBatch productBatch = productBatchOptional.get();
+            if (productBatch.getStock().getId() != stockOptional.get().getId()) {
+                throw new InvalidArgumentException("Product batch does not in Factory's stock.");
+            }
+        }
+    }
+
+    public List<ProductBatch> getAllProductBatchInStock(Long factoryId) throws InvalidArgumentException {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists.");
+        }
+        Optional<Stock> stockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory does not have any Stock.");
+        }
+
+        return batchRepository.findAllByStock(stockOptional.get());
     }
 
     @Autowired

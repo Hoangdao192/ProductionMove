@@ -26,6 +26,14 @@ function FactoryLayout ({ children }) {
                 {
                     heading: "Tạo lô sản phẩm",
                     action: "/factory/warehouse/create_batch"
+                },
+                {
+                    heading: "Quản lý lô sản phẩm",
+                    action: "/factory/warehouse/list_batch"
+                },
+                {
+                    heading: "Xuất kho",
+                    action: "/factory/warehouse/export"
                 }
             ]
         },
