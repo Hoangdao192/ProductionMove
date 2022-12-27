@@ -11,11 +11,13 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping(path = "/api/product_line")
+@PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
 public class ProductLineController {
 
     @Autowired

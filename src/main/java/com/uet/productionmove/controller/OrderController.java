@@ -8,6 +8,7 @@ import com.uet.productionmove.model.OrderModel;
 import com.uet.productionmove.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping(path = "api/order")
+@PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
 public class OrderController {
 
     private OrderService orderService;

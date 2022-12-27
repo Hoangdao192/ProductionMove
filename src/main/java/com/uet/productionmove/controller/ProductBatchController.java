@@ -11,15 +11,18 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/product_batch")
+@PreAuthorize("hasAnyAuthority('Admin', 'Distributor', 'Manufacture') and isAuthenticated()")
 public class ProductBatchController {
 
     private ProductBatchService productBatchService;
 
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
     public ResponseEntity<ProductBatch> createProductBatch(@RequestBody @Valid ProductBatchModel productBatchModel)
             throws InvalidArgumentException {
         ProductBatch productBatch = productBatchService.createProductBatch(productBatchModel);
@@ -27,17 +30,21 @@ public class ProductBatchController {
     }
 
     @GetMapping(path = "/list")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
     public ResponseEntity<List<ProductBatch>> getAllProductBatch(@RequestParam Long factoryId)
             throws InvalidArgumentException {
         return ResponseEntity.ok(productBatchService.getAllProductBatchByFactoryId(factoryId));
     }
 
     @GetMapping(path = "/list/not_import")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
     public ResponseEntity<List<ProductBatch>> getAllProductBatchNotImported(@RequestParam Long factoryId)
             throws InvalidArgumentException {
         return ResponseEntity.ok(productBatchService.getAllProductBatchNotImported());
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
+    @DeleteMapping(path = "/delete")
     public String deleteProductBatch(@RequestParam Long productBatchId) {
         productBatchService.deleteProductBatch(productBatchId);
         return "";

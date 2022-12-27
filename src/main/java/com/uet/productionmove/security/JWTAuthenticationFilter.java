@@ -1,6 +1,10 @@
 package com.uet.productionmove.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uet.productionmove.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,18 +36,33 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         if (!jwt.isEmpty() && jwtProvider.validateToken(jwt)) {
             String userId = jwtProvider.getUserIdFromJWT(jwt);
 
-            UserDetails userDetails = customUserDetailService.loadUserById(userId);
-            if (userDetails != null) {
+            User user = customUserDetailService.loadUserById(userId);
+            if (user != null) {
                 UsernamePasswordAuthenticationToken
                         authenticationToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities()
+                        user, null, user.getAuthorities()
                 );
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
 
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(convertObjectToJson(new Object() {
+                public String error = "Unauthorized request";
+            }));
+        }
+    }
+
+    public String convertObjectToJson(Object object) throws JsonProcessingException {
+        if (object == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {

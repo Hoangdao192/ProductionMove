@@ -6,6 +6,7 @@ import com.uet.productionmove.model.WarrantyCenterModel;
 import com.uet.productionmove.service.WarrantyCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,12 +16,14 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "api/warranty")
+@PreAuthorize("hasAnyAuthority('Admin', 'Warranty center') and isAuthenticated()")
 public class WarrantyCenterController {
 
     @Autowired
     private WarrantyCenterService warrantyCenterService;
 
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> createWarrantyCenter(
             @Valid @RequestBody WarrantyCenterModel warrantyCenterModel)
             throws InvalidArgumentException {
@@ -30,6 +33,7 @@ public class WarrantyCenterController {
     }
 
     @PostMapping(path = "/update")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> updateWarrantyCenter(
             @Valid @RequestBody WarrantyCenterModel warrantyCenterModel)
             throws InvalidArgumentException {
@@ -40,6 +44,7 @@ public class WarrantyCenterController {
     }
 
     @DeleteMapping(path = "delete")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> deleteWarrantyCenter(@RequestParam Long warrantyCenterId)
             throws InvalidArgumentException {
         warrantyCenterService.deleteWarrantyCenter(warrantyCenterId);
@@ -49,6 +54,7 @@ public class WarrantyCenterController {
     }
 
     @GetMapping(path = "/list")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<List<WarrantyCenterModel>> getAllWarrantyCenter() {
         return ResponseEntity.ok(warrantyCenterService.getAllWarrantyCenter());
     }

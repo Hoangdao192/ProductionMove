@@ -1,5 +1,6 @@
 package com.uet.productionmove.security;
 
+import com.uet.productionmove.entity.User;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
@@ -10,11 +11,11 @@ public class JsonWebTokenProvider {
     private final String JWT_SECRET = "UET_PRODUCTION_MOVE";
     private final long JWT_EXPIRATION = 604800000L;
 
-    public String generateToken(CustomUserDetail user) {
+    public String generateToken(User user) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + JWT_EXPIRATION);
         return Jwts.builder()
-                .setSubject(user.getUser().getId().toString())
+                .setSubject(user.getId().toString())
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)

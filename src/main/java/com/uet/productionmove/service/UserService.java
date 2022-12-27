@@ -12,11 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 @Slf4j
 public class UserService {
     private DistributorRepository distributorRepository;
@@ -26,12 +28,14 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 //    @Autowired
     private UnitRepository unitRepository;
+    private RoleRepository roleRepository;
+
 
     @Autowired
     public UserService(
             DistributorRepository distributorRepository, WarrantyCenterRepository warrantyCenterRepository,
             FactoryRepository factoryRepository, UserRepository userRepository,
-            UnitRepository unitRepository,
+            UnitRepository unitRepository, RoleRepository roleRepository,
             PasswordEncoder passwordEncoder) {
         this.distributorRepository = distributorRepository;
         this.warrantyCenterRepository = warrantyCenterRepository;
@@ -39,6 +43,8 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.unitRepository = unitRepository;
+        this.roleRepository = roleRepository;
+        initUserRoles();
         initAdminAccount();
     }
 
@@ -91,7 +97,24 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    private void initAdminAccount() {
+    private void initUserRoles() {
+        if (!roleRepository.existsByName(UserType.ADMIN)) {
+            roleRepository.save(new Role(UserType.ADMIN));
+        }
+        if (!roleRepository.existsByName(UserType.DISTRIBUTOR)) {
+            roleRepository.save(new Role(UserType.DISTRIBUTOR));
+        }
+        if (!roleRepository.existsByName(UserType.MANUFACTURE)) {
+            roleRepository.save(new Role(UserType.MANUFACTURE));
+        }
+        if (!roleRepository.existsByName(UserType.WARRANTY_CENTER)) {
+            roleRepository.save(new Role(UserType.WARRANTY_CENTER));
+        }
+        roleRepository.flush();
+    }
+
+    @Transactional
+    public void initAdminAccount() {
         if (userRepository.findByUsername("admin").isEmpty()) {
             Unit unit = new Unit();
             unit.setType("Admin");
@@ -102,6 +125,7 @@ public class UserService {
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("admin"));
             user.setRole("Admin");
+            user.addRole(roleRepository.findByName(UserType.ADMIN).get());
             userRepository.save(user);
         }
     }

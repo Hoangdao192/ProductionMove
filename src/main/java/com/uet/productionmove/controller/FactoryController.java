@@ -8,6 +8,7 @@ import com.uet.productionmove.model.FactoryModel;
 import com.uet.productionmove.service.FactoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,11 +18,13 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "/api/factory")
+@PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
 public class FactoryController {
 
     private FactoryService factoryService;
 
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> createFactory(
             @Valid @RequestBody FactoryModel factoryModel) throws InvalidArgumentException {
 
@@ -31,6 +34,7 @@ public class FactoryController {
     }
 
     @PostMapping(path = "/update")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> updateFactory(
             @Valid @RequestBody FactoryModel factoryModel) throws InvalidArgumentException {
 
@@ -68,11 +72,13 @@ public class FactoryController {
     }
 
     @GetMapping(path = "list")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<List<FactoryModel>> getAllFactory() {
         return ResponseEntity.ok(factoryService.getAllFactory());
     }
 
     @DeleteMapping(path = "delete")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> deleteFactory(@RequestParam Long factoryId)
             throws InvalidArgumentException {
         factoryService.deleteFactoryById(factoryId);

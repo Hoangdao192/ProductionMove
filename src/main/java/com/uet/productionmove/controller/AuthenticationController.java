@@ -1,5 +1,6 @@
 package com.uet.productionmove.controller;
 
+import com.uet.productionmove.entity.User;
 import com.uet.productionmove.model.LoginRequestModel;
 import com.uet.productionmove.security.CustomUserDetail;
 import com.uet.productionmove.security.JsonWebTokenProvider;
@@ -33,9 +34,9 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        System.out.println((CustomUserDetail) authentication.getPrincipal());
+        System.out.println((User) authentication.getPrincipal());
         // Trả về jwt cho người dùng.
-        String jwt = tokenProvider.generateToken((CustomUserDetail) authentication.getPrincipal());
+        String jwt = tokenProvider.generateToken((User) authentication.getPrincipal());
         Map<String, String> returnData = new HashMap<>();
         returnData.put("accessToken", jwt);
         returnData.put("tokenType", "Bearer");

@@ -6,6 +6,7 @@ import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.service.DistributorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,11 +16,13 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "/api/distributor")
+@PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
 public class DistributorController {
 
     private DistributorService distributorService;
 
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> createDistributor(
             @Valid @RequestBody DistributorModel distributorModel) throws InvalidArgumentException {
 
@@ -29,6 +32,7 @@ public class DistributorController {
     }
 
     @PostMapping(path = "/update")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> updateDistributor(
             @Valid @RequestBody DistributorModel distributorModel) throws InvalidArgumentException {
 
@@ -39,11 +43,13 @@ public class DistributorController {
     }
 
     @GetMapping(path = "/list")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<List<DistributorModel>> getAllDistributor() {
         return ResponseEntity.ok(distributorService.getAllDistributor());
     }
 
     @DeleteMapping(path = "delete")
+    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> deleteDistributor(@RequestParam Long distributorId)
             throws InvalidArgumentException {
         distributorService.deleteDistributor(distributorId);

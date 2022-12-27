@@ -8,6 +8,7 @@ import com.uet.productionmove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,12 +17,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/account/")
+@PreAuthorize("isAuthenticated()")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping(path = "create")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody UserModel userModel)
             throws InvalidArgumentException {
 
@@ -31,6 +34,7 @@ public class UserController {
     }
 
     @PostMapping(path = "update")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public Object updateAccount(@RequestBody @Valid UserModel userModel) throws InvalidArgumentException {
         User user = userService.updateUser(userModel);
         return ResponseEntity.ok(Map.of("message", "Update user successful",
@@ -38,6 +42,7 @@ public class UserController {
     }
 
     @PostMapping(path = "delete")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<String> deleteAccount(@RequestParam String userId) throws InvalidArgumentException {
         userService.deleteUser(userId);
         return ResponseEntity.ok("Delete user successful.");
@@ -67,6 +72,7 @@ public class UserController {
     }
 
     @GetMapping(path = "list")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseModel getAccountList(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size) {

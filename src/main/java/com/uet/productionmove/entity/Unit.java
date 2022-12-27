@@ -1,18 +1,20 @@
 package com.uet.productionmove.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uet.productionmove.validator.RoleConstraint;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.ToString.Exclude;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "units")
@@ -41,6 +43,7 @@ public class Unit {
     private WarrantyCenter warrantyCenter;
 
     @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     private List<User> users;
 }
