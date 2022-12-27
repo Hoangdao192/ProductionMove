@@ -1,14 +1,14 @@
 package com.uet.productionmove.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uet.productionmove.model.DistributorModel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Table(name = "distributor")
 @Entity
@@ -29,6 +29,12 @@ public class Distributor {
     private String name;
     private String address;
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "distributor", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Order> orders;
 
     public Distributor(Unit unit, String name, String address, String phoneNumber) {
         this.unit = unit;

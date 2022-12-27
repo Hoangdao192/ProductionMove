@@ -3,12 +3,14 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
+import com.uet.productionmove.repository.BatchRepository;
 import com.uet.productionmove.repository.DistributorRepository;
 import com.uet.productionmove.repository.StockRepository;
 import com.uet.productionmove.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,8 @@ public class DistributorService {
     private UnitRepository unitRepository;
     @Autowired
     private StockRepository stockRepository;
+    @Autowired
+    private BatchRepository batchRepository;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
@@ -64,6 +68,14 @@ public class DistributorService {
         return distributorRepository.save(distributor);
     }
 
+    public Distributor getDistributorByUnitId(Long unitId) throws InvalidArgumentException {
+        Optional<Distributor> distributorOptional = distributorRepository.findByUnitId(unitId);
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with Unit ID not exists.");
+        }
+        return distributorOptional.get();
+    }
+
     public List<DistributorModel> getAllDistributor() {
         List<Distributor> distributors = distributorRepository.findAll();
         List<DistributorModel> distributorModels = new ArrayList<>();
@@ -77,6 +89,18 @@ public class DistributorService {
             distributorModels.add(distributorModel);
         });
         return distributorModels;
+    }
+
+    public List<ProductBatch> getAllProductBatchInStock(Long distributorId) throws InvalidArgumentException {
+        Optional<Distributor> distributorOptional = distributorRepository.findById(distributorId);
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with ID not exists.");
+        }
+        Optional<Stock> stockOptional = stockRepository.findByStockOwner(distributorOptional.get().getUnit());
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor does not have any stock.");
+        }
+        return batchRepository.findAllByStock(stockOptional.get());
     }
 
     public void deleteDistributor(Long distributorId) throws InvalidArgumentException {

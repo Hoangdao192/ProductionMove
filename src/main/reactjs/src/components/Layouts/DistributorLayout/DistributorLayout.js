@@ -1,5 +1,5 @@
 import Sidebar from "../../Components/Sidebar";
-import style from './ManagerLayout.module.scss';
+import style from './DistributorLayout.module.scss';
 
 import {
     UilEstate,
@@ -8,15 +8,16 @@ import {
     UilPackage,
     UilChart,
     UilSignOutAlt,
-    UilBuilding
+    UilBuilding,
+    UilArchive
 } from "@iconscout/react-unicons";
 
-function ManagerLayout ({ children }) {
+function DistributorLayout ({ children }) {
     const itemList = [
         {
             icon: UilEstate,
             heading: "DashBoard",
-            action: "/manager/home"
+            action: "/distributor/home"
         },
         {
             icon: UilClipboardAlt,
@@ -33,44 +34,20 @@ function ManagerLayout ({ children }) {
             ]
         },
         {
-            icon: UilBuilding,
-            heading: "Đơn vị",
+            icon: UilArchive,
+            heading: "Kho hàng",
             children: [
                 {
-                    heading: "Tạo mới",
-                    action: "/manager/unit/create"
+                    heading: "Quản lý lô sản phẩm",
+                    action: "/distributor/warehouse/list_batch"
                 },
                 {
-                    heading: "Quản lý đơn vị",
-                    action: "/manager/unit/list"
-                }
-            ]
-        },
-        {
-            icon: UilUser,
-            heading: "Tài khoản",
-            children: [
-                { 
-                    heading: "Quản lý tài khoản", 
-                    action: "/manager/account/list"
+                    heading: "Nhập kho",
+                    action: "/distributor/warehouse/import"
                 },
-                { 
-                    heading: "Cấp tài khoản", 
-                    action: "/manager/account/create"
-                }
-            ]
-        },
-        {
-            icon: UilPackage,
-            heading: "Dòng sản phẩm",
-            children: [
-                { 
-                    heading: "Tạo mới", 
-                    action: "/manager/product_line/create"
-                },
-                { 
-                    heading: "Xem danh sách", 
-                    action: "/manager/product_line/list"
+                {
+                    heading: "Xuất kho",
+                    action: "/distributor/warehouse/export"
                 }
             ]
         },
@@ -81,7 +58,7 @@ function ManagerLayout ({ children }) {
         {
             icon: UilSignOutAlt,
             heading: "Đăng xuất",
-            action: '/logout'
+            action: "/logout"
         }
     ];
 
@@ -95,4 +72,4 @@ function ManagerLayout ({ children }) {
     )
 }
 
-export default ManagerLayout;
+export default DistributorLayout;

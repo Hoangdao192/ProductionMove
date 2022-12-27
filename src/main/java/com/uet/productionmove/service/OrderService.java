@@ -1,16 +1,10 @@
 package com.uet.productionmove.service;
 
-import com.uet.productionmove.entity.Customer;
-import com.uet.productionmove.entity.Order;
-import com.uet.productionmove.entity.OrderDetail;
-import com.uet.productionmove.entity.ProductLine;
+import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.OrderDetailModel;
 import com.uet.productionmove.model.OrderModel;
-import com.uet.productionmove.repository.CustomerRepository;
-import com.uet.productionmove.repository.OrderDetailRepository;
-import com.uet.productionmove.repository.OrderRepository;
-import com.uet.productionmove.repository.ProductLineRepository;
+import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +19,8 @@ public class OrderService {
     private CustomerRepository customerRepository;
     private OrderDetailRepository orderDetailRepository;
     private ProductLineRepository productLineRepository;
+    @Autowired
+    private DistributorRepository distributorRepository;
 
     public Order createOrder(OrderModel orderModel) throws InvalidArgumentException {
         Optional<Customer> customerOptional = customerRepository.findById(orderModel.getCustomerId());
@@ -32,10 +28,17 @@ public class OrderService {
             throw new InvalidArgumentException("Customer with ID not exists.");
         }
 
+        Optional<Distributor> distributorOptional =
+                distributorRepository.findById(orderModel.getDistributorId());
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with ID not exists.");
+        }
+
         Order order = new Order();
         order.setId(null);
         order.setOrderDate(orderModel.getOrderDate());
         order.setCustomer(customerOptional.get());
+        order.setDistributor(distributorOptional.get());
         order = orderRepository.save(order);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -113,6 +116,14 @@ public class OrderService {
 
     public List<Order> getAllOrderByCustomer(Long customerId) {
         return orderRepository.findAllByCustomerId(customerId);
+    }
+
+    public List<Order> getAllOrderByDistributorId(Long distributorId) throws InvalidArgumentException {
+        Optional<Distributor> distributorOptional = distributorRepository.findById(distributorId);
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with ID not exists.");
+        }
+        return orderRepository.findAllByDistributor(distributorOptional.get());
     }
 
     public OrderDetail createOrderDetail(OrderDetailModel orderDetailModel)

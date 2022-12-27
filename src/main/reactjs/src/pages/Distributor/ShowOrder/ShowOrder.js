@@ -11,22 +11,48 @@ export default function ShowOrder() {
     const [orders, setOrders] = useState([]);
     const [reducer, forceUpdate] = useReducer(x => x + 1, 0)
 
+    const [distributor, setDistributor] = useState();
+    const user = Authentication.getCurrentUser();
+
+    function loadDistributor() {
+        return new Promise((resolve, reject) => {
+            let url = config.server.api.distributor.get.url + "?unitId=" + user.unit.id;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                }
+            }).then((distributor) => {
+                if (distributor != undefined) {
+                    resolve(distributor);
+                }
+            })
+        })
+    }
+
     useEffect(() => {
-        let url = config.server.api.order.list.url;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                'Authorization': Authentication.generateAuthorizationHeader()
-            }
-        })
-        .then((response) => {
-            if (response.status == 200) {
-                return response.json();
-            }
-        }).then((data) => {
-            if (data != undefined) setOrders(data);
-            console.log(data);
-        })
+        loadDistributor()
+            .then((distributor) => {
+                let url = config.server.api.order.list.url + "?distributorId=" + distributor.id;
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': Authentication.generateAuthorizationHeader()
+                    }
+                })
+                .then((response) => {
+                    if (response.status == 200) {
+                        return response.json();
+                    }
+                }).then((data) => {
+                    if (data != undefined) setOrders(data);
+                    console.log(data);
+                })
+            })
     }, [reducer])
 
     function formatDate(date) {

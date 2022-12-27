@@ -66,6 +66,7 @@ class Authentication {
     logout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("tokenType");
+        localStorage.removeItem("user");
     }
 }
 

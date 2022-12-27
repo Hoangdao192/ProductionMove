@@ -21,6 +21,30 @@ export default function CreateOrder() {
         customerId: ""
     })
     const [isAddProductShow, setShowAddProduct] = useState(false)
+    const [isCustomerValid, setIsCustomerValid] = useState(true)
+
+    const [distributor, setDistributor] = useState();
+    const user = Authentication.getCurrentUser();
+
+    function loadDistributor() {
+        return new Promise((resolve, reject) => {
+            let url = config.server.api.distributor.get.url + "?unitId=" + user.unit.id;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                }
+            }).then((distributor) => {
+                if (distributor != undefined) {
+                    resolve(distributor);
+                }
+            })
+        })
+    }
 
     function resetComponent() {
         setProducts([])
@@ -54,6 +78,11 @@ export default function CreateOrder() {
             alert("Invalid order detail");
             return false;
         }
+
+        if (!isCustomerValid) {
+            alert("Invalid customer");
+            return false;
+        }
         return true;
     }
 
@@ -67,6 +96,7 @@ export default function CreateOrder() {
                     'Authorization': Authentication.generateAuthorizationHeader()
                 },
                 body: JSON.stringify({
+                    distributorId: distributor.id,
                     orderDate: order.orderDate,
                     customerId: order.customerId,
                     orderDetailList: orderDetailList
@@ -104,11 +134,15 @@ export default function CreateOrder() {
         }).then((response) => {
             console.log(response.body)
             if (response.status == 200) {
+                setIsCustomerValid(true)
                 return response.json()
             }
         }).then((data) => {
             if (data != undefined) setCustomer(data)
-            else setCustomer({})
+            else {
+                setIsCustomerValid(false)
+                setCustomer({})
+            }
         })
     }
 
@@ -120,7 +154,9 @@ export default function CreateOrder() {
                 'Authorization': Authentication.generateAuthorizationHeader()
             }
         }).then((response) => {
-            return response.json();
+            if (response.status == 200) {
+                return response.json();
+            }
         }).then((data) => {
             if (data != undefined) setProducts(data)
         })
@@ -197,7 +233,10 @@ export default function CreateOrder() {
     }
 
     useEffect(() => {
-        loadProductLine()
+        loadDistributor().then((distributor) => {
+            setDistributor(distributor);
+            loadProductLine();
+        })
     }, [reducer])
 
     return (
@@ -216,6 +255,13 @@ export default function CreateOrder() {
                     customerId: e.target.value
                 })} onBlur={(e) => validateCustomer()}
                     value={order.customerId} placeholder='Nhập mã khách hàng' type="text" className={style.input}/>
+
+                {
+                    !isCustomerValid ? <p style={{
+                    fontWeight: 500,
+                    color: 'red'
+                }} >* Khách hàng không tồn tại</p> : <></>
+                }
 
                 <div className={`${style.customerInfo} ${customer.id != undefined ? style.show : ''}`}>
                     <p><span>Mã khách hàng:</span> {customer.id}</p>

@@ -54,7 +54,7 @@ public class ProductBatchService {
         productBatch.setProductQuantity(productBatchModel.getProductQuantity());
         productBatch.setManufacturingDate(productBatchModel.getManufacturingDate());
         productBatch.setWarrantyPeriod(productBatchModel.getWarrantyPeriod());
-        productBatch =  batchRepository.save(productBatch);
+        productBatch = batchRepository.save(productBatch);
 
         for (int i = 0; i < productBatch.getProductQuantity(); ++i) {
             Product product = new Product();
@@ -76,6 +76,15 @@ public class ProductBatchService {
 
     public List<ProductBatch> getAllProductBatchNotImported() {
         return batchRepository.findAllByStockIsNull();
+    }
+
+    public List<Product> getAllProductByProductBatchId(Long productBatchId)
+            throws InvalidArgumentException {
+        Optional<ProductBatch> productBatchOptional = batchRepository.findById(productBatchId);
+        if (productBatchOptional.isEmpty()) {
+            throw new InvalidArgumentException("Product batch with ID not exists.");
+        }
+        return productRepository.findByBatch(productBatchOptional.get());
     }
 
     public void insertProductBatch(ProductBatchModel productBatchModel) {

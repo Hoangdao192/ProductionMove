@@ -1,6 +1,7 @@
 package com.uet.productionmove.repository;
 
 import com.uet.productionmove.entity.Customer;
+import com.uet.productionmove.entity.Distributor;
 import com.uet.productionmove.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,6 +19,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying
     @Query(value = "DELETE FROM orders WHERE customer_id = ?1", nativeQuery = true)
     void deleteByCustomerId(Long customerId);
+
+    List<Order> findAllByDistributor(Distributor distributor);
 
 //    @Transactional
 //    @Modifying

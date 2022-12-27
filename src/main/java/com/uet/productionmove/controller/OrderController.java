@@ -64,6 +64,13 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping(path = "/list", params = "distributorId")
+    public ResponseEntity<List<Order>> getAllOrderByDistributorId(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(orderService.getAllOrderByDistributorId(distributorId));
+    }
+
+
     @PostMapping(path = "/detail/create")
     public ResponseEntity<Map<String, Object>> createOrderDetail(
             @RequestBody @Valid OrderDetailModel orderDetailModel) throws InvalidArgumentException {

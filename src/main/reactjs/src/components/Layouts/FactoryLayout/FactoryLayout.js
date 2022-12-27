@@ -43,7 +43,8 @@ function FactoryLayout ({ children }) {
         },
         {
             icon: UilSignOutAlt,
-            heading: "Đăng xuất"
+            heading: "Đăng xuất",
+            action: '/logout'
         }
     ];
 

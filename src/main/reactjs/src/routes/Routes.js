@@ -25,6 +25,11 @@ import CreateBatch from "../pages/Factory/CreateBatch";
 import ListBatch from "../pages/Factory/ListBatch";
 import StockExport from "../pages/Factory/StockExport";
 import NotFound from "../pages/NotFound";
+import Logout from "../pages/Logout";
+import DistributorLayout from "../components/Layouts/DistributorLayout";
+
+import DistributorStockList from '../pages/Distributor/Stock/ListBatch';
+import DistributorShowBatch from '../pages/Distributor/Stock/ShowBatch';
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -38,20 +43,30 @@ const privateRoutes = [
     {path: '/manager/product_line/create', layout: ManagerLayout, component: CreateProductLine, authorization : ['Admin']},
     {path: '/manager/product_line/list', layout: ManagerLayout, component: ListProductLine, authorization : ['Admin']},
     {path: '/manager/product_line/show', layout: ManagerLayout, component: ShowProductLine, authorization : ['Admin']},
-    {path: '/distributor/home', layout: ManagerLayout, component: DistributorHome, authorization : ['Distributor']},
-    {path: '/distributor/order/create', layout: ManagerLayout, component: CreateOrder, authorization : ['Distributor']},
-    {path: '/distributor/order/list', layout: ManagerLayout, component: ShowOrder, authorization : ['Distributor']},
-    {path: '/distributor/order_detail/get', layout: ManagerLayout, component: ShowOrderDetail, authorization : ['Distributor']},
+
+    {path: '/distributor/home', layout: DistributorLayout, component: DistributorHome, authorization : ['Distributor']},
+    {path: '/distributor/order/create', layout: DistributorLayout, component: CreateOrder, authorization : ['Distributor']},
+    {path: '/distributor/order/list', layout: DistributorLayout, component: ShowOrder, authorization : ['Distributor']},
+    {path: '/distributor/order_detail/get', layout: DistributorLayout, component: ShowOrderDetail, authorization : ['Distributor']},
+    // {path: '/factory/warehouse/import', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/warehouse/list_batch', layout: DistributorLayout, component: DistributorStockList, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/warehouse/show_batch', layout: DistributorLayout, component: DistributorShowBatch, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/warehouse/export', layout: DistributorLayout, component: StockExport, authorization : ['Admin', 'Distributor']},
+
     {path: '/factory/home', layout: FactoryLayout, component: FactoryHome, authorization : ['Manufacture']},
     {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/list_batch', layout: FactoryLayout, component: ListBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport, authorization : ['Admin', 'Manufacture']},
+
     {path: '/warranty/home', layout: FactoryLayout, component: WarrantyCenterHome, authorization : ['Manufacture']}
 ];
 
 const publicRoutes = [
     {path: '/home', component: Home},
+    {path: '/', component: Home},
+    // {path: '/home', component: Home},
     {path: '/login', component: Login},
+    {path: '/logout', component: Logout},
     {path: '/not_found', component: NotFound}
 ];
 

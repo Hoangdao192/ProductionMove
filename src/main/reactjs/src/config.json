@@ -76,6 +76,11 @@
                 },
                 "delete" : {
                     "url" : "http://localhost:5000/api/distributor/delete"
+                },
+                "stock" : {
+                    "list": {
+                        "url" : "http://localhost:5000/api/distributor/stock/list"
+                    }
                 }
             },
             "factory" : {

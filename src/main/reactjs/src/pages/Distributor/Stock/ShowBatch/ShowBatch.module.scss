@@ -1,0 +1,50 @@
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.container {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1rem 2rem;
+}
+
+.productBatchInfo {
+    &>p {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    &>div {
+        display: flex;
+
+        &>p:first-child {
+            font-weight: bold;
+            margin-right: 1rem;
+            width: 10rem;
+        }
+    }
+}
+
+.productList {
+    margin-top: 2rem;
+
+    &>p {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    &>div {
+        display: flex;
+
+        &>p:first-child {
+            font-weight: bold;
+            margin-right: 1rem;
+            width: 10rem;
+        }
+    }
+}

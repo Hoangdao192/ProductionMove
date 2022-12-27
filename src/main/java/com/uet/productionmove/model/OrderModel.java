@@ -23,6 +23,9 @@ public class OrderModel {
     @NotNull(message = "customerId cannot be null")
     private Long customerId;
 
+    @NotNull(message = "distributorId cannot be null.")
+    private Long distributorId;
+
     @NotNull(message = "order details cannot be null.")
     @Valid
     @NotEmptyList

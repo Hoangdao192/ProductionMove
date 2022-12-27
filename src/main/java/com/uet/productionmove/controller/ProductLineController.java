@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping(path = "/api/product_line")
-@PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('Admin', 'Manufacture', 'Distributor') and isAuthenticated()")
 public class ProductLineController {
 
     @Autowired

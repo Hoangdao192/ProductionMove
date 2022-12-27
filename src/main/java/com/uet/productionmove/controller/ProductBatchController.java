@@ -1,5 +1,6 @@
 package com.uet.productionmove.controller;
 
+import com.uet.productionmove.entity.Product;
 import com.uet.productionmove.entity.ProductBatch;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.ProductBatchModel;
@@ -48,6 +49,12 @@ public class ProductBatchController {
     public String deleteProductBatch(@RequestParam Long productBatchId) {
         productBatchService.deleteProductBatch(productBatchId);
         return "";
+    }
+
+    @GetMapping(path = "/product/list")
+    public ResponseEntity<List<Product>> getAllProductByProductBatchId(@RequestParam Long productBatchId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(productBatchService.getAllProductByProductBatchId(productBatchId));
     }
 
     @Autowired

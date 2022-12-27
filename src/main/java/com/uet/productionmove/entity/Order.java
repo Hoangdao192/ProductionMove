@@ -22,10 +22,14 @@ public class Order {
     private LocalDate orderDate;
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "distributor_id", updatable = false, nullable = false)
+    private Distributor distributor;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
 //    @JsonManagedReference
     private List<OrderDetail> orderDetails;
 }
