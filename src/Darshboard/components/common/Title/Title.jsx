@@ -26,6 +26,8 @@ function Title({ icon, title, name, avatar }) {
                     ? 20
                     : name === "UilFileExport"
                     ? 20
+                    : name === "UilShutter"
+                    ? 30
                     : 15
                 }
               />

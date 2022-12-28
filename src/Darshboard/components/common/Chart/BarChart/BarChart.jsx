@@ -19,17 +19,38 @@ ChartJS.register(
   Legend
 );
 
-export default function BarChart({ title, legend, labelList, dataList }) {
+export default function BarChart({
+  title,
+  legend,
+  labelList,
+  dataList,
+  scales,
+  tooltip,
+}) {
   const options = {
     responsive: true,
+    // scales: scales,
+    scales: scales,
+
     plugins: {
       legend: {
         position: "top",
+        labels: {
+          fontColor: "red",
+          font: {
+            size: 10,
+          },
+        },
       },
       title: {
         display: true,
         text: title,
+        font: {
+          size: 20,
+        },
+        color: "black",
       },
+      tooltip: tooltip,
     },
   };
 

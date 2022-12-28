@@ -105,3 +105,15 @@
   align-items: center;
   justify-items: center
 }
+
+.UilShutter {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 0px 2px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}

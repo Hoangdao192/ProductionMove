@@ -5,12 +5,13 @@ import {
   ReportForProductLine,
   ErrorProducts,
   FactoryExport,
+  StaticOperator,
 } from "../pages/Statistics";
 
 const Content = () => {
   return (
     <div className={styles.container}>
-      <ErrorProducts />
+      <StaticOperator />
     </div>
   );
 };
