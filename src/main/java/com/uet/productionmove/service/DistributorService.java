@@ -3,6 +3,8 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
+import com.uet.productionmove.model.ProductWarrantyModel;
+import com.uet.productionmove.model.SoldProductModel;
 import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,12 @@ public class DistributorService {
     private ProductRepository productRepository;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private CustomerProductRepository customerProductRepository;
+    @Autowired
+    private ProductWarrantyRepository productWarrantyRepository;
+    @Autowired
+    private WarrantyCenterRepository warrantyCenterRepository;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
@@ -114,15 +122,31 @@ public class DistributorService {
         return products;
     }
 
-    public List<Product> getAllSoldProduct(Long distributorId) throws InvalidArgumentException {
+    public List<SoldProductModel> getAllSoldProduct(Long distributorId) throws InvalidArgumentException {
         List<Order> orders = orderService.getAllOrderByDistributorId(distributorId);
         List<Product> products = new ArrayList<>();
+        List<SoldProductModel> soldProductModels = new ArrayList<>();
         orders.forEach(order -> {
             order.getOrderDetails().forEach(orderDetail -> {
+                Product product = orderDetail.getProduct();
+                SoldProductModel soldProduct = new SoldProductModel();
+                soldProduct.setId(product.getId());
+                soldProduct.setStatus(product.getStatus());
+                soldProduct.setBatch(product.getBatch());
+                soldProduct.setProductLine(product.getProductLine());
+                soldProduct.setOrder(order);
+
+                CustomerProduct customerProduct =
+                        customerProductRepository.findByProductId(product.getId()).get();
+
+                soldProduct.setCustomerProduct(customerProduct);
+                soldProductModels.add(soldProduct);
+
                 products.add(orderDetail.getProduct());
             });
         });
-        return products;
+
+        return soldProductModels;
     }
 
     public Distributor getDistributorById(Long distributorId) throws InvalidArgumentException {
@@ -139,6 +163,50 @@ public class DistributorService {
             throw new InvalidArgumentException("Distributor with ID not exists.");
         }
         distributorRepository.delete(distributorOptional.get());
+    }
+
+    public ProductWarranty requestProductWarranty(ProductWarrantyModel productWarrantyModel)
+            throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(productWarrantyModel.getRequestWarrantyDistributorId());
+
+        Optional<CustomerProduct> customerProductOptional =
+                customerProductRepository.findById(productWarrantyModel.getCustomerProductId());
+        if (customerProductOptional.isEmpty()) {
+            throw new InvalidArgumentException("Customer product with ID not exists.");
+        }
+        Optional<WarrantyCenter> warrantyCenterOptional = warrantyCenterRepository
+                .findById(productWarrantyModel.getWarrantyCenterId());
+        if (warrantyCenterOptional.isEmpty()) {
+            throw new InvalidArgumentException("Warranty center ID not exists.");
+        }
+
+        //  Kiểm tra xem sản phẩm này có đang được bảo hành hay không
+        if (!productWarrantyRepository
+                .findAllByCustomerProductAndEndWarrantyDateIsNull(customerProductOptional.get())
+                .isEmpty()) {
+            throw new InvalidArgumentException("Sản phẩm này đang được bảo hành.");
+        }
+
+        Product product = customerProductOptional.get().getProduct();
+        product.setStatus(ProductStatus.ERROR_WARRANTY);
+
+        ProductWarranty productWarranty = new ProductWarranty();
+        productWarranty.setRequestWarrantyDistributor(distributor);
+        productWarranty.setCustomerProduct(customerProductOptional.get());
+        productWarranty.setWarrantyCenter(warrantyCenterOptional.get());
+        productWarranty.setStartWarrantyDate(productWarrantyModel.getStartWarrantyDate());
+        productWarranty.setDescription(productWarrantyModel.getDescription());
+        productWarranty.setCustomer(customerProductOptional.get().getCustomer());
+        productWarranty.setStatus(ProductWarrantyStatus.WAITING);
+        return productWarrantyRepository.save(productWarranty);
+    }
+
+    /**
+     * Lấy tất cả yêu cầu bảo hành đến từ đại lý (distributorId)
+     */
+    public List<ProductWarranty> getAllRequestWarranty(Long distributorId) throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        return productWarrantyRepository.findAllByRequestWarrantyDistributor(distributor);
     }
 
     @Autowired

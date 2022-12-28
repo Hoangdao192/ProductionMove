@@ -56,10 +56,29 @@ export default function ListProduct() {
             }
         })
     }
+
+    function loadSoldProduct(distributorId) {
+        let url = config.server.api.distributor.sold.list.url + "?distributorId=" + distributorId;
+        fetch(url, {
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        }).then((response) => {
+            if (response.status == 200) {
+                return response.json();
+            }
+        }).then((data) => {
+            if (data != undefined) {
+                console.log(data)
+                setSoldProducts(data);
+            }
+        })
+    }
     
     useEffect(() => {
         loadDistributor().then((distributor) => {
             loadInStockProduct(distributor.id)
+            loadSoldProduct(distributor.id)
         });
     }, [])
 
@@ -134,7 +153,7 @@ export default function ListProduct() {
                                     <TableCell align="center">{product.productLine.productName}</TableCell>
                                     <TableCell align="center">{product.batch.manufacturingDate}</TableCell>
                                     <TableCell align="center">{product.batch.id}</TableCell>
-                                    <TableCell align="center">{}</TableCell>
+                                    <TableCell align="center">{product.status}</TableCell>
                                     {/* <TableCell align="center">
                                         <div className={style.action}>
                                             <button className={style.button}>Sửa</button>
@@ -160,32 +179,33 @@ export default function ListProduct() {
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                             <TableRow>
-                                <TableCell align="center">STT</TableCell>
-                                <TableCell align="center">Mã lô hàng</TableCell>
+                            <TableCell align="center">STT</TableCell>
+                                <TableCell align="center">Mã sản phẩm</TableCell>
                                 <TableCell align="center">Mã dòng sản phẩm</TableCell>
-                                <TableCell align="center">Tên dòng sản phẩm</TableCell>
-                                <TableCell align="center">Ngày sản xuất</TableCell>
-                                <TableCell align="center">Số lượng sản phẩm</TableCell>
-                                <TableCell align="center">Tùy chọn</TableCell>
+                                <TableCell align="center">Tên sản phẩm</TableCell>
+                                <TableCell align="center">Ngày bán</TableCell>
+                                <TableCell align="center">Mã lô hàng</TableCell>
+                                <TableCell align="center">Mã khách hàng</TableCell>
+                                <TableCell align="center">Tên khách hàng</TableCell>
                             </TableRow>
                             </TableHead>
                             <TableBody>
-                            {soldProducts.length > 0 ? soldProducts.map((productBatch, index) => (
+                            {soldProducts.length > 0 ? soldProducts.map((product, index) => (
                                 <TableRow
                                     key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                     <TableCell align="center">{index}</TableCell>
-                                    <TableCell align="center">{productBatch.id}</TableCell>
-                                    <TableCell align="center">{productBatch.productLine.id}</TableCell>
-                                    <TableCell align="center">{productBatch.productLine.productName}</TableCell>
-                                    <TableCell align="center">{formatDate(productBatch.manufacturingDate)}</TableCell>
-                                    <TableCell align="center">{productBatch.productQuantity}</TableCell>
-                                    <TableCell align="center">
-                                        <div className={style.action}>
-                                            <button className={style.button}>Nhập kho</button>
-                                        </div>
-                                    </TableCell>
+                                    <TableCell align="center">{product.id}</TableCell>
+                                    <TableCell align="center">{product.productLine.id}</TableCell>
+                                    <TableCell align="center">{product.productLine.productName}</TableCell>
+                                    <TableCell align="center">{product.order.orderDate}</TableCell>
+                                    <TableCell align="center">{product.batch.id}</TableCell>
+                                    <TableCell align="center">{product.customerProduct.customer.id}</TableCell>
+                                    <TableCell align="center">{
+                                        product.customerProduct.customer.firstName + " " +
+                                        product.customerProduct.customer.lastName
+                                        }</TableCell>
                                 </TableRow>
                             )) : <TableCell align="center" colSpan={7}>Không có lô hàng nào</TableCell>}
                             </TableBody>

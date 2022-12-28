@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "api/warranty")
-@PreAuthorize("hasAnyAuthority('Admin', 'Warranty center') and isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('Admin', 'Warranty center', 'Distributor') and isAuthenticated()")
 public class WarrantyCenterController {
 
     @Autowired
@@ -45,6 +45,12 @@ public class WarrantyCenterController {
                 "warrantyCenter", warrantyCenter));
     }
 
+    @GetMapping(path = "get", params = "unitId")
+    public ResponseEntity<WarrantyCenter> getWarrantyCenterByUnitId(@RequestParam Long unitId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(warrantyCenterService.getWarrantyCenterByUnitId(unitId));
+    }
+
     @DeleteMapping(path = "delete")
     @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<Map<String, Object>> deleteWarrantyCenter(@RequestParam Long warrantyCenterId)
@@ -56,7 +62,7 @@ public class WarrantyCenterController {
     }
 
     @GetMapping(path = "/list")
-    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
     public ResponseEntity<List<WarrantyCenterModel>> getAllWarrantyCenter() {
         return ResponseEntity.ok(warrantyCenterService.getAllWarrantyCenter());
     }
@@ -66,6 +72,30 @@ public class WarrantyCenterController {
             @RequestBody @Valid ProductWarrantyModel productWarrantyModel) throws InvalidArgumentException {
         ProductWarranty productWarranty = warrantyCenterService.createProductWarranty(productWarrantyModel);
         return ResponseEntity.ok(productWarranty);
+    }
+
+    @GetMapping(path = "/warranty/list")
+    public ResponseEntity<List<ProductWarranty>> getAllProductWarrantyByWarrantyCenterId(
+            @RequestParam Long warrantyCenterId
+    ) throws InvalidArgumentException {
+        List<ProductWarranty> productWarranties = warrantyCenterService.getAllWarrantyByWarrantyCenterId(warrantyCenterId);
+        return ResponseEntity.ok(productWarranties);
+    }
+
+    @GetMapping(path = "/warranty/request/list")
+    public ResponseEntity<List<ProductWarranty>> getAllProductWarrantyRequestByWarrantyCenterId(
+            @RequestParam Long warrantyCenterId
+    ) throws InvalidArgumentException {
+        List<ProductWarranty> productWarranties =
+                warrantyCenterService.getAllProductWarrantyRequest(warrantyCenterId);
+        return ResponseEntity.ok(productWarranties);
+    }
+
+    @PostMapping(path = "/warranty/accept")
+    public ResponseEntity<String> acceptWarrantyRequest(@RequestParam Long productWarrantyId)
+        throws InvalidArgumentException {
+        warrantyCenterService.acceptWarrantyRequest(productWarrantyId);
+        return ResponseEntity.ok("Successful");
     }
 
 }

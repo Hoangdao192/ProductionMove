@@ -3,8 +3,11 @@ package com.uet.productionmove.controller;
 import com.uet.productionmove.entity.Distributor;
 import com.uet.productionmove.entity.Product;
 import com.uet.productionmove.entity.ProductBatch;
+import com.uet.productionmove.entity.ProductWarranty;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
+import com.uet.productionmove.model.ProductWarrantyModel;
+import com.uet.productionmove.model.SoldProductModel;
 import com.uet.productionmove.service.DistributorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +71,29 @@ public class DistributorController {
     public ResponseEntity<List<Product>> getAllProductInStock(@RequestParam Long distributorId)
             throws InvalidArgumentException {
         return ResponseEntity.ok(distributorService.getAllProductInStock(distributorId));
+    }
+
+    @GetMapping(path = "sold/list")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+    public ResponseEntity<List<SoldProductModel>> getAllSoldProduct(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getAllSoldProduct(distributorId));
+    }
+
+    @PostMapping(path = "warranty/request")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+    public ResponseEntity<ProductWarranty> requestProductWarranty(
+            @RequestBody @Valid ProductWarrantyModel productWarrantyModel) throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.requestProductWarranty(productWarrantyModel));
+    }
+
+    @GetMapping(path = "warranty/list")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+    public ResponseEntity<List<ProductWarranty>> requestProductWarranty(
+            @RequestParam Long distributorId) throws InvalidArgumentException {
+        return ResponseEntity.ok(
+                distributorService.getAllRequestWarranty(distributorId)
+        );
     }
 
     @DeleteMapping(path = "delete")

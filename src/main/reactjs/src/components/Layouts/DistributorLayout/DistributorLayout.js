@@ -10,6 +10,7 @@ import {
     UilSignOutAlt,
     UilBuilding,
     UilArchive,
+    UilNotes,
     UilUsersAlt
 } from "@iconscout/react-unicons";
 
@@ -31,6 +32,20 @@ function DistributorLayout ({ children }) {
                 {
                     heading: "Quản lý đơn hàng",
                     action: "/distributor/order/list"
+                }
+            ]
+        },
+        {
+            icon: UilNotes,
+            heading: "Đơn bảo hành",
+            children: [
+                {
+                    heading: "Tạo mới",
+                    action: "/distributor/warranty/create"
+                },
+                {
+                    heading: "Xem danh sách",
+                    action: "/distributor/warranty/list"
                 }
             ]
         },

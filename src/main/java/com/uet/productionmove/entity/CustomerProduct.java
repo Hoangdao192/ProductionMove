@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CustomerProduct {
     @Id
+    @Column(name = "product_id")
     private Long productId;
     private LocalDate activationDate;
     private LocalDate warrantyExpiredDate;
@@ -21,4 +22,9 @@ public class CustomerProduct {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @MapsId
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

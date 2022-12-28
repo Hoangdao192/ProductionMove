@@ -80,6 +80,7 @@ public class OrderService {
             CustomerProduct customerProduct = new CustomerProduct();
             customerProduct.setProductId(product.getId());
             customerProduct.setActivationDate(orderModel.getOrderDate());
+            customerProduct.setCustomer(customerOptional.get());
             LocalDate warrantyExpiredDate =
                     orderModel.getOrderDate().plusMonths(product.getBatch().getWarrantyPeriod());
             customerProduct.setWarrantyExpiredDate(warrantyExpiredDate);

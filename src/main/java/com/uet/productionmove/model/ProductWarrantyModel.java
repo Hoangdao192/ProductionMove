@@ -12,10 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductWarrantyModel {
-    private Long id;
 
-    @NotNull(message = "productId cannot be null.")
-    private Long productId;
+    @NotNull(message = "customerProductId cannot be null.")
+    private Long customerProductId;
 
     @NotNull(message = "startWarrantyDate cannot be null.")
     private LocalDate startWarrantyDate;
@@ -25,5 +24,10 @@ public class ProductWarrantyModel {
     @NotNull(message = "warrantyCenterId cannot be null.")
     private Long warrantyCenterId;
 
+    //  Đại lý gửi yêu cầu bảo hành
+    @NotNull(message = "requestWarrantyDistributorId cannot be null.")
+    private Long requestWarrantyDistributorId;
+
     private String description;
+    private String status;
 }

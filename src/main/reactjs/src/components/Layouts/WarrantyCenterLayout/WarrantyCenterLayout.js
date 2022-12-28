@@ -34,38 +34,6 @@ function WarrantyCenterLayout ({ children }) {
             ]
         },
         {
-            icon: UilUser,
-            heading: "Tài khoản",
-            children: [
-                { 
-                    heading: "Quản lý tài khoản", 
-                    action: "/manager/account/list"
-                },
-                { 
-                    heading: "Cấp tài khoản", 
-                    action: "/manager/account/create"
-                }
-            ]
-        },
-        {
-            icon: UilPackage,
-            heading: "Dòng sản phẩm",
-            children: [
-                { 
-                    heading: "Tạo mới", 
-                    action: "/manager/product_line/create"
-                },
-                { 
-                    heading: "Xem danh sách", 
-                    action: "/manager/product_line/list"
-                }
-            ]
-        },
-        {
-            icon: UilChart,
-            heading: "Analytics"
-        },
-        {
             icon: UilSignOutAlt,
             heading: "Đăng xuất",
             action: '/logout'

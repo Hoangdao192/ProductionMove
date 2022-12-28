@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface WarrantyCenterRepository extends JpaRepository<WarrantyCenter, Long> {
-
+    Optional<WarrantyCenter> findByUnitId(Long unitId);
 }

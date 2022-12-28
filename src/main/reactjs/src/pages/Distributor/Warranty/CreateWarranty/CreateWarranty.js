@@ -1,7 +1,6 @@
 import style from './CreateWarranty.module.scss';
 import Authentication from '../../../../services/Authentication/Authentication';
 import config from '../../../../config.json';
-import Checkout from '../../ServiceCenter/ServiceCenter';
 import { UilPlus } from '@iconscout/react-unicons'
 
 import * as React from "react";
@@ -18,9 +17,12 @@ export default function CreateWarranty() {
     const [isCustomerValidated, setCustomerValidate] = useState(false);
     const [isProductValidated, setProductValidate] = useState(false);
 
+    const [warrantyCenterList, setWarrantyCenterList] = useState([])
+
     const [reducer, forceUpdate] = React.useReducer(x => x + 1, 0);
 
     const [warranty, setWarranty] = useState({
+        requestWarrantyDistributorId: "",
         customerProductId: "",
         startWarrantyDate: "",
         warrantyDate: "",
@@ -33,6 +35,7 @@ export default function CreateWarranty() {
         setCustomerValidate(false);
         setProductValidate(false);
         setWarranty({
+            requestWarrantyDistributorId: "",
             customerProductId: "",
             startWarrantyDate: "",
             warrantyDate: "",
@@ -41,12 +44,12 @@ export default function CreateWarranty() {
         forceUpdate()
     }
 
-    const [warrantyCenter, setWarrantyCenter] = useState({});
+    const [distributor, setDistributor] = useState();
     const user = Authentication.getCurrentUser();
 
-    function loadWarrantyCenter() {
+    function loadDistributor() {
         return new Promise((resolve, reject) => {
-            let url = config.server.api.warranty.get.url + "?unitId=" + user.unit.id;
+            let url = config.server.api.distributor.get.url + "?unitId=" + user.unit.id;
             fetch(url, {
                 method: "GET",
                 headers: {
@@ -56,15 +59,19 @@ export default function CreateWarranty() {
                 if (response.status == 200) {
                     return response.json()
                 }
-            }).then((warrantyCenter) => {
-                if (warrantyCenter != undefined) {
-                    resolve(warrantyCenter);
+            }).then((distributor) => {
+                if (distributor != undefined) {
+                    resolve(distributor);
                 }
             })
         })
     }
-
     function validation() {
+        if (warranty.warrantyCenterId == "-1") {
+            alert("Bạn chưa chọn trung tâm nhận bảo hành");
+            return false;
+        }
+
         if (!isCustomerValidated) {
             alert("Bạn chưa nhập mã khách hàng hoặc khách hàng không tồn tại")
             return false;
@@ -82,10 +89,27 @@ export default function CreateWarranty() {
         return true;
     }
 
+    function loadWarrantyCenterList() {
+        let url = config.server.api.warranty.list.url;
+        fetch(url, {
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }
+        }).then((response) => {
+            if (response.status == 200) {
+                return response.json()
+            }
+        }).then((data) => {
+            if (data != undefined) {
+                setWarrantyCenterList(data)
+            }
+        })
+    }
+
     function sendRequest() {
         if (!validation()) return;
 
-        let url = config.server.api.warranty.warranty.create.url;
+        let url = config.server.api.distributor.warranty.request.url;
         fetch(url, {
             method: "POST",
             headers: {
@@ -95,7 +119,8 @@ export default function CreateWarranty() {
             body: JSON.stringify({
                 customerProductId: product.id,
                 startWarrantyDate: warranty.startWarrantyDate,
-                warrantyCenterId: warrantyCenter.id
+                warrantyCenterId: warranty.warrantyCenterId,
+                requestWarrantyDistributorId: distributor.id
             })
         }).then((response) => {
             if (response.status == 200) {
@@ -167,8 +192,9 @@ export default function CreateWarranty() {
     }
 
     React.useEffect(() => {
-        loadWarrantyCenter().then((warrantyCenter) => {
-            setWarrantyCenter(warrantyCenter)
+        loadDistributor().then((distributor) => {
+            setDistributor(distributor);
+            loadWarrantyCenterList()
         })
     }, [reducer])
 
@@ -229,6 +255,26 @@ export default function CreateWarranty() {
                         ...warranty,
                         startWarrantyDate: e.target.value
                     })} type="date" className={style.input} placeholder="Nhập mã sản phẩm"/>
+            </div>
+            <div>
+                <label htmlFor="" className={style.label}>Trung tâm bảo hành</label>
+                <select value={warranty.warrantyCenterId} onChange={(e) => {
+                    setWarranty({
+                        ...warranty,
+                        warrantyCenterId: e.target.value
+                    })
+                }} className={style.select} name="" id="">
+                    <option value="-1"> - Chưa chọn - </option>
+                    {
+                        warrantyCenterList.map((warrantyCenter, index) => {
+                            return (
+                                <option value={warrantyCenter.id}>
+                                    {warrantyCenter.name}
+                                </option>
+                            )
+                        })
+                    }
+                </select>
             </div>
             <button onClick={(e) => sendRequest()} className={style.actionButton}>
                 <UilPlus className={style.icon}/>
