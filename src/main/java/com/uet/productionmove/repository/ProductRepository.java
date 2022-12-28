@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByBatch(ProductBatch batch);
+
+    List<Product> findAllByBatchAndStatus(ProductBatch productBatch, String status);
 }

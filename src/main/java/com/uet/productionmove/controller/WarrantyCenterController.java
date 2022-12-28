@@ -1,7 +1,9 @@
 package com.uet.productionmove.controller;
 
+import com.uet.productionmove.entity.ProductWarranty;
 import com.uet.productionmove.entity.WarrantyCenter;
 import com.uet.productionmove.exception.InvalidArgumentException;
+import com.uet.productionmove.model.ProductWarrantyModel;
 import com.uet.productionmove.model.WarrantyCenterModel;
 import com.uet.productionmove.service.WarrantyCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,13 @@ public class WarrantyCenterController {
     @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<List<WarrantyCenterModel>> getAllWarrantyCenter() {
         return ResponseEntity.ok(warrantyCenterService.getAllWarrantyCenter());
+    }
+
+    @PostMapping(path = "/warranty/create")
+    public ResponseEntity<ProductWarranty> createProductWarranty(
+            @RequestBody @Valid ProductWarrantyModel productWarrantyModel) throws InvalidArgumentException {
+        ProductWarranty productWarranty = warrantyCenterService.createProductWarranty(productWarrantyModel);
+        return ResponseEntity.ok(productWarranty);
     }
 
 }

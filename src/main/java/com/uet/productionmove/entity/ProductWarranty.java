@@ -24,5 +24,9 @@ public class ProductWarranty {
     private LocalDate startWarrantyDate;
     private LocalDate endWarrantyDate;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "warranty_center_id")
+    private WarrantyCenter warrantyCenter;
+
     private String description;
 }

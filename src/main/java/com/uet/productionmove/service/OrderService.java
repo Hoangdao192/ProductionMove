@@ -8,7 +8,9 @@ import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,8 @@ public class OrderService {
     private ProductRepository productRepository;
     @Autowired
     private DistributorRepository distributorRepository;
+    @Autowired
+    private CustomerProductRepository customerProductRepository;
 
     public Order createOrder(OrderModel orderModel) throws InvalidArgumentException {
         Optional<Customer> customerOptional = customerRepository.findById(orderModel.getCustomerId());
@@ -56,8 +60,33 @@ public class OrderService {
                 throw new InvalidArgumentException("Product line with ID not exists.");
             }
 
+            /*Kiểm tra xem sản phẩm có nằm trong kho của đơn vị bán hay không*/
+            Product product = productOptional.get();
+            //  UnitId của đơn vị sở hữu kho
+            Long stockOwnerUnitId = product.getBatch().getStock().getStockOwner().getId();
+            //  UnitId của đơn vị bán
+            Long distributorUnitId = distributorOptional.get().getUnit().getId();
+            if (stockOwnerUnitId != distributorUnitId) {
+                throw new InvalidArgumentException("Đại lý không có sản phẩm này trong kho");
+            }
+            /*Kiểm tra trạng thái của sản phẩm*/
+            if (!product.getStatus().equals(ProductStatus.AGENCY)) {
+                throw new InvalidArgumentException("Sản phẩm này đã bán hoặc không nằm trong kho");
+            }
+
+            product.setStatus(ProductStatus.SOLD);
+
+            //  Tạo thông tin về sản phẩm của khách hàng
+            CustomerProduct customerProduct = new CustomerProduct();
+            customerProduct.setProductId(product.getId());
+            customerProduct.setActivationDate(orderModel.getOrderDate());
+            LocalDate warrantyExpiredDate =
+                    orderModel.getOrderDate().plusMonths(product.getBatch().getWarrantyPeriod());
+            customerProduct.setWarrantyExpiredDate(warrantyExpiredDate);
+            customerProductRepository.save(customerProduct);
+
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(productOptional.get());
+            orderDetail.setProduct(product);
             orderDetail.setProductLine(productLineOptional.get());
             orderDetail.setQuantity(orderDetailModel.getQuantity());
             orderDetail.setOrder(order);

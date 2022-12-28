@@ -3,10 +3,7 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
-import com.uet.productionmove.repository.BatchRepository;
-import com.uet.productionmove.repository.DistributorRepository;
-import com.uet.productionmove.repository.StockRepository;
-import com.uet.productionmove.repository.UnitRepository;
+import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +22,10 @@ public class DistributorService {
     private StockRepository stockRepository;
     @Autowired
     private BatchRepository batchRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OrderService orderService;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
@@ -101,6 +102,35 @@ public class DistributorService {
             throw new InvalidArgumentException("Distributor does not have any stock.");
         }
         return batchRepository.findAllByStock(stockOptional.get());
+    }
+
+    public List<Product> getAllProductInStock(Long distributorId) throws InvalidArgumentException {
+        List<ProductBatch> productBatchesInStock = getAllProductBatchInStock(distributorId);
+        List<Product> products = new ArrayList<>();
+        productBatchesInStock.forEach(productBatch -> {
+            List<Product> result = productRepository.findAllByBatchAndStatus(productBatch, ProductStatus.AGENCY);
+            products.addAll(result);
+        });
+        return products;
+    }
+
+    public List<Product> getAllSoldProduct(Long distributorId) throws InvalidArgumentException {
+        List<Order> orders = orderService.getAllOrderByDistributorId(distributorId);
+        List<Product> products = new ArrayList<>();
+        orders.forEach(order -> {
+            order.getOrderDetails().forEach(orderDetail -> {
+                products.add(orderDetail.getProduct());
+            });
+        });
+        return products;
+    }
+
+    public Distributor getDistributorById(Long distributorId) throws InvalidArgumentException {
+        Optional<Distributor> distributorOptional = distributorRepository.findById(distributorId);
+        if (distributorOptional.isEmpty()) {
+            throw new InvalidArgumentException("Distributor with ID not exists.");
+        }
+        return distributorOptional.get();
     }
 
     public void deleteDistributor(Long distributorId) throws InvalidArgumentException {

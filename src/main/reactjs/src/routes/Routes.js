@@ -31,6 +31,11 @@ import DistributorLayout from "../components/Layouts/DistributorLayout";
 import DistributorStockList from '../pages/Distributor/Stock/ListBatch';
 import DistributorShowBatch from '../pages/Distributor/Stock/ShowBatch';
 import CreateCustomer from "../pages/Distributor/Customer/CreateCustomer";
+import ListCustomer from "../pages/Distributor/Customer/ListCustomer";
+import EditCustomer from "../pages/Distributor/Customer/EditCustomer";
+import WarrantyCenterLayout from "../components/Layouts/WarrantyCenterLayout";
+import CreateWarranty from "../pages/WarrantyCenter/Warranty/CreateWarranty";
+import ListProduct from "../pages/Distributor/Stock/ListProduct";
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -53,19 +58,25 @@ const privateRoutes = [
     {path: '/distributor/warehouse/list_batch', layout: DistributorLayout, component: DistributorStockList, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/show_batch', layout: DistributorLayout, component: DistributorShowBatch, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/export', layout: DistributorLayout, component: StockExport, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/warehouse/product/list', layout: DistributorLayout, component: ListProduct, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/customer/create', layout: DistributorLayout, component: CreateCustomer, authorization: ['Admin', 'Distributor']},
+    {path: '/distributor/customer/list', layout: DistributorLayout, component: ListCustomer, authorization: ['Admin', 'Distributor']},
+    {path: '/distributor/customer/edit', layout: DistributorLayout, component: EditCustomer, authorization: ['Admin', 'Distributor']},
 
     {path: '/factory/home', layout: FactoryLayout, component: FactoryHome, authorization : ['Manufacture']},
     {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/list_batch', layout: FactoryLayout, component: ListBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport, authorization : ['Admin', 'Manufacture']},
 
-    {path: '/warranty/home', layout: FactoryLayout, component: WarrantyCenterHome, authorization : ['Manufacture']}
+    {path: '/warranty/home', layout: WarrantyCenterLayout, component: WarrantyCenterHome, authorization : ['Warranty center']},
+    {path: '/warranty/warranty/create', layout: WarrantyCenterLayout, component: CreateWarranty, authorization : ['Warranty center']},
+    {path: '/warranty/warranty/list', layout: WarrantyCenterLayout, component: WarrantyCenterHome, authorization : ['Warranty center']},
+
+    {path: '/home', component: Home},
+    {path: '/', component: Home}
 ];
 
 const publicRoutes = [
-    {path: '/home', component: Home},
-    {path: '/', component: Home},
     // {path: '/home', component: Home},
     {path: '/login', component: Login},
     {path: '/logout', component: Logout},

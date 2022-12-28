@@ -1,19 +1,14 @@
-import style from './CreateCustomer.module.scss';
-import { UilPlus } from '@iconscout/react-unicons'
-
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from 'react';
-
-import config from '../../../../config.json';
+import style from './EditCustomer.module.scss';
 import Authentication from '../../../../services/Authentication/Authentication';
+import config from '../../../../config.json';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { UilSave } from '@iconscout/react-unicons';
 
-export default function CreateCustomer() {
-    const [customer, setCustomer] = useState({
-        firstName: "",
-        lastName: "",
-        address: "",
-        phoneNumber: ""
-    })
+export default function EditCustomer() {
+    const [customer, setCustomer] = useState(useLocation().state.customer)
+    const [isNavigateBack, setNavigateBack] = useState(false);
+    const navigate = useNavigate()
 
     function resetComponent() {
         setCustomer({
@@ -52,7 +47,7 @@ export default function CreateCustomer() {
 
     function sendCreateCustomerRequest() {
         if (validation()) {
-            let url = config.server.api.customer.create.url;
+            let url = config.server.api.customer.update.url;
             fetch(url, {
                 method: "POST",
                 headers: {
@@ -62,8 +57,8 @@ export default function CreateCustomer() {
                 body: JSON.stringify(customer)
             }).then((response) => {
                 if (response.status === 200) {
-                    alert("Tạo khách hàng thành công")
-                    resetComponent()
+                    alert("Cập nhập thông tin thành công")
+                    navigate(-1)
                 } else {
                     alert("Không thành công")
                 }
@@ -74,8 +69,14 @@ export default function CreateCustomer() {
     return (
         <div className={style.container}>
             <p className={style.title}>
-                Tạo khách hàng mới 
+                Sửa thông tin khách hàng
             </p>
+            <div>
+                <label htmlFor="" className={style.label}>
+                    Mã khách hàng
+                </label>
+                <input value={customer.id} readOnly type="text" className={style.input} placeholder="Nhập họ" />
+            </div>
             <div>
                 <label htmlFor="" className={style.label}>
                     Họ
@@ -110,8 +111,8 @@ export default function CreateCustomer() {
             </div>
 
             <button className={style.actionButton} onClick={(e) => sendCreateCustomerRequest()}>
-                <UilPlus className={style.icon}/>
-                <span>Tạo khách hàng mới</span>
+                <UilSave className={style.icon}/>
+                <span>Lưu thông tin</span>
             </button>
         </div>
     )

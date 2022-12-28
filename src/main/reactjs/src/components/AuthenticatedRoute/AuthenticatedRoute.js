@@ -5,9 +5,14 @@ function AuthenticatedRoute({authorization, children}) {
     console.log(authorization)
     const isAuthenticated = Authentication.isUserAuthenticated();
     let havePermission = false;
-    const userRole = Authentication.getCurrentUser().role;
-    if (authorization != undefined) {
-        if (authorization.includes(userRole)) {
+
+    if (isAuthenticated) {
+        const userRole = Authentication.getCurrentUser().role;
+        if (authorization != undefined) {
+            if (authorization.includes(userRole)) {
+                havePermission = true;
+            }
+        } else {
             havePermission = true;
         }
     }

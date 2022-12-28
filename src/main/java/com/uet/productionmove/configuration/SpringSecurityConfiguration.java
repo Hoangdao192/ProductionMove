@@ -1,6 +1,5 @@
 package com.uet.productionmove.configuration;
 
-import com.uet.productionmove.entity.UserType;
 import com.uet.productionmove.security.CustomUserDetailService;
 import com.uet.productionmove.security.CustomUsernamePasswordFilter;
 import com.uet.productionmove.security.JWTAuthenticationFilter;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

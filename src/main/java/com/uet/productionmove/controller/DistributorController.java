@@ -1,6 +1,7 @@
 package com.uet.productionmove.controller;
 
 import com.uet.productionmove.entity.Distributor;
+import com.uet.productionmove.entity.Product;
 import com.uet.productionmove.entity.ProductBatch;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
@@ -60,6 +61,13 @@ public class DistributorController {
     public ResponseEntity<List<ProductBatch>> getAllProductBatchInStock(@RequestParam Long distributorId)
             throws InvalidArgumentException {
         return ResponseEntity.ok(distributorService.getAllProductBatchInStock(distributorId));
+    }
+
+    @GetMapping(path = "stock/product/list")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+    public ResponseEntity<List<Product>> getAllProductInStock(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getAllProductInStock(distributorId));
     }
 
     @DeleteMapping(path = "delete")

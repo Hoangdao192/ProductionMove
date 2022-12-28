@@ -1,0 +1,41 @@
+.container {
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1rem 2rem;
+}
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.label {
+    display: block;
+    padding: 10px;
+    padding-left: 0;
+    border-radius: 0.75rem;
+    // border: 2px solid gray;
+    margin-right: 1rem;
+}
+
+.input {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+    transition: 0.3s;
+    width: 20rem;
+}
+
+.input:focus {
+    border: 2px solid black;
+}
+
+.customerInfo {
+    margin-top: 1rem;
+}
+
+.productInfo {
+    margin-top: 1rem;
+}

@@ -1,10 +1,14 @@
 package com.uet.productionmove.service;
 
+import com.uet.productionmove.entity.Product;
 import com.uet.productionmove.entity.ProductLine;
+import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.repository.ProductLineRepository;
 import com.uet.productionmove.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -29,5 +33,13 @@ public class ProductService {
 //                "Intel® Killer™ Wi-Fi 6 1675 (AX211) 2x2 + Bluetooth 5.2 Wireless Card",
 //                "3-cell, 55 Wh \"smart\" lithium-ion, integrated"
 //        ));
+    }
+
+    public Product getProductById(Long productId) throws InvalidArgumentException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty()) {
+            throw new InvalidArgumentException("Product with ID not exists.");
+        }
+        return productOptional.get();
     }
 }

@@ -32,6 +32,8 @@ public class FactoryService {
     private UserService userService;
     @Autowired
     private StockTransactionRepository stockTransactionRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -165,6 +167,14 @@ public class FactoryService {
             if (productBatch.getStock().getId() != factoryStockOptional.get().getId()) {
                 throw new InvalidArgumentException("Product batch does not in Factory's stock.");
             }
+
+            // Thay đổi trạng thái của các sản phẩm trong lô hàng thành "Đã được đưa về đại
+            // lý"
+            List<Product> products = productRepository.findByBatch(productBatch);
+            products.forEach((product) -> {
+                product.setStatus(ProductStatus.AGENCY);
+                productRepository.save(product);
+            });
 
             productBatch.setStock(distributorStockOptional.get());
             productBatch = batchRepository.save(productBatch);

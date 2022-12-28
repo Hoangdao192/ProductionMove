@@ -14,30 +14,25 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/customer")
-@PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('Admin', 'Distributor', 'Warranty center') and isAuthenticated()")
+@CrossOrigin("http://localhost:3000")
 public class CustomerController {
 
     private CustomerService customerService;
 
     @PostMapping(path = "create")
-    public ResponseEntity<Map<String, Object>> createCustomer(
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+    public ResponseEntity<Customer> createCustomer(
             @RequestBody @Valid Customer customer) {
         customer = customerService.createCustomer(customer);
-        return ResponseEntity.ok(Map.of(
-                "message", "Create customer successful",
-                "content", Map.of("customer", customer)
-        ));
+        return ResponseEntity.ok(customer);
     }
 
     @PostMapping(path = "update")
-    public ResponseEntity<Map<String, Object>> updateCustomer(
-            @RequestBody @Valid Customer customer
-    ) throws InvalidArgumentException {
+    public ResponseEntity<Customer> updateCustomer(
+            @RequestBody @Valid Customer customer) throws InvalidArgumentException {
         customer = customerService.updateCustomer(customer);
-        return ResponseEntity.ok(Map.of(
-                "message", "Update customer successful",
-                "content", Map.of("customer", customer)
-        ));
+        return ResponseEntity.ok(customer);
     }
 
     @GetMapping(path = "get")
@@ -58,8 +53,7 @@ public class CustomerController {
         customerService.deleteCustomer(customerId);
         return ResponseEntity.ok(Map.of(
                 "message", "Delete customer successful",
-                "content", Map.of("id", customerId)
-        ));
+                "content", Map.of("id", customerId)));
     }
 
     @Autowired

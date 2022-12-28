@@ -1,10 +1,17 @@
 package com.uet.productionmove.service;
 
+import com.uet.productionmove.entity.Customer;
+import com.uet.productionmove.entity.Product;
+import com.uet.productionmove.entity.ProductWarranty;
 import com.uet.productionmove.entity.Unit;
 import com.uet.productionmove.entity.UserType;
 import com.uet.productionmove.entity.WarrantyCenter;
 import com.uet.productionmove.exception.InvalidArgumentException;
+import com.uet.productionmove.model.ProductWarrantyModel;
 import com.uet.productionmove.model.WarrantyCenterModel;
+import com.uet.productionmove.repository.CustomerRepository;
+import com.uet.productionmove.repository.ProductRepository;
+import com.uet.productionmove.repository.ProductWarrantyRepository;
 import com.uet.productionmove.repository.UnitRepository;
 import com.uet.productionmove.repository.UserRepository;
 import com.uet.productionmove.repository.WarrantyCenterRepository;
@@ -23,6 +30,12 @@ public class WarrantyCenterService {
     private UserRepository userRepository;
     @Autowired
     private UnitRepository unitRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductWarrantyRepository productWarrantyRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public WarrantyCenter createWarrantyCenter(WarrantyCenterModel warrantyCenterModel)
             throws InvalidArgumentException {
@@ -75,6 +88,26 @@ public class WarrantyCenterService {
             warrantyCenterModels.add(warrantyCenterModel);
         });
         return warrantyCenterModels;
+    }
+
+    public ProductWarranty createProductWarranty(ProductWarrantyModel productWarrantyModel)
+            throws InvalidArgumentException {
+        Optional<Product> productOptional = productRepository.findById(productWarrantyModel.getProductId());
+        if (productOptional.isEmpty()) {
+            throw new InvalidArgumentException("Product with ID not exists.");
+        }
+        Optional<WarrantyCenter> warrantyCenterOptional = warrantyCenterRepository
+                .findById(productWarrantyModel.getWarrantyCenterId());
+        if (warrantyCenterOptional.isEmpty()) {
+            throw new InvalidArgumentException("Warranty center ID not exists.");
+        }
+
+        ProductWarranty productWarranty = new ProductWarranty();
+        productWarranty.setProduct(productOptional.get());
+        productWarranty.setWarrantyCenter(warrantyCenterOptional.get());
+        productWarranty.setStartWarrantyDate(productWarrantyModel.getStartWarrantyDate());
+        productWarranty.setDescription(productWarrantyModel.getDescription());
+        return productWarrantyRepository.save(productWarranty);
     }
 
     @Autowired

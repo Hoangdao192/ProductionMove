@@ -2,6 +2,11 @@
     "server" : {
         "url" : "http://localhost:5000",
         "api" : {
+            "product" : {
+                "get" : {
+                    "url" : "http://localhost:5000/api/product/get"
+                }
+            },
             "productBatch" : {
                 "create" : {
                     "url" : "http://localhost:5000/api/product_batch/create"
@@ -44,8 +49,20 @@
                 }
             },
             "customer" : {
+                "update" : {
+                    "url" : "http://localhost:5000/api/customer/update"
+                },
+                "create" : {
+                    "url" : "http://localhost:5000/api/customer/create"
+                },
                 "get" : {
                     "url" : "http://localhost:5000/api/customer/get"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/customer/list"
+                },
+                "delete" : {
+                    "url" : "http://localhost:5000/api/customer/delete"
                 }
             },
             "account" : {
@@ -85,6 +102,11 @@
                 "stock" : {
                     "list": {
                         "url" : "http://localhost:5000/api/distributor/stock/list"
+                    },
+                    "product" : {
+                        "list" : {
+                            "url" : "http://localhost:5000/api/distributor/stock/product/list"
+                        }
                     }
                 }
             },
