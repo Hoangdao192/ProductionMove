@@ -170,6 +170,15 @@ public class WarrantyCenterService {
     }
 
     /**
+     * Lấy tất cả yêu cầu bảo hành đang bảo hành
+     */
+    public List<ProductWarranty> getAllDoingProductWarranty(Long warrantyCenterId) throws InvalidArgumentException {
+        WarrantyCenter warrantyCenter = getWarrantyCenterById(warrantyCenterId);
+        return productWarrantyRepository
+                .findAllByWarrantyCenterAndStatus(warrantyCenter, ProductWarrantyStatus.DOING);
+    }
+
+    /**
      * Trung tâm bảo hành chấp nhận yêu cầu bảo hành.
      */
     public void acceptWarrantyRequest(Long productWarrantyId) throws InvalidArgumentException {
@@ -186,6 +195,25 @@ public class WarrantyCenterService {
         productWarrantyRepository.save(productWarranty);
         productRepository.save(product);
     }
+
+    /**
+     * Xác nhận bảo hành thành công
+     */
+    public void finishWarranty(Long productWarrantyId) throws InvalidArgumentException {
+        ProductWarranty productWarranty = getProductWarrantyById(productWarrantyId);
+        if (productWarranty.getStatus().equals(ProductWarrantyStatus.DONE)) {
+            throw new InvalidArgumentException("ProductWarranty status is Done already.");
+        }
+
+        productWarranty.setStatus(ProductWarrantyStatus.DONE);
+
+        Product product = productWarranty.getCustomerProduct().getProduct();
+        product.setStatus(ProductStatus.DONE_WARRANTY);
+
+        productWarrantyRepository.save(productWarranty);
+        productRepository.save(product);
+    }
+
 
     @Autowired
     public void setWarrantyCenterRepository(

@@ -89,6 +89,12 @@
                     },
                     "list" : {
                         "url" : "http://localhost:5000/api/distributor/warranty/list"
+                    },
+                    "return" : {
+                        "url" : "http://localhost:5000/api/distributor/warranty/return"
+                    },
+                    "finish" : {
+                        "url" : "http://localhost:5000/api/distributor/warranty/finish"
                     }
                 },
                 "create" : {
@@ -170,10 +176,16 @@
                     "url" : "http://localhost:5000/api/warranty/delete"
                 },
                 "warranty" : {
+                    "finish" : {
+                        "url" : "http://localhost:5000/api/warranty/warranty/finish"
+                    },
                     "request" : {
                         "list" : {
                             "url" : "http://localhost:5000/api/warranty/warranty/request/list"
                         }
+                    },
+                    "doing" : {
+                        "url" : "http://localhost:5000/api/warranty/warranty/doing"
                     },
                     "accept" : {
                         "url" : "http://localhost:5000/api/warranty/warranty/accept"

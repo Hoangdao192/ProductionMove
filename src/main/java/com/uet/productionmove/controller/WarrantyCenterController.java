@@ -98,4 +98,17 @@ public class WarrantyCenterController {
         return ResponseEntity.ok("Successful");
     }
 
+    @PostMapping(path = "/warranty/finish")
+    public ResponseEntity<String> finishWarranty(@RequestParam Long productWarrantyId)
+            throws InvalidArgumentException {
+        warrantyCenterService.finishWarranty(productWarrantyId);
+        return ResponseEntity.ok("Successful");
+    }
+
+    @GetMapping(path = "warranty/doing")
+    public ResponseEntity<List<ProductWarranty>> getAllDoingProductWarranty(@RequestParam Long warrantyCenterId)
+            throws InvalidArgumentException
+    {
+        return ResponseEntity.ok(warrantyCenterService.getAllDoingProductWarranty(warrantyCenterId));
+    }
 }

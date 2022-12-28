@@ -89,11 +89,27 @@ public class DistributorController {
 
     @GetMapping(path = "warranty/list")
     @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
-    public ResponseEntity<List<ProductWarranty>> requestProductWarranty(
+    public ResponseEntity<List<ProductWarranty>> getAllRequestProductWarranty(
             @RequestParam Long distributorId) throws InvalidArgumentException {
         return ResponseEntity.ok(
                 distributorService.getAllRequestWarranty(distributorId)
         );
+    }
+
+    @GetMapping(path = "warranty/finish")
+    public ResponseEntity<List<ProductWarranty>> getAllFinishedProductWarranty(
+            @RequestParam Long distributorId) throws InvalidArgumentException {
+        return ResponseEntity.ok(
+                distributorService.getAllFinishedWarranty(distributorId)
+        );
+    }
+
+    @PostMapping(path = "warranty/return")
+    public ResponseEntity<String> returnProductToCustomer(
+            @RequestParam Long productWarrantyId
+    ) throws InvalidArgumentException {
+        distributorService.returnWarrantyProductToCustomer(productWarrantyId);
+        return ResponseEntity.ok("Success");
     }
 
     @DeleteMapping(path = "delete")

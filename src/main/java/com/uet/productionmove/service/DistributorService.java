@@ -202,12 +202,44 @@ public class DistributorService {
     }
 
     /**
+     * Trả lại sản phẩm đã bảo hành cho khách hàng
+     */
+    public void returnWarrantyProductToCustomer(Long productWarrantyId)
+            throws InvalidArgumentException {
+        Optional<ProductWarranty> productWarrantyOptional = productWarrantyRepository.findById(productWarrantyId);
+        if (productWarrantyOptional.isEmpty()) {
+            throw new InvalidArgumentException("ProductWarranty with ID not exists");
+        }
+
+        // Cập nhập thông tin bảo hành
+        ProductWarranty productWarranty = productWarrantyOptional.get();
+        if (productWarranty.getStatus().equals(ProductWarrantyStatus.RETURNED)) {
+            throw new InvalidArgumentException("ProductWarranty status is returned.");
+        }
+        productWarranty.setStatus(ProductWarrantyStatus.RETURNED);
+        productWarrantyRepository.save(productWarranty);
+
+        //  Cập nhập trạng thái sản phẩm
+        Product product = productWarranty.getCustomerProduct().getProduct();
+        product.setStatus(ProductStatus.RETURNED_WARRANTY);
+        productRepository.save(product);
+    }
+
+    /**
      * Lấy tất cả yêu cầu bảo hành đến từ đại lý (distributorId)
      */
     public List<ProductWarranty> getAllRequestWarranty(Long distributorId) throws InvalidArgumentException {
         Distributor distributor = getDistributorById(distributorId);
-        return productWarrantyRepository.findAllByRequestWarrantyDistributor(distributor);
+        return productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatusNotLike(distributor, ProductWarrantyStatus.RETURNED);
     }
+
+    public List<ProductWarranty> getAllFinishedWarranty(Long distributorId) throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        return productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.RETURNED);
+    }
+
 
     @Autowired
     public void setDistributorRepository(DistributorRepository distributorRepository) {
