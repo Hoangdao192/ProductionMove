@@ -30,6 +30,7 @@ import DistributorLayout from "../components/Layouts/DistributorLayout";
 
 import DistributorStockList from '../pages/Distributor/Stock/ListBatch';
 import DistributorShowBatch from '../pages/Distributor/Stock/ShowBatch';
+import CreateCustomer from "../pages/Distributor/Customer/CreateCustomer";
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -52,6 +53,7 @@ const privateRoutes = [
     {path: '/distributor/warehouse/list_batch', layout: DistributorLayout, component: DistributorStockList, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/show_batch', layout: DistributorLayout, component: DistributorShowBatch, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/export', layout: DistributorLayout, component: StockExport, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/customer/create', layout: DistributorLayout, component: CreateCustomer, authorization: ['Admin', 'Distributor']},
 
     {path: '/factory/home', layout: FactoryLayout, component: FactoryHome, authorization : ['Manufacture']},
     {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Manufacture']},

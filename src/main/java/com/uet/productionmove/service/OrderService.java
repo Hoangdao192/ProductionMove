@@ -20,6 +20,8 @@ public class OrderService {
     private OrderDetailRepository orderDetailRepository;
     private ProductLineRepository productLineRepository;
     @Autowired
+    private ProductRepository productRepository;
+    @Autowired
     private DistributorRepository distributorRepository;
 
     public Order createOrder(OrderModel orderModel) throws InvalidArgumentException {
@@ -28,8 +30,7 @@ public class OrderService {
             throw new InvalidArgumentException("Customer with ID not exists.");
         }
 
-        Optional<Distributor> distributorOptional =
-                distributorRepository.findById(orderModel.getDistributorId());
+        Optional<Distributor> distributorOptional = distributorRepository.findById(orderModel.getDistributorId());
         if (distributorOptional.isEmpty()) {
             throw new InvalidArgumentException("Distributor with ID not exists.");
         }
@@ -44,6 +45,11 @@ public class OrderService {
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (int i = 0; i < orderModel.getOrderDetailList().size(); ++i) {
             OrderDetailModel orderDetailModel = orderModel.getOrderDetailList().get(i);
+
+            Optional<Product> productOptional = productRepository.findById(orderDetailModel.getProductId());
+            if (productOptional.isEmpty()) {
+                throw new InvalidArgumentException("Product with ID not exists.");
+            }
             Optional<ProductLine> productLineOptional = productLineRepository
                     .findById(orderDetailModel.getProductLineId());
             if (productLineOptional.isEmpty()) {
@@ -51,6 +57,7 @@ public class OrderService {
             }
 
             OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setProduct(productOptional.get());
             orderDetail.setProductLine(productLineOptional.get());
             orderDetail.setQuantity(orderDetailModel.getQuantity());
             orderDetail.setOrder(order);

@@ -9,7 +9,8 @@ import {
     UilChart,
     UilSignOutAlt,
     UilBuilding,
-    UilArchive
+    UilArchive,
+    UilUsersAlt
 } from "@iconscout/react-unicons";
 
 function DistributorLayout ({ children }) {
@@ -48,6 +49,20 @@ function DistributorLayout ({ children }) {
                 {
                     heading: "Xuất kho",
                     action: "/distributor/warehouse/export"
+                }
+            ]
+        },
+        {
+            icon: UilUsersAlt,
+            heading: "Khách hàng",
+            children: [
+                {
+                    heading: "Tạo khách hàng",
+                    action: "/distributor/customer/create"
+                },
+                {
+                    heading: "Danh sách khách hàng",
+                    action: "/distributor/customer/list"
                 }
             ]
         },

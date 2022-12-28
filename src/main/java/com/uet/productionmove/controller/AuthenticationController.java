@@ -5,13 +5,16 @@ import com.uet.productionmove.model.LoginRequestModel;
 import com.uet.productionmove.security.CustomUserDetail;
 import com.uet.productionmove.security.JsonWebTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,9 +31,7 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestModel.getUsername(),
-                        loginRequestModel.getPassword()
-                )
-        );
+                        loginRequestModel.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -40,10 +41,10 @@ public class AuthenticationController {
         Map<String, String> returnData = new HashMap<>();
         returnData.put("accessToken", jwt);
         returnData.put("tokenType", "Bearer");
-//        return new Object() {
-//            public String accessToken = jwt;
-//            public String tokenType = "Bearer";
-//        };
+        // return new Object() {
+        // public String accessToken = jwt;
+        // public String tokenType = "Bearer";
+        // };
         return returnData;
     }
 }

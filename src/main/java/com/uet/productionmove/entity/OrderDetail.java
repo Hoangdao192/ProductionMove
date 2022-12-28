@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(
-        name = "order_details",
-        uniqueConstraints = @UniqueConstraint(columnNames={"order_id", "product_line_id"})
-)
+@Table(name = "order_details", uniqueConstraints = @UniqueConstraint(columnNames = { "order_id", "product_line_id" }))
 @Entity
 @Data
 @AllArgsConstructor
@@ -28,6 +25,10 @@ public class OrderDetail {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_line_id")
     private ProductLine productLine;
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     private Integer quantity;
 }

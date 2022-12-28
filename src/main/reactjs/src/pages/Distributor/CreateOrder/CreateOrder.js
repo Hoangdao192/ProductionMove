@@ -12,7 +12,8 @@ export default function CreateOrder() {
     const [orderDetail, setOrderDetail] = useState({
         productLineId: "",
         productName: "",
-        quantity: ""
+        quantity: 1,
+        productId: ""
     })
     const [orderDetailList, setOrderDetailList] = useState([])
     const [customer, setCustomer] = useState({})
@@ -163,8 +164,20 @@ export default function CreateOrder() {
     }
 
     function validateOrderDetail(orderDetail) {
-        if (orderDetail.productLineId == "None" || orderDetail.productLineId == "" || orderDetail.quantity == "") {
+        console.log(orderDetail)
+        if (orderDetail.productLineId == "None" || orderDetail.productLineId == "") {
             return false;
+        }
+        if (!/^\d+$/.test(orderDetail.productId)) {
+            alert("Invalid")
+            return false;
+        }
+
+        for (let i = 0; i < orderDetailList.length; ++i) {
+            if (orderDetailList[i].productId === orderDetail.productId) {
+                alert("Product id exisst");
+                return false;
+            }
         }
         return true;
     }
@@ -177,30 +190,18 @@ export default function CreateOrder() {
 
         newOrderDetail.quantity = parseInt(newOrderDetail.quantity);
 
-        let exists = false;
-        let newOrderDetailList = [...orderDetailList];
-        for (let i = 0; i < newOrderDetailList.length; ++i) {
-            if (newOrderDetailList[i].productLineId === newOrderDetail.productLineId) {
-                newOrderDetailList[i].quantity += newOrderDetail.quantity;
-                setOrderDetailList(newOrderDetailList);
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            setOrderDetailList(
-                [
-                    ...orderDetailList,
-                    newOrderDetail
-                ]
-            )
-        }
+        setOrderDetailList(
+            [
+                ...orderDetailList,
+                newOrderDetail
+            ]
+        )
     }
 
-    function deleteOrderDetail(productLineId) {
+    function deleteOrderDetail(deleteOrderDetail) {
         let newOrderDetailList = [];
         orderDetailList.forEach((orderDetail) => {
-            if (orderDetail.productLineId != productLineId) {
+            if (orderDetail.productId != deleteOrderDetail.productId) {
                 newOrderDetailList.push(orderDetail)
             }
                 
@@ -221,13 +222,15 @@ export default function CreateOrder() {
         addOrderDetail({
             productLineId: orderDetail.productLineId,
             productName: orderDetail.productName,
-            quantity: orderDetail.quantity
+            quantity: orderDetail.quantity,
+            productId: orderDetail.productId
         })
         
         setOrderDetail({
             productLineId: "",
             productName: "",
-            quantity: ""
+            quantity: 1,
+            productId: ""
         })
         setShowAddProduct(false)
     }
@@ -301,13 +304,13 @@ export default function CreateOrder() {
                         </select>
                     </div>
                     <div>
-                        <label className={style.label} htmlFor="">Số lượng</label>
-                        <input onChange={(e) => {
-                            setOrderDetail({
-                                ...orderDetail,
-                                quantity: e.target.value
-                            })
-                        }} min={1} max={100} placeholder='Nhập số lượng' type="number" className={style.input}/>
+                        <label className={style.label} htmlFor="">Mã máy</label>
+                            <input onChange={(e) => {
+                                setOrderDetail({
+                                    ...orderDetail,
+                                    productId: e.target.value
+                                }) }}
+                                value={orderDetail.productId} placeholder='Nhập mã máy' type="text" className={style.input}/>
                     </div>
                     <button type='button' onClick={(e) => {acceptAddProduct(e)}}>Chấp nhận</button>
                     <button type='button' onClick={(e) => {cancelAddProduct(e)}}>Hủy</button>
@@ -317,8 +320,9 @@ export default function CreateOrder() {
                     <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Mã sản phẩm</th>
+                            <th>Mã dòng sản phẩm</th>
                             <th>Tên sản phẩm</th>
+                            <th>Mã sản phẩm</th>
                             <th>Số lượng</th>
                             <th>Tuỳ chọn</th>
                         </tr>
@@ -331,10 +335,11 @@ export default function CreateOrder() {
                                         <td>{index}</td>
                                         <td>{orderDetail.productLineId}</td>
                                         <td>{orderDetail.productName}</td>
+                                        <td>{orderDetail.productId}</td>
                                         <td>{orderDetail.quantity}</td>
                                         <td>
                                             <button type='button' 
-                                            onClick={(e) => deleteOrderDetail(orderDetail.productLineId)}>Xóa</button>
+                                            onClick={(e) => deleteOrderDetail(orderDetail)}>Xóa</button>
                                         </td>
                                     </tr>
                                 )
