@@ -1,0 +1,172 @@
+.container {
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+}
+
+select {
+    flex: 1;
+    background-color: white;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+}
+
+.select>option {
+    padding: 8px 20px;
+    color: black;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: white;
+    margin-top: 1rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.table thead {
+    width: 100%;
+}
+
+.table thead tr {
+
+    width: 100%;
+    color: black;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+}
+
+.table tr {
+    width: 100%;
+    text-align: center;
+}
+
+.table th,
+.table td {
+    padding: 20px 15px;
+
+}
+
+.table tbody tr {
+    cursor: pointer;
+    border-bottom: 1px solid #dddddd;
+}
+
+.table tbody tr:last-of-type {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f6fb;
+    color: black;
+}
+
+.action button {
+    padding: 3px 15px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.action button:hover {
+    background-color: #d3f36b;
+}
+
+.action {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.warrantyInfo, .productInfo {
+    margin-top: 1rem;
+
+    &>div {
+        display: flex;
+        align-items: center;
+        &>p {
+            margin: 0;
+            padding: 0;
+        }
+
+        &>label {
+            width: 8rem;
+            font-weight: 600;
+            margin-right: 2rem;
+        }
+    }
+}
+
+.inputContainer {
+    margin-top: 1rem;
+    &>label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}
+
+.actionButton {
+    cursor: pointer;
+    padding: 0.4rem 1rem;
+    background-color: var(--secondaryColor);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+
+    .icon {
+        width: 1rem;
+        margin-right: 0.5rem;
+        transition: 0.3s;
+    }
+
+    &:hover {
+        background-color: var(--secondaryColorDarker);
+
+        .icon {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.infoContainer {
+    display: flex;
+    column-gap: 2rem;
+    row-gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.errorInput {
+    margin-top: 1rem;
+}
+
+.errorInput label {
+    min-width: 25%;
+    padding-right: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.errorInput input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+    transition: 0.3s;
+}

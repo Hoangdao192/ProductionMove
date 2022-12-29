@@ -80,7 +80,7 @@ export default function ShowOrderDetail() {
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                 <TableCell align='left' sx={{paddingLeft: 0}}>{index}</TableCell>
-                                                <TableCell align='center'>{orderDetail.productLine.id}</TableCell>
+                                                <TableCell align='center'>{orderDetail.product.id}</TableCell>
                                                 <TableCell align='center'>{orderDetail.productLine.productName}</TableCell>
                                                 <TableCell align='center'>{orderDetail.quantity}</TableCell>
                                                 <TableCell align='right' sx={{paddingRight: 0}}>

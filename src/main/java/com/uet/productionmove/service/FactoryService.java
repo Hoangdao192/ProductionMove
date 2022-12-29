@@ -34,6 +34,8 @@ public class FactoryService {
     private StockTransactionRepository stockTransactionRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ErrorProductRepository errorProductRepository;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -210,6 +212,20 @@ public class FactoryService {
             throw new InvalidArgumentException("Factory does not have any Stock.");
         }
         return batchRepository.findAllByFactoryAndStockIsNull(factoryOptional.get());
+    }
+
+    public List<Product> getAllProductInStock(Long factoryId) throws InvalidArgumentException {
+        List<ProductBatch> productBatches = getAllProductBatchInStock(factoryId);
+        List<Product> products = new ArrayList<>();
+        productBatches.forEach(productBatch -> {
+            products.addAll(productRepository.findByBatch(productBatch));
+        });
+        return products;
+    }
+
+    public List<ErrorProduct> getAllErrorProductInStock(Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        return errorProductRepository.findAllByFactory(factory);
     }
 
     @Autowired

@@ -40,6 +40,9 @@ import ListWarranty from "../pages/WarrantyCenter/Warranty/ListWarranty";
 
 import DistributorCreateWarranty from '../pages/Distributor/Warranty/CreateWarranty';
 import DistributorListWarranty from '../pages/Distributor/Warranty/ListWarranty';
+import ReturnWarrantyFactory from "../pages/WarrantyCenter/Warranty/ReturnWarrantyFactory";
+import FactoryProductList from '../pages/Factory/ListProduct';
+import ProductRecall from "../pages/Distributor/ProductRecall";
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -68,15 +71,18 @@ const privateRoutes = [
     {path: '/distributor/customer/edit', layout: DistributorLayout, component: EditCustomer, authorization: ['Admin', 'Distributor']},
     {path: '/distributor/warranty/create', layout: DistributorLayout, component: DistributorCreateWarranty, authorization: ['Admin', 'Distributor']},
     {path: '/distributor/warranty/list', layout: DistributorLayout, component: DistributorListWarranty, authorization: ['Admin', 'Distributor']},
+    {path: '/distributor/productRecall', layout: DistributorLayout, component: ProductRecall, authorization: ['Admin', 'Distributor']},
 
     {path: '/factory/home', layout: FactoryLayout, component: FactoryHome, authorization : ['Manufacture']},
     {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/list_batch', layout: FactoryLayout, component: ListBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport, authorization : ['Admin', 'Manufacture']},
+    {path: '/factory/warehouse/product/list', layout: FactoryLayout, component: FactoryProductList, authorization : ['Admin', 'Manufacture']},
 
     {path: '/warranty/home', layout: WarrantyCenterLayout, component: WarrantyCenterHome, authorization : ['Warranty center']},
     {path: '/warranty/warranty/create', layout: WarrantyCenterLayout, component: CreateWarranty, authorization : ['Warranty center']},
     {path: '/warranty/warranty/list', layout: WarrantyCenterLayout, component: ListWarranty, authorization : ['Warranty center']},
+    {path: '/warranty/warranty/return', layout: WarrantyCenterLayout, component: ReturnWarrantyFactory, authorization : ['Warranty center']},
 
     {path: '/home', component: Home},
     {path: '/', component: Home}

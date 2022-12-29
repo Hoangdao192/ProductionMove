@@ -125,6 +125,7 @@ export default function CreateWarranty() {
         }).then((response) => {
             if (response.status == 200) {
                 alert("Tạo đơn bảo hành thành công.")
+                forceUpdate()
             } else {
                 alert("Không thành công")
             }

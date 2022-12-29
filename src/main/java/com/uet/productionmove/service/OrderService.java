@@ -78,7 +78,7 @@ public class OrderService {
 
             //  Tạo thông tin về sản phẩm của khách hàng
             CustomerProduct customerProduct = new CustomerProduct();
-            customerProduct.setProductId(product.getId());
+            customerProduct.setProduct(product);
             customerProduct.setActivationDate(orderModel.getOrderDate());
             customerProduct.setCustomer(customerOptional.get());
             LocalDate warrantyExpiredDate =

@@ -27,4 +27,8 @@ public class Product {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "batch_id", nullable = false)
     private ProductBatch batch;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
 }

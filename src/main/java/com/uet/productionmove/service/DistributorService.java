@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.StackWalker.Option;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,8 @@ public class DistributorService {
     private ProductWarrantyRepository productWarrantyRepository;
     @Autowired
     private WarrantyCenterRepository warrantyCenterRepository;
+    @Autowired
+    private ProductLineService productLineService;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
@@ -181,14 +184,13 @@ public class DistributorService {
         }
 
         //  Kiểm tra xem sản phẩm này có đang được bảo hành hay không
-        if (!productWarrantyRepository
-                .findAllByCustomerProductAndEndWarrantyDateIsNull(customerProductOptional.get())
-                .isEmpty()) {
-            throw new InvalidArgumentException("Sản phẩm này đang được bảo hành.");
-        }
-
         Product product = customerProductOptional.get().getProduct();
+        if (!(product.getStatus().equals(ProductStatus.SOLD) || product.getStatus().equals(ProductStatus.RETURNED_WARRANTY)
+                || product.getStatus().equals(ProductStatus.ERROR_SUMMON))) {
+            throw new InvalidArgumentException("Sản phẩm đang được bảo hành rồi.");
+        }
         product.setStatus(ProductStatus.ERROR_WARRANTY);
+        productRepository.save(product);
 
         ProductWarranty productWarranty = new ProductWarranty();
         productWarranty.setRequestWarrantyDistributor(distributor);
@@ -223,6 +225,54 @@ public class DistributorService {
         Product product = productWarranty.getCustomerProduct().getProduct();
         product.setStatus(ProductStatus.RETURNED_WARRANTY);
         productRepository.save(product);
+    }
+
+    /**
+     * Trả về các sản phẩm cần triệu hồi theo Đại lý và dòng sản phẩm tương ứng
+     */
+    public List<CustomerProduct> getAllRecallCustomerProduct(Long distributorId, Long productLineId)
+            throws InvalidArgumentException{
+        Distributor distributor = getDistributorById(distributorId);
+        ProductLine productLine = productLineService.getProductLineById(productLineId);
+
+        List<CustomerProduct> customerProducts = new ArrayList<>();
+
+        List<Order> orders = orderService.getAllOrderByDistributorId(distributorId);
+        orders.forEach(order -> {
+            order.getOrderDetails().forEach(orderDetail -> {
+                Product product = orderDetail.getProduct();
+                if (product.getProductLine().getId() == productLine.getId()
+                    && (product.getStatus().equals(ProductStatus.SOLD) ||
+                        product.getStatus().equals(ProductStatus.RETURNED_WARRANTY))) {
+                    Optional<CustomerProduct> customerProductOptional =
+                            customerProductRepository.findByProductId(product.getId());
+                    customerProducts.add(customerProductOptional.get());
+                }
+            });
+        });
+
+        return customerProducts;
+    }
+
+    /**
+     * Triệu hồi sản phẩm
+     */
+    public void recallProduct(Long distributorId, Long productLineId, Long warrantyCenterId)
+            throws InvalidArgumentException {
+        List<CustomerProduct> customerProducts =
+                getAllRecallCustomerProduct(distributorId, productLineId);
+        for (int i = 0; i < customerProducts.size(); ++i) {
+            CustomerProduct customerProduct = customerProducts.get(i);
+            Product product = customerProduct.getProduct();
+            product.setStatus(ProductStatus.ERROR_SUMMON);
+            productRepository.save(product);
+            ProductWarrantyModel productWarrantyModel = new ProductWarrantyModel();
+            productWarrantyModel.setCustomerProductId(customerProduct.getProductId());
+            productWarrantyModel.setStartWarrantyDate(LocalDate.now());
+            productWarrantyModel.setWarrantyCenterId(warrantyCenterId);
+            productWarrantyModel.setRequestWarrantyDistributorId(distributorId);
+            requestProductWarranty(productWarrantyModel);
+        }
     }
 
     /**

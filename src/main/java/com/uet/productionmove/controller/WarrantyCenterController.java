@@ -1,5 +1,6 @@
 package com.uet.productionmove.controller;
 
+import com.uet.productionmove.entity.ErrorProduct;
 import com.uet.productionmove.entity.ProductWarranty;
 import com.uet.productionmove.entity.WarrantyCenter;
 import com.uet.productionmove.exception.InvalidArgumentException;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
 
@@ -103,6 +105,16 @@ public class WarrantyCenterController {
             throws InvalidArgumentException {
         warrantyCenterService.finishWarranty(productWarrantyId);
         return ResponseEntity.ok("Successful");
+    }
+
+    @PostMapping(path = "/warranty/return_factory")
+    public ResponseEntity<ErrorProduct> returnErrorProductToFactory(
+            @RequestParam Long productWarrantyId, @RequestParam Long factoryId,
+            @RequestParam @Valid @NotEmpty(message = "error cannot be empty") String error
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(
+                warrantyCenterService.returnWarrantyFactory(
+                        productWarrantyId, factoryId, error));
     }
 
     @GetMapping(path = "warranty/doing")

@@ -5,6 +5,7 @@ import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.repository.ProductLineRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,14 @@ public class ProductLineService {
     @Autowired
     public ProductLineService(ProductLineRepository productLineRepository) {
         this.productLineRepository = productLineRepository;
+    }
+
+    public ProductLine getProductLineById(Long productLineId) throws InvalidArgumentException {
+        Optional<ProductLine> productLineOptional = productLineRepository.findById(productLineId);
+        if (productLineOptional.isEmpty()) {
+            throw new InvalidArgumentException("ProductLine with ID not exists.");
+        }
+        return productLineOptional.get();
     }
 
     public Page<ProductLine> getAllProductLine(int page, int size) {

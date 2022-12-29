@@ -30,6 +30,10 @@ public class WarrantyCenterService {
     private DistributorRepository distributorRepository;
     @Autowired
     private CustomerProductRepository customerProductRepository;
+    @Autowired
+    private FactoryService factoryService;
+    @Autowired
+    private ErrorProductRepository errorProductRepository;
 
     public WarrantyCenter getWarrantyCenterById(Long warrantyCenterId)
             throws InvalidArgumentException {
@@ -214,6 +218,28 @@ public class WarrantyCenterService {
         productRepository.save(product);
     }
 
+    /**
+     * Trung tâm bảo hành trả sản phẩm lỗi cho cơ sở sản xuất
+     */
+    public ErrorProduct returnWarrantyFactory(Long productWarrantyId, Long factoryId, String error)
+            throws InvalidArgumentException {
+        ProductWarranty productWarranty = getProductWarrantyById(productWarrantyId);
+        Factory factory = factoryService.getFactoryById(factoryId);
+
+        Product product = productWarranty.getCustomerProduct().getProduct();
+        product.setStatus(ProductStatus.ERROR_FACTORY);
+        productRepository.save(product);
+
+        productWarranty.setStatus(ProductWarrantyStatus.CANNOT_WARRANTY);
+        productWarrantyRepository.save(productWarranty);
+
+        ErrorProduct errorProduct = new ErrorProduct();
+        errorProduct.setFactory(factory);
+        errorProduct.setProduct(product);
+        errorProduct.setWarrantyCenter(productWarranty.getWarrantyCenter());
+        errorProduct.setError(error);
+        return errorProductRepository.save(errorProduct);
+    }
 
     @Autowired
     public void setWarrantyCenterRepository(

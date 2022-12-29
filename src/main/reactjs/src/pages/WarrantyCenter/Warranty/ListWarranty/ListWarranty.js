@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableContainer,
 import config from '../../../../config.json';
 import Authentication from "../../../../services/Authentication/Authentication";
 import { useReducer } from "react";
+import { Link } from "react-router-dom";
 
 function ShowWarrantyForm() {
     const [productWarrantyList, setProductWarrantyList] = useState([]);
@@ -214,6 +215,12 @@ function ShowWarrantyForm() {
                                         style={{whiteSpace: 'nowrap'}} className={style.editButton}>
                                         Bảo hành xong
                                     </button>
+                                    <Link to="/warranty/warranty/return" state={{productWarranty: productWarranty}}>
+                                        <button
+                                            style={{whiteSpace: 'nowrap'}} className={style.editButton}>
+                                            Trả về nhà máy
+                                        </button>
+                                    </Link>
                                 </div>
                             </TableCell>
                         </TableRow>

@@ -50,6 +50,11 @@ function DistributorLayout ({ children }) {
             ]
         },
         {
+            icon: UilClipboardAlt,
+            heading: "Triệu hồi sản phẩm",
+            action: "/distributor/productRecall"
+        },
+        {
             icon: UilArchive,
             heading: "Kho hàng",
             children: [

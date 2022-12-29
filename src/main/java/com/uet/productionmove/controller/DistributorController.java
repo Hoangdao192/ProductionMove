@@ -1,9 +1,6 @@
 package com.uet.productionmove.controller;
 
-import com.uet.productionmove.entity.Distributor;
-import com.uet.productionmove.entity.Product;
-import com.uet.productionmove.entity.ProductBatch;
-import com.uet.productionmove.entity.ProductWarranty;
+import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.DistributorModel;
 import com.uet.productionmove.model.ProductWarrantyModel;
@@ -78,6 +75,21 @@ public class DistributorController {
     public ResponseEntity<List<SoldProductModel>> getAllSoldProduct(@RequestParam Long distributorId)
             throws InvalidArgumentException {
         return ResponseEntity.ok(distributorService.getAllSoldProduct(distributorId));
+    }
+
+    @GetMapping(path = "productRecall")
+    public ResponseEntity<List<CustomerProduct>> getAllRecallProduct(
+            @RequestParam Long distributorId, @RequestParam Long productLineId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getAllRecallCustomerProduct(distributorId, productLineId));
+    }
+
+    @PostMapping(path = "productRecall")
+    public ResponseEntity<String> recallProduct(
+            @RequestParam Long distributorId, @RequestParam Long productLineId, @RequestParam Long warrantyCenterId
+    ) throws InvalidArgumentException {
+        distributorService.recallProduct(distributorId, productLineId, warrantyCenterId);
+        return ResponseEntity.ok("Success");
     }
 
     @PostMapping(path = "warranty/request")

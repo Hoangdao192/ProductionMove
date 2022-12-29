@@ -83,6 +83,9 @@
                 }
             },
             "distributor" : {
+                "productRecall" : {
+                    "url" : "http://localhost:5000/api/distributor/productRecall"
+                },
                 "warranty" : {
                     "request" : {
                         "url" : "http://localhost:5000/api/distributor/warranty/request"
@@ -146,6 +149,14 @@
                     "url" : "http://localhost:5000/api/factory/delete"
                 },
                 "stock" : {
+                    "product" : {
+                        "errorList" : {
+                            "url": "http://localhost:5000/api/factory/stock/product/errorList"
+                        },
+                        "list" : {
+                            "url" : "http://localhost:5000/api/factory/stock/product/list"
+                        }
+                    },
                     "export" : {
                         "url": "http://localhost:5000/api/factory/stock/export"
                     },
@@ -176,6 +187,9 @@
                     "url" : "http://localhost:5000/api/warranty/delete"
                 },
                 "warranty" : {
+                    "returnFactory" : {
+                        "url" : "http://localhost:5000/api/warranty/warranty/return_factory"
+                    },
                     "finish" : {
                         "url" : "http://localhost:5000/api/warranty/warranty/finish"
                     },

@@ -1,6 +1,8 @@
 package com.uet.productionmove.controller;
 
+import com.uet.productionmove.entity.ErrorProduct;
 import com.uet.productionmove.entity.Factory;
+import com.uet.productionmove.entity.Product;
 import com.uet.productionmove.entity.ProductBatch;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.FactoryExportModel;
@@ -18,7 +20,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "/api/factory")
-@PreAuthorize("hasAnyAuthority('Admin', 'Manufacture') and isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('Admin', 'Manufacture', 'Distributor', 'Warranty center') and isAuthenticated()")
 public class FactoryController {
 
     private FactoryService factoryService;
@@ -83,9 +85,22 @@ public class FactoryController {
     }
 
     @GetMapping(path = "list")
-    @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
     public ResponseEntity<List<FactoryModel>> getAllFactory() {
         return ResponseEntity.ok(factoryService.getAllFactory());
+    }
+
+    @GetMapping(path = "/stock/product/list")
+    public ResponseEntity<List<Product>> getAllProductInStock(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getAllProductInStock(factoryId));
+    }
+
+    @GetMapping(path = "/stock/product/errorList")
+    public ResponseEntity<List<ErrorProduct>> getAllErrorProductInStock(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getAllErrorProductInStock(factoryId));
     }
 
     @DeleteMapping(path = "delete")

@@ -9,4 +9,6 @@ public class ProductWarrantyStatus {
     public static final String DONE = "Done";
     //  Trả lại khách hàng
     public static final String RETURNED = "Returned";
+    //  Không thể bảo hành
+    public static final String CANNOT_WARRANTY = "Cannot warranty";
 }
