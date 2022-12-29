@@ -2,6 +2,9 @@
     "server" : {
         "url" : "http://localhost:5000",
         "api" : {
+            "login" : {
+                "url" : "http://localhost:5000/api/login"
+            },
             "product" : {
                 "get" : {
                     "url" : "http://localhost:5000/api/product/get"
@@ -86,6 +89,14 @@
                 }
             },
             "distributor" : {
+                "producTransaction" : {
+                    "inComing" : {
+                        "url" : "http://localhost:5000/api/distributor/productTransaction/incoming"
+                    },
+                    "import" : {
+                        "url" : "http://localhost:5000/api/distributor/productTransaction/import"
+                    }
+                },
                 "productRecall" : {
                     "url" : "http://localhost:5000/api/distributor/productRecall"
                 },
@@ -120,6 +131,9 @@
                     "url" : "http://localhost:5000/api/distributor/delete"
                 },
                 "stock" : {
+                    "export" : {
+                        "url" : "http://localhost:5000/api/distributor/stock/export"
+                    },
                     "list": {
                         "url" : "http://localhost:5000/api/distributor/stock/list"
                     },
@@ -153,6 +167,9 @@
                 },
                 "stock" : {
                     "product" : {
+                        "export" : {
+                            "url" : "http://localhost:5000/api/factory/stock/product/export"
+                        },
                         "errorList" : {
                             "url": "http://localhost:5000/api/factory/stock/product/errorList"
                         },

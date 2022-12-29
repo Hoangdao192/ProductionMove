@@ -45,6 +45,8 @@ import FactoryProductList from '../pages/Factory/ListProduct';
 import ProductRecall from "../pages/Distributor/ProductRecall";
 import EditProductLine from "../pages/Manager/ProductLine/EditProductLine";
 import ProductExport from "../pages/Factory/ProductExport/ProductExport";
+import ImportProduct from "../pages/Distributor/Stock/ImportProduct";
+import ExportProduct from "../pages/Distributor/Stock/ExportProduct/ExportProduct";
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -67,7 +69,8 @@ const privateRoutes = [
     // {path: '/factory/warehouse/import', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/list_batch', layout: DistributorLayout, component: DistributorStockList, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/show_batch', layout: DistributorLayout, component: DistributorShowBatch, authorization : ['Admin', 'Distributor']},
-    {path: '/distributor/warehouse/export', layout: DistributorLayout, component: StockExport, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/warehouse/export', layout: DistributorLayout, component: ExportProduct, authorization : ['Admin', 'Distributor']},
+    {path: '/distributor/warehouse/import', layout: DistributorLayout, component: ImportProduct, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/warehouse/product/list', layout: DistributorLayout, component: ListProduct, authorization : ['Admin', 'Distributor']},
     {path: '/distributor/customer/create', layout: DistributorLayout, component: CreateCustomer, authorization: ['Admin', 'Distributor']},
     {path: '/distributor/customer/list', layout: DistributorLayout, component: ListCustomer, authorization: ['Admin', 'Distributor']},

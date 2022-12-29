@@ -25,7 +25,7 @@ class Authentication {
     login(username, password) {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
-            request.open("POST", "http://localhost:5000/api/login");
+            request.open("POST", config.server.api.login.url);
             request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             request.onload = function () {
                 if (this.status >= 200 && this.status < 400) {

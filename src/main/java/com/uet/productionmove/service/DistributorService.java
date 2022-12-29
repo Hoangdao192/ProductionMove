@@ -2,9 +2,7 @@ package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
-import com.uet.productionmove.model.DistributorModel;
-import com.uet.productionmove.model.ProductWarrantyModel;
-import com.uet.productionmove.model.SoldProductModel;
+import com.uet.productionmove.model.*;
 import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,13 @@ public class DistributorService {
     private WarrantyCenterRepository warrantyCenterRepository;
     @Autowired
     private ProductLineService productLineService;
+    private StockService stockService;
+    @Autowired
+    private ProductTransactionRepository transactionRepository;
+    @Autowired
+    private ProductTransactionDetailRepository transactionDetailRepository;
+    private FactoryService factoryService;
+    private ProductService productService;
 
     public Distributor createDistributor(DistributorModel distributorModel)
             throws InvalidArgumentException {
@@ -116,13 +121,61 @@ public class DistributorService {
     }
 
     public List<Product> getAllProductInStock(Long distributorId) throws InvalidArgumentException {
-        List<ProductBatch> productBatchesInStock = getAllProductBatchInStock(distributorId);
+       Distributor distributor = getDistributorById(distributorId);
+       Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
+       return productRepository.findAllByStock(stock);
+    }
+
+    public List<Product> getAllErrorProductInStock(Long distributorId) throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
         List<Product> products = new ArrayList<>();
-        productBatchesInStock.forEach(productBatch -> {
-            List<Product> result = productRepository.findAllByBatchAndStatus(productBatch, ProductStatus.AGENCY);
-            products.addAll(result);
-        });
-        return products;
+        products.addAll(productRepository.findAllByStockAndStatus(stock, ProductStatus.ERROR_SUMMON));
+    }
+
+    /**
+     * Đại lý xuất hàng cho cơ sở sản xuất
+     */
+    public ProductTransaction exportProductToFactory(DistributorExportModel distributorExportModel)
+            throws InvalidArgumentException{
+        if (!(distributorExportModel.getExportType().equals("Error") ||
+            distributorExportModel.getExportType().equals("Cannot sale"))) {
+            throw new InvalidArgumentException("exportType invalid");
+        }
+
+        Factory factory = factoryService.getFactoryById(distributorExportModel.getFactoryId());
+        Distributor distributor = getDistributorById(distributorExportModel.getDistributorId());
+        Stock factoryStock = stockService.getStockByStockOwner(factory.getUnit());
+        Stock distributorStock = stockService.getStockByStockOwner(distributor.getUnit());
+
+        ProductTransaction productTransaction = new ProductTransaction();
+        productTransaction.setExportStock(distributorStock);
+        productTransaction.setImportStock(factoryStock);
+        productTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
+        productTransaction = transactionRepository.save(productTransaction);
+
+        List<Long> productIds = distributorExportModel.getProductIds();
+        for (int i = 0; i < productIds.size(); ++i) {
+            //  Kiểm tra sản phẩm có nằm trong kho của đai lý không
+            Product product = productService.getProductById(productIds.get(i));
+            if (product.getStock().getId() != distributorStock.getId()) {
+                throw new InvalidArgumentException("Sản phẩm không nằm trong kho.");
+            }
+
+            if (distributorExportModel.getExportType().equals("Error")) {
+                product.setStatus(ProductStatus.ERROR_FACTORY);
+            } else {
+                product.setStatus(ProductStatus.RETURNED_FACTORY);
+                product = productRepository.save(product);
+            }
+
+            ProductTransactionDetail productTransactionDetail = new ProductTransactionDetail();
+            productTransactionDetail.setProduct(product);
+            productTransactionDetail.setProductTransaction(productTransaction);
+            transactionDetailRepository.save(productTransactionDetail);
+        }
+
+        return productTransaction;
     }
 
     public List<SoldProductModel> getAllSoldProduct(Long distributorId) throws InvalidArgumentException {
@@ -201,6 +254,52 @@ public class DistributorService {
         productWarranty.setCustomer(customerProductOptional.get().getCustomer());
         productWarranty.setStatus(ProductWarrantyStatus.WAITING);
         return productWarrantyRepository.save(productWarranty);
+    }
+
+    /**
+     * Xác nhận nhập kho đơn hàng được chuyển đến
+     */
+    public void importProductTransaction(Long productTransactionId) throws InvalidArgumentException {
+        Optional<ProductTransaction> productTransactionOptional =
+                transactionRepository.findById(productTransactionId);
+        if (productTransactionOptional.isEmpty()) {
+            throw new InvalidArgumentException("ProductTransaction with ID not exists.");
+        }
+        ProductTransaction productTransaction = productTransactionOptional.get();
+        //  Kiểm tra và cập nhập trạng thái đơn vận chuyển
+        if (productTransaction.getTransactionStatus().equals(StockTransactionStatus.EXPORT_DONE)) {
+            throw new InvalidArgumentException("ProductTransaction was imported.");
+        }
+        productTransaction.setTransactionStatus(StockTransactionStatus.EXPORT_DONE);
+        productTransaction.getProductTransactionDetails().forEach(transactionDetail -> {
+            //  Cập nhập trạng thái sản phẩm
+            Product product = transactionDetail.getProduct();
+            product.setStatus(ProductStatus.AGENCY);
+            product.setStock(productTransaction.getImportStock());
+            productRepository.save(product);
+        });
+    }
+
+    public List<FactoryProductTransactionModel> getAllInComingProductTransaction(Long distributorId)
+            throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
+        List<FactoryProductTransactionModel> transactionModels = new ArrayList<>();
+        List<ProductTransaction> productTransactions = transactionRepository
+                .findAllByImportStockAndTransactionStatus(stock, StockTransactionStatus.EXPORTING);
+        for (int i = 0; i < productTransactions.size(); ++i) {
+            ProductTransaction productTransaction = productTransactions.get(i);
+            FactoryProductTransactionModel factoryTransaction = new FactoryProductTransactionModel(
+                    productTransaction.getId(), productTransaction.getExportStock(),
+                    productTransaction.getImportStock(), productTransaction.getTransactionStatus(),
+                    productTransaction.getProductTransactionDetails()
+            );
+            Factory factory = factoryService
+                    .getFactoryByUnitId(productTransaction.getExportStock().getStockOwner().getId());
+            factoryTransaction.setFactory(factory);
+            transactionModels.add(factoryTransaction);
+        }
+        return transactionModels;
     }
 
     /**
@@ -290,9 +389,23 @@ public class DistributorService {
                 .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.RETURNED);
     }
 
-
     @Autowired
     public void setDistributorRepository(DistributorRepository distributorRepository) {
         this.distributorRepository = distributorRepository;
+    }
+
+    @Autowired
+    public void setStockService(StockService stockService) {
+        this.stockService = stockService;
+    }
+
+    @Autowired
+    public void setFactoryService(FactoryService factoryService) {
+        this.factoryService = factoryService;
+    }
+
+    @Autowired
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 }

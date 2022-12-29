@@ -24,6 +24,26 @@ class ServerAPI {
             })
         })
     }
+
+    getDistributorByUnitId(unitId) {
+        return new Promise((resolve, reject) => {
+            let url = config.server.api.distributor.get.url + "?unitId=" + unitId;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                } else reject("Không thể tải dữ liệu")
+            }).then((distributor) => {
+                if (distributor != undefined) {
+                    resolve(distributor);
+                }
+            })
+        })
+    }
 }
 
 export default new ServerAPI();

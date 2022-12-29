@@ -1,0 +1,33 @@
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.container {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1rem 2rem;
+}
+
+.secondTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    &:last-of-type {
+        margin-top: 2rem;
+    }
+}
+
+.action button {
+    padding: 3px 15px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.action button:hover {
+    background-color: #d3f36b;
+}

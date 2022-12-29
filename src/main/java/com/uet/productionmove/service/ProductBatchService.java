@@ -14,25 +14,25 @@ import java.util.Optional;
 @Service
 public class ProductBatchService {
 
-    @Autowired
+
     private ProductRepository productRepository;
-    @Autowired
+
     private BatchRepository batchRepository;
-    @Autowired
+
     private FactoryRepository factoryRepository;
-    @Autowired
+
     private ProductLineRepository productLineRepository;
-    @Autowired
+
     private StockRepository stockRepository;
-    @Autowired
     private StockService stockService;
-    @Autowired
-    private FactoryService factoryService;
-    @Autowired
     private ProductLineService productLineService;
 
     public ProductBatch createProductBatch(ProductBatchModel productBatchModel) throws InvalidArgumentException {
-        Factory factory = factoryService.getFactoryById(productBatchModel.getFactoryId());
+        Optional<Factory> factoryOptional = factoryRepository.findById(productBatchModel.getFactoryId());
+        if (factoryOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory with ID not exists.");
+        }
+        Factory factory = factoryOptional.get();
         ProductLine productLine = productLineService.getProductLineById(productBatchModel.getProductLineId());
 
         Stock stock = null;
@@ -114,4 +114,38 @@ public class ProductBatchService {
                 && stockRepository.existsById(productBatch.getStock().getId());
     }
 
+    @Autowired
+    public void setStockService(StockService stockService) {
+        this.stockService = stockService;
+    }
+
+    @Autowired
+    public void setProductLineService(ProductLineService productLineService) {
+        this.productLineService = productLineService;
+    }
+
+    @Autowired
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @Autowired
+    public void setBatchRepository(BatchRepository batchRepository) {
+        this.batchRepository = batchRepository;
+    }
+
+    @Autowired
+    public void setFactoryRepository(FactoryRepository factoryRepository) {
+        this.factoryRepository = factoryRepository;
+    }
+
+    @Autowired
+    public void setProductLineRepository(ProductLineRepository productLineRepository) {
+        this.productLineRepository = productLineRepository;
+    }
+
+    @Autowired
+    public void setStockRepository(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
+    }
 }

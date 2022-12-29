@@ -1,12 +1,11 @@
 package com.uet.productionmove.controller;
 
-import com.uet.productionmove.entity.ErrorProduct;
-import com.uet.productionmove.entity.Factory;
-import com.uet.productionmove.entity.Product;
-import com.uet.productionmove.entity.ProductBatch;
+import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.FactoryExportModel;
+import com.uet.productionmove.model.FactoryExportProductModel;
 import com.uet.productionmove.model.FactoryModel;
+import com.uet.productionmove.model.ProductTransactionModel;
 import com.uet.productionmove.service.FactoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +93,15 @@ public class FactoryController {
             @RequestParam Long factoryId
     ) throws InvalidArgumentException {
         return ResponseEntity.ok(factoryService.getAllProductInStock(factoryId));
+    }
+
+    @PostMapping(path = "/stock/product/export")
+    public ResponseEntity<ProductTransaction> exportProductsToDistributor(
+            @RequestBody @Valid FactoryExportProductModel factoryExportProductModel)
+            throws InvalidArgumentException {
+        ProductTransaction productTransaction =
+                factoryService.exportProductsToDistributor(factoryExportProductModel);
+        return ResponseEntity.ok(productTransaction);
     }
 
     @GetMapping(path = "/stock/product/errorList")

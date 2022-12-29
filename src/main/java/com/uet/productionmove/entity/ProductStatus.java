@@ -6,7 +6,7 @@ package com.uet.productionmove.entity;
 public class ProductStatus {
     //  Vừa mới được sản xuất
     public static String NEWLY_PRODUCED = "Newly produced";
-    // Đã đưa về cơ sở sản xuất
+    // Đã đưa về đại lý
     public static String AGENCY = "Agency";
     //  Đã bán cho khách hàng
     public static String SOLD = "Sold";

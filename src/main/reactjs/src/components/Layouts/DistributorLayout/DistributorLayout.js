@@ -59,12 +59,8 @@ function DistributorLayout ({ children }) {
             heading: "Kho hàng",
             children: [
                 {
-                    heading: "Quản lý sản phẩm",
+                    heading: "Danh sách sản phẩm",
                     action: "/distributor/warehouse/product/list"
-                },
-                {
-                    heading: "Quản lý lô hàng",
-                    action: "/distributor/warehouse/list_batch"
                 },
                 {
                     heading: "Nhập kho",

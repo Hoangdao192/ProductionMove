@@ -1,30 +1,34 @@
-import style from './ProductExport.module.scss';
-import config from '../../../config.json';
-import Authentication from '../../../services/Authentication/Authentication';
+import style from './ExportProduct.module.scss';
+import config from '../../../../config.json';
+import Authentication from '../../../../services/Authentication/Authentication';
 import { toast } from 'react-toastify';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import { useState } from 'react';
 import { useReducer } from 'react';
 import { useEffect } from 'react';
-import ServerAPI from '../../../services/ServerAPI';
-import ProductStatus from '../../Data/ProductStatus'
+import ServerAPI from '../../../../services/ServerAPI';
+import ProductStatus from '../../../Data/ProductStatus'
 
-export default function ProductExport() {
-    const [distributors, setDistributor] = useState([]);
+const productStatus = [];
+productStatus['Agency'] = "Tốt"
+
+export default function ExportProduct() {
+    const [exportType, setExportType] = useState("Error")
+    const [factories, setFactories] = useState([]);
     const [reducer, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const [exportDistributor, setExportDistributor] = useState(-1)
+    const [exportFactory, setExportFactory] = useState(-1)
     const [exportProducts, setExportProducts] = useState([])
     const [products, setProducts] = useState([]);
     
     const [selectedProducts, setSelectedProducts] = useState(new Map());
 
-    const [factory, setFactory] = useState();
+    const [distributor, setDistributor] = useState();
     const user = Authentication.getCurrentUser();
     
     function resetComponent() {
         setDistributor([])
-        setExportDistributor(-1)
+        setExportFactory(-1)
         setExportProducts([])
         setProducts([])
         setSelectedProducts(new Map())
@@ -32,7 +36,7 @@ export default function ProductExport() {
     }
 
     function validation() {
-        if (exportDistributor == -1) {
+        if (exportFactory == -1) {
             toast.error("Bạn chưa chọn đại lý nhận hàng.")
             return false;
         }
@@ -45,7 +49,7 @@ export default function ProductExport() {
 
     function sendExportRequest() {
         if (validation()) {
-            let url = config.server.api.factory.stock.product.export.url;
+            let url = config.server.api.distributor.stock.export.url;
             fetch(url, {
                 method: "POST",
                 headers: {
@@ -53,9 +57,10 @@ export default function ProductExport() {
                     'Authorization': Authentication.generateAuthorizationHeader()
                 },
                 body: JSON.stringify({
-                    factoryId: factory.id,
-                    distributorId: exportDistributor,
-                    productIds: exportProducts.map((product) => {return product.id})
+                    factoryId: exportFactory,
+                    distributorId: distributor.id,
+                    productIds: exportProducts.map((product) => {return product.id}),
+                    exportType: "Error"
                 })
             }).then((response) => {
                 if (response.status == 200) {
@@ -68,8 +73,8 @@ export default function ProductExport() {
         }
     }
 
-    function loadDistributors() {
-        let url = config.server.api.distributor.list.url;
+    function loadFactories() {
+        let url = config.server.api.factory.list.url;
         fetch(url, {
             headers: {
                 'Authorization': Authentication.generateAuthorizationHeader()
@@ -81,14 +86,18 @@ export default function ProductExport() {
             }
         }).then((data) => {
             if (data != undefined) {
-                setDistributor(data)
+                setFactories(data)
             }
         })
     }
 
-    function loadProductInStock(factoryId) {
-        let url = config.server.api.factory.stock.product.list.url;
-        fetch(`${url}?factoryId=${factoryId}`, {
+    function loadErrorProduct(distributorId) {
+        
+    }
+
+    function loadProductInStock(distributorId) {
+        let url = config.server.api.distributor.stock.product.list.url;
+        fetch(`${url}?distributorId=${distributorId}`, {
             headers: {
                 'Authorization': Authentication.generateAuthorizationHeader()
             }
@@ -133,11 +142,11 @@ export default function ProductExport() {
     }
 
     useEffect(() => {
-        ServerAPI.getFactoryByUnitId(user.unit.id)
-            .then((factory) => {
-                setFactory(factory)    
-                loadDistributors();
-                loadProductInStock(factory.id);
+        ServerAPI.getDistributorByUnitId(user.unit.id)
+            .then((distributor) => {
+                setDistributor(distributor)
+                loadFactories();
+                loadProductInStock(distributor.id);
             })
     }, [reducer])
     
@@ -155,15 +164,15 @@ export default function ProductExport() {
             <button onClick={(e) => sendExportRequest()} className={style.exportButton}>Xuất hàng</button>
 
             <label htmlFor="" className={style.label}>
-                Đại lý nhận hàng
+                Cơ sở sản xuất nhận hàng
             </label>
-            <select value={exportDistributor} className={style.select} name="" id=""
-                onChange={(e) => setExportDistributor(parseInt(e.target.value))}>
+            <select value={exportFactory} className={style.select} name="" id=""
+                onChange={(e) => setExportFactory(parseInt(e.target.value))}>
                 <option value={-1} key={-1}>
                     - Chưa chọn -
                 </option>
                 {
-                    distributors.map((distributor, index) => {
+                    factories.map((distributor, index) => {
                         return (
                             <option value={distributor.id} key={index}>
                                 {distributor.name}
@@ -171,6 +180,18 @@ export default function ProductExport() {
                         )
                     })
                 }
+            </select>
+            <label htmlFor="" className={style.label}>
+                Loại xuất hàng
+            </label>
+            <select value={exportType} className={style.select} name="" id=""
+                onChange={(e) => setExportType(e.target.value)}>
+                <option value="Error">
+                    Sản phẩm lỗi
+                </option>
+                <option value="Cannot sale">
+                    Không bán được
+                </option>
             </select>
             <label htmlFor="" className={style.label + " " + style.exportLabel}>
                 Danh sách lô hàng sẽ xuất đi
@@ -200,7 +221,7 @@ export default function ProductExport() {
                                 <TableCell align="center">{product.productLine.id}</TableCell>
                                 <TableCell align="center">{product.productLine.productName}</TableCell>
                                 <TableCell align="center">{product.batch.manufacturingDate}</TableCell>
-                                <TableCell align="center">{ProductStatus[product.status]}</TableCell>
+                                <TableCell align="center">{productStatus[product.status]}</TableCell>
                                 <TableCell align="center">
                                     <div className={style.action}>
                                         <button onClick={(e) => unSelectProduct(product)}>
@@ -244,7 +265,7 @@ export default function ProductExport() {
                                 <TableCell align="center">{product.productLine.id}</TableCell>
                                 <TableCell align="center">{product.productLine.productName}</TableCell>
                                 <TableCell align="center">{product.batch.manufacturingDate}</TableCell>
-                                <TableCell align="center">{ProductStatus[product.status]}</TableCell>
+                                <TableCell align="center">{productStatus[product.status]}</TableCell>
                                 <TableCell align="center">
                                     <div className={style.action}>
                                         <button className={style.button} disabled={selectedProducts.has(product.id) ? true : false}  

@@ -1,7 +1,9 @@
 package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.Customer;
+import com.uet.productionmove.entity.Distributor;
 import com.uet.productionmove.exception.InvalidArgumentException;
+import com.uet.productionmove.model.CustomerModel;
 import com.uet.productionmove.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,17 @@ import java.util.Optional;
 public class CustomerService {
     private CustomerRepository customerRepository;
     private OrderService orderService;
+    private DistributorService distributorService;
 
-    public Customer createCustomer(Customer customer) {
-        customer.setId(null);
+    public Customer createCustomer(CustomerModel customerModel) throws InvalidArgumentException {
+        Customer customer = new Customer();
+        Distributor distributor =
+                distributorService.getDistributorById(customerModel.getDistributorId());
+        customer.setDistributor(distributor);
+        customer.setAddress(customerModel.getAddress());
+        customer.setLastName(customerModel.getLastName());
+        customer.setFirstName(customerModel.getFirstName());
+        customer.setPhoneNumber(customerModel.getPhoneNumber());
         return customerRepository.save(customer);
     }
 
@@ -56,5 +66,10 @@ public class CustomerService {
     @Autowired
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @Autowired
+    public void setDistributorService(DistributorService distributorService) {
+        this.distributorService = distributorService;
     }
 }

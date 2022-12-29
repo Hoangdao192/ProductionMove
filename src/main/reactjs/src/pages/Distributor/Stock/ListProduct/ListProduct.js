@@ -9,6 +9,9 @@ import { useReducer } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+const productStatus = [];
+productStatus['Agency'] = "Tốt"
+
 export default function ListProduct() {
     const [reducer, forceUpdate] = useReducer(x => x + 1, 0);
     const [page, setPage] = useState(0);
@@ -138,6 +141,7 @@ export default function ListProduct() {
                                 <TableCell align="center">Tên sản phẩm</TableCell>
                                 <TableCell align="center">Ngày sản xuất</TableCell>
                                 <TableCell align="center">Mã lô hàng</TableCell>
+                                <TableCell align="center">Trạng thái</TableCell>
                                 {/* <TableCell align="center">Tùy chọn</TableCell> */}
                             </TableRow>
                             </TableHead>
@@ -153,7 +157,7 @@ export default function ListProduct() {
                                     <TableCell align="center">{product.productLine.productName}</TableCell>
                                     <TableCell align="center">{product.batch.manufacturingDate}</TableCell>
                                     <TableCell align="center">{product.batch.id}</TableCell>
-                                    <TableCell align="center">{product.status}</TableCell>
+                                    <TableCell align="center">{productStatus[product.status]}</TableCell>
                                     {/* <TableCell align="center">
                                         <div className={style.action}>
                                             <button className={style.button}>Sửa</button>

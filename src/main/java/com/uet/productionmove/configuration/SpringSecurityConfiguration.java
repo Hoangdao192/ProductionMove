@@ -40,14 +40,14 @@ public class SpringSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors()
-                .and()
+                .cors().disable()
+                // .and()
                 .authorizeRequests()
-                        .antMatchers("/api/login").permitAll();
-//                .antMatchers("/api/order/list").authenticated()
-////                    .antMatchers("/api/login", "/api/account/create").permitAll()
-////                    .antMatchers("/users/get").authenticated();
-//                .anyRequest().authenticated();
+                .antMatchers("/api/login").permitAll();
+        // .antMatchers("/api/order/list").authenticated()
+        //// .antMatchers("/api/login", "/api/account/create").permitAll()
+        //// .antMatchers("/users/get").authenticated();
+        // .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), CustomUsernamePasswordFilter.class);
         return http.build();
     }
@@ -76,7 +76,8 @@ public class SpringSecurityConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000");
+                        .allowedOrigins("http://localhost:3000",
+                                "https://2b55-2a09-bac1-7a80-50-00-245-6e.ap.ngrok.io");
             }
         };
     }

@@ -3,7 +3,9 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.FactoryExportModel;
+import com.uet.productionmove.model.FactoryExportProductModel;
 import com.uet.productionmove.model.FactoryModel;
+import com.uet.productionmove.model.ProductTransactionModel;
 import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,23 +22,24 @@ public class FactoryService {
     private FactoryRepository factoryRepository;
     @Autowired
     private DistributorRepository distributorRepository;
+    @Autowired
+    private ProductTransactionDetailRepository transactionDetailRepository;
 
-    @Autowired
     private StockRepository stockRepository;
-    @Autowired
+
     private UnitRepository unitRepository;
-    @Autowired
+
     private StockTransactionRepository stockTransactionRepository;
-    @Autowired
+
     private ProductRepository productRepository;
-    @Autowired
+
     private ErrorProductRepository errorProductRepository;
-    @Autowired
     private DistributorService distributorService;
-    @Autowired
     private StockService stockService;
-    @Autowired
     private ProductBatchService productBatchService;
+    @Autowired
+    private ProductTransactionRepository productTransactionRepository;
+    private ProductService productService;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -135,9 +138,9 @@ public class FactoryService {
     }
 
     /**
-     * Cơ sở sản xuất xuất hàng cho đại lý
+     * Cơ sở sản xuất xuất lô hàng cho đại lý
      */
-    public void exportBatchToDistributor(FactoryExportModel factoryExportModel)
+    public ProductTransaction exportBatchToDistributor(FactoryExportModel factoryExportModel)
             throws InvalidArgumentException {
         Factory factory = getFactoryById(factoryExportModel.getFactoryId());
         Distributor distributor =
@@ -145,6 +148,12 @@ public class FactoryService {
 
         Stock factoryStock = stockService.getStockByStockOwner(factory.getUnit());
         Stock distributorStock = stockService.getStockByStockOwner(distributor.getUnit());
+
+        ProductTransaction productTransaction = new ProductTransaction();
+        productTransaction.setExportStock(factoryStock);
+        productTransaction.setImportStock(distributorStock);
+        productTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
+        productTransaction = productTransactionRepository.save(productTransaction);
 
         for (int i = 0; i < factoryExportModel.getExportBatchIds().size(); ++i) {
             Long batchId = factoryExportModel.getExportBatchIds().get(i);
@@ -159,21 +168,57 @@ public class FactoryService {
 
             // Thay đổi trạng thái của các sản phẩm trong lô hàng thành "Đã được đưa về đại lý"
             List<Product> products = productRepository.findByBatch(productBatch);
-            products.forEach((product) -> {
+            for (int j = 0; j < products.size(); ++j) {
+                Product product = products.get(j);
                 product.setStatus(ProductStatus.AGENCY);
                 product.setStock(distributorStock);
                 productRepository.save(product);
-            });
+
+                ProductTransactionDetail productTransactionDetail = new ProductTransactionDetail();
+                productTransactionDetail.setProductTransaction(productTransaction);
+                productTransactionDetail.setProduct(product);
+                transactionDetailRepository.save(productTransactionDetail);
+            }
 
             productBatch.setStock(distributorStock);
             productBatch = batchRepository.save(productBatch);
-            ProductBatchTransaction productBatchTransaction = new ProductBatchTransaction();
-            productBatchTransaction.setBatch(productBatch);
-            productBatchTransaction.setExportStock(factoryStock);
-            productBatchTransaction.setImportStock(distributorStock);
-            productBatchTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
-            stockTransactionRepository.save(productBatchTransaction);
         }
+        return productTransaction;
+    }
+
+    /**
+     * Cơ sở sản xuất xuất sản phẩm sang đại lý
+     */
+    public ProductTransaction exportProductsToDistributor(
+            FactoryExportProductModel factoryExportProductModel)
+            throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryExportProductModel.getFactoryId());
+        Distributor distributor =
+                distributorService.getDistributorById(factoryExportProductModel.getDistributorId());
+
+        Stock importStock = stockService.getStockByStockOwner(distributor.getUnit());
+        Stock exportStock = stockService.getStockByStockOwner(factory.getUnit());
+
+        ProductTransaction productTransaction = new ProductTransaction();
+        productTransaction.setImportStock(importStock);
+        productTransaction.setExportStock(exportStock);
+        productTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
+        productTransaction = productTransactionRepository.save(productTransaction);
+
+        List<Long> productIds = factoryExportProductModel.getProductIds();
+        for (int i = 0; i < productIds.size(); ++i) {
+            Product product = productService.getProductById(productIds.get(i));
+            if (product.getStock().getId() != exportStock.getId()) {
+                throw new InvalidArgumentException("Sản phẩm không nằm trong kho.");
+            }
+
+            ProductTransactionDetail productTransactionDetail = new ProductTransactionDetail();
+            productTransactionDetail.setProduct(product);
+            productTransactionDetail.setProductTransaction(productTransaction);
+            transactionDetailRepository.save(productTransactionDetail);
+        }
+
+        return productTransaction;
     }
 
     public List<ProductBatch> getAllProductBatchInStock(Long factoryId) throws InvalidArgumentException {
@@ -202,12 +247,9 @@ public class FactoryService {
     }
 
     public List<Product> getAllProductInStock(Long factoryId) throws InvalidArgumentException {
-        List<ProductBatch> productBatches = getAllProductBatchInStock(factoryId);
-        List<Product> products = new ArrayList<>();
-        productBatches.forEach(productBatch -> {
-            products.addAll(productRepository.findByBatch(productBatch));
-        });
-        return products;
+        Factory factory = getFactoryById(factoryId);
+        Stock stock = stockService.getStockByStockOwner(factory.getUnit());
+        return productRepository.findAllByStock(stock);
     }
 
     public List<ErrorProduct> getAllErrorProductInStock(Long factoryId) throws InvalidArgumentException {
@@ -228,5 +270,55 @@ public class FactoryService {
     @Autowired
     public void setFactoryRepository(FactoryRepository factoryRepository) {
         this.factoryRepository = factoryRepository;
+    }
+
+    @Autowired
+    public void setStockService(StockService stockService) {
+        this.stockService = stockService;
+    }
+
+    @Autowired
+    public void setProductBatchService(ProductBatchService productBatchService) {
+        this.productBatchService = productBatchService;
+    }
+
+    @Autowired
+    public void setDistributorService(DistributorService distributorService) {
+        this.distributorService = distributorService;
+    }
+
+    @Autowired
+    public void setDistributorRepository(DistributorRepository distributorRepository) {
+        this.distributorRepository = distributorRepository;
+    }
+
+    @Autowired
+    public void setStockRepository(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
+    }
+
+    @Autowired
+    public void setUnitRepository(UnitRepository unitRepository) {
+        this.unitRepository = unitRepository;
+    }
+
+    @Autowired
+    public void setStockTransactionRepository(StockTransactionRepository stockTransactionRepository) {
+        this.stockTransactionRepository = stockTransactionRepository;
+    }
+
+    @Autowired
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @Autowired
+    public void setErrorProductRepository(ErrorProductRepository errorProductRepository) {
+        this.errorProductRepository = errorProductRepository;
+    }
+
+    @Autowired
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 }

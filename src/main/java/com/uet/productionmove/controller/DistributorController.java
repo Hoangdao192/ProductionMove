@@ -2,9 +2,7 @@ package com.uet.productionmove.controller;
 
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
-import com.uet.productionmove.model.DistributorModel;
-import com.uet.productionmove.model.ProductWarrantyModel;
-import com.uet.productionmove.model.SoldProductModel;
+import com.uet.productionmove.model.*;
 import com.uet.productionmove.service.DistributorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -106,6 +104,29 @@ public class DistributorController {
         return ResponseEntity.ok(
                 distributorService.getAllRequestWarranty(distributorId)
         );
+    }
+
+    @GetMapping(path = "/stock/export")
+    public ResponseEntity<List<FactoryProductTransactionModel>> getAllInComingProductTransaction(
+            @RequestParam Long distributorId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(
+            distributorService.getAllInComingProductTransaction(distributorId)
+        );
+    }
+
+    @PostMapping(path = "/productTransaction/import")
+    public ResponseEntity<String> importProductTransaction(@RequestParam Long productTransactionId)
+            throws InvalidArgumentException{
+        distributorService.importProductTransaction(productTransactionId);
+        return ResponseEntity.ok("Success");
+    }
+
+    @PostMapping(path = "/productTransaction/export")
+    public ResponseEntity<String> exportProductToFactory(@RequestBody @Valid DistributorExportModel distributorExportModel)
+            throws InvalidArgumentException{
+        distributorService.exportProductToFactory(distributorExportModel);
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping(path = "warranty/finish")

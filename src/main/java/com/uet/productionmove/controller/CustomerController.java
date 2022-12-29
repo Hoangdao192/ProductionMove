@@ -2,6 +2,7 @@ package com.uet.productionmove.controller;
 
 import com.uet.productionmove.entity.Customer;
 import com.uet.productionmove.exception.InvalidArgumentException;
+import com.uet.productionmove.model.CustomerModel;
 import com.uet.productionmove.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class CustomerController {
     @PostMapping(path = "create")
     @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
     public ResponseEntity<Customer> createCustomer(
-            @RequestBody @Valid Customer customer) {
-        customer = customerService.createCustomer(customer);
+            @RequestBody @Valid CustomerModel customerModel) throws InvalidArgumentException {
+        Customer customer = customerService.createCustomer(customerModel);
         return ResponseEntity.ok(customer);
     }
 

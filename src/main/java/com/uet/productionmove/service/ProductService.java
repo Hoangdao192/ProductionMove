@@ -42,4 +42,11 @@ public class ProductService {
         }
         return productOptional.get();
     }
+
+    public Product updateProduct(Product product) throws InvalidArgumentException {
+        Product dbProduct = getProductById(product.getId());
+        dbProduct.setStock(product.getStock());
+        dbProduct.setStatus(product.getStatus());
+        return productRepository.save(dbProduct);
+    }
 }
