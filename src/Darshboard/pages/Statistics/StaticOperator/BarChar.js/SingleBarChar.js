@@ -3,7 +3,17 @@ import React from "react";
 
 import { BarChart } from "../../../../components/common/Chart";
 
-function SingleBarChar({ title, labelList, dataList, percent, scales }) {
+function SingleBarChar({
+  title,
+  labelList,
+  dataList,
+  percent,
+  scales,
+  positionLabels,
+  sizeLabels,
+  displayLabels,
+  sizeTitle,
+}) {
   let labels = [""];
   let dataSet = [];
 
@@ -26,7 +36,6 @@ function SingleBarChar({ title, labelList, dataList, percent, scales }) {
   if (title === "Sản phẩm từng trạng thái") {
     // { status: "NEW", quantity: 300, color: "rgb(66, 194, 255)" }
     dataList.forEach((item, index) => {
-      console.log(item.color.substring(4, item.color.length - 1));
       dataSet = [
         ...dataSet,
         {
@@ -121,6 +130,10 @@ function SingleBarChar({ title, labelList, dataList, percent, scales }) {
       dataList={dataSet}
       scales={scales}
       tooltip={tooltip}
+      positionLabels={positionLabels}
+      sizeLabels={sizeLabels}
+      displayLabels={displayLabels}
+      sizeTitle={sizeTitle}
     />
   );
 }

@@ -26,19 +26,28 @@ export default function BarChart({
   dataList,
   scales,
   tooltip,
+  positionLabels,
+  sizeLabels,
+  displayLabels,
+  sizeTitle,
 }) {
   const options = {
     responsive: true,
     // scales: scales,
-    scales: scales,
+    // scales: scales,
+    scales: {
+      ...scales,
+    },
 
     plugins: {
       legend: {
-        position: "top",
+        display: displayLabels ? displayLabels : true,
+        position: positionLabels ? positionLabels : "top",
         labels: {
+          textAlign: "left",
           fontColor: "red",
           font: {
-            size: 10,
+            size: sizeLabels ? sizeLabels : 14,
           },
         },
       },
@@ -46,7 +55,7 @@ export default function BarChart({
         display: true,
         text: title,
         font: {
-          size: 20,
+          size: sizeTitle ? sizeTitle : 18,
         },
         color: "black",
       },

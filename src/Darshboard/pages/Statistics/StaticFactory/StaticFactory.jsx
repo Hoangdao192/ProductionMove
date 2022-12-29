@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
-import styles from "./StaticOperator.module.css";
+import styles from "./StaticFactory.module.css";
 
 import {
   statusProduct,
-  fatoryProduct,
-  warrantyProduct,
-  agencyProduct,
+  manufacturingProduct,
+  sellProduct,
+  errorProduct,
 } from "./data";
-import SingleBarChar from "./BarChar.js/SingleBarChar";
+import SingleBarChar from "./BarChar/SingleBarChar.js";
 import { Title } from "../../../components/common";
-import { UilShutter } from "@iconscout/react-unicons";
+import { UilBuilding } from "@iconscout/react-unicons";
 
-function StaticOperator() {
+function StaticFactory() {
+  const [optionMan, setOptionMan] = useState("mounth");
+  const [optionWarranty, setOptionWarranty] = useState("mounth");
+  const [optionErrorProduct, setOptionErrorProduct] = useState("productLine");
   const [sizeLabelStatusChart, setSizeLabelStatusChart] = useState(10);
   const [sizeTitle, setSizeTitle] = useState(18);
 
   const changeSizeLabelChart = () => {
-    if (window.innerWidth <= 750 && sizeLabelStatusChart !== 8) {
-      setSizeLabelStatusChart(8);
+    if (window.innerWidth <= 750 && sizeLabelStatusChart !== 6) {
+      setSizeLabelStatusChart(6);
       setSizeTitle(12);
     }
   };
@@ -44,7 +47,7 @@ function StaticOperator() {
 
   return (
     <div className={styles.container}>
-      <Title icon={[{ icon: UilShutter }]} title="Ban điều hành" />
+      <Title icon={[{ icon: UilBuilding }]} title="Cơ sở sản xuất" />
       <div className={styles.line_1}>
         <div className={styles.statusBarChart}>
           <div className={styles.tbOption}>
@@ -63,14 +66,26 @@ function StaticOperator() {
         <div className={styles.factoryBarChart}>
           <div className={styles.tbOption}>
             {/* <label htmlFor="op">Tùy chọn</label> */}
-            <select></select>
+            <select
+              name="optionManufacturing"
+              id="opManufac"
+              value={optionMan}
+              onChange={(e) => {
+                setOptionMan(e.target.value);
+              }}
+            >
+              <option value="mounth">Tháng</option>
+              <option value="quarter">Quý</option>
+              <option value="year">Năm</option>
+            </select>
           </div>
           <SingleBarChar
-            title={"Sản phẩm từng nhà sản xuất"}
-            dataList={fatoryProduct}
-            positionLabels={"right"}
+            title={"Sản phẩm sản xuất"}
+            dataList={manufacturingProduct}
+            type={optionMan}
             sizeLabels={sizeLabelStatusChart}
             sizeTitle={sizeTitle}
+            positionLabels={"right"}
             percent
           />
         </div>
@@ -79,28 +94,52 @@ function StaticOperator() {
         <div className={styles.warrantyBarChart}>
           <div className={styles.tbOption}>
             {/* <label htmlFor="op">Tùy chọn</label> */}
-            <select></select>
+            <select
+              name="optionWarranty"
+              id="optionWarranty"
+              value={optionWarranty}
+              onChange={(e) => {
+                setOptionWarranty(e.target.value);
+              }}
+            >
+              <option value="mounth">Tháng</option>
+              <option value="quarter">Quý</option>
+              <option value="year">Năm</option>
+            </select>
           </div>
           <SingleBarChar
-            title={"Sản phẩm từng cơ sở bảo hành"}
-            dataList={warrantyProduct}
-            positionLabels={"right"}
+            title={"Sản phẩm đã bán"}
+            dataList={sellProduct}
+            type={optionWarranty}
             sizeLabels={sizeLabelStatusChart}
             sizeTitle={sizeTitle}
+            positionLabels={"right"}
             percent
           />
         </div>
         <div className={styles.agencyBarChart}>
           <div className={styles.tbOption}>
             {/* <label htmlFor="op">Tùy chọn</label> */}
-            <select></select>
+            <select
+              name="optionErrorProduct"
+              id="optionErrorProduct"
+              value={optionErrorProduct}
+              onChange={(e) => {
+                setOptionErrorProduct(e.target.value);
+              }}
+            >
+              <option value="productLine">Dòng sản phẩm</option>
+              <option value="factory">Nhà sản xuất</option>
+              <option value="agency">Nhà phân phối</option>
+            </select>
           </div>
           <SingleBarChar
-            title={"Sản phẩm từng đại lý"}
-            dataList={agencyProduct}
-            positionLabels={"right"}
+            title={"Sản phẩm lỗi"}
+            dataList={errorProduct}
+            type={optionErrorProduct}
             sizeLabels={sizeLabelStatusChart}
             sizeTitle={sizeTitle}
+            positionLabels={"right"}
             percent
           />
         </div>
@@ -109,4 +148,4 @@ function StaticOperator() {
   );
 }
 
-export default StaticOperator;
+export default StaticFactory;

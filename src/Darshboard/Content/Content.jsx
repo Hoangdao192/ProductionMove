@@ -6,12 +6,15 @@ import {
   ErrorProducts,
   FactoryExport,
   StaticOperator,
+  StaticFactory,
+  StaticAgency,
+  StaticWarranty,
 } from "../pages/Statistics";
 
 const Content = () => {
   return (
     <div className={styles.container}>
-      <StaticOperator />
+      <StaticWarranty />
     </div>
   );
 };

@@ -28,6 +28,10 @@ function Title({ icon, title, name, avatar }) {
                     ? 20
                     : name === "UilShutter"
                     ? 30
+                    : name === "UilBuilding"
+                    ? 30
+                    : name === "UilShield"
+                    ? 30
                     : 15
                 }
               />
