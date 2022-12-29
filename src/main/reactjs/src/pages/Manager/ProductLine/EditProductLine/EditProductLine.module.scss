@@ -1,0 +1,92 @@
+.createProductLine {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+}
+
+.label {
+    display: block;
+    padding: 10px;
+    padding-left: 0;
+    border-radius: 0.75rem;
+    // border: 2px solid gray;
+    margin-right: 1rem;
+}
+
+.input {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 0.75rem;
+    border: 2px solid gray;
+    transition: 0.3s;
+    width: 20rem;
+}
+
+.input:focus {
+    border: 2px solid black;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+
+.secondTitle {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.form {
+    width: 100%;
+}
+
+.productLineInfo {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    column-gap: 2rem;
+}
+
+
+.createButton {
+    transition: 0.3s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #d3f36b;
+}
+
+.createButton .icon {
+    width: 1rem;
+    transition: inherit;
+}
+
+.createButton span {
+    transition: 0s;
+    margin-left: 0.7rem;
+    white-space: nowrap;
+}
+
+.createButton:hover {
+    background-color: #fed337;
+
+    .icon {
+        transform: rotate(90deg);
+    }
+
+    span {
+        font-weight: bold;
+    }
+}

@@ -1,4 +1,5 @@
 import config from '../../config.json';
+import ServerMessageParser from '../ServerMessageParser';
 
 class Authentication {
     isUserAuthenticated() {
@@ -32,7 +33,7 @@ class Authentication {
                     let authToken = response["accessToken"];
                     let tokenType = response["tokenType"];
                     if (authToken == undefined || authToken == null || authToken.length == 0) {
-                        reject("Tên đăng nhập hoặc mật khẩu không đúng");
+                        reject("Không nhận được token đăng nhập");
                         // return false;
                     }
     
@@ -54,6 +55,9 @@ class Authentication {
                         }
                     })
                     // return true;
+                } else {
+                    let errors = ServerMessageParser.parse(this.response)
+                    reject(errors[0])
                 }
             }
             request.send(JSON.stringify({

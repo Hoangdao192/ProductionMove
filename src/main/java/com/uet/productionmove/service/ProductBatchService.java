@@ -24,32 +24,27 @@ public class ProductBatchService {
     private ProductLineRepository productLineRepository;
     @Autowired
     private StockRepository stockRepository;
+    @Autowired
+    private StockService stockService;
+    @Autowired
+    private FactoryService factoryService;
+    @Autowired
+    private ProductLineService productLineService;
 
     public ProductBatch createProductBatch(ProductBatchModel productBatchModel) throws InvalidArgumentException {
-        Optional<Factory> factoryOptional = factoryRepository.findById(productBatchModel.getFactoryId());
-        Optional<ProductLine> productLineOptional = productLineRepository
-                .findById(productBatchModel.getProductLineId());
+        Factory factory = factoryService.getFactoryById(productBatchModel.getFactoryId());
+        ProductLine productLine = productLineService.getProductLineById(productBatchModel.getProductLineId());
 
-        Optional<Stock> stockOptional = null;
+        Stock stock = null;
         if (productBatchModel.getStockId() != null) {
-            stockOptional = stockRepository.findById(productBatchModel.getStockId());
-            if (stockOptional.isEmpty()) {
-                throw new InvalidArgumentException("Stock with ID not exists.");
-            }
-        }
-
-        if (factoryOptional.isEmpty()) {
-            throw new InvalidArgumentException("Factory with ID not exists.");
-        }
-        if (productLineOptional.isEmpty()) {
-            throw new InvalidArgumentException("ProductLine with ID not exists.");
+            stock = stockService.getStockById(productBatchModel.getStockId());
         }
 
         ProductBatch productBatch = new ProductBatch();
-        productBatch.setProductLine(productLineOptional.get());
-        productBatch.setFactory(factoryOptional.get());
-        if (stockOptional != null) {
-            productBatch.setStock(stockOptional.get());
+        productBatch.setProductLine(productLine);
+        productBatch.setFactory(factory);
+        if (stock != null) {
+            productBatch.setStock(stock);
         }
         productBatch.setProductQuantity(productBatchModel.getProductQuantity());
         productBatch.setManufacturingDate(productBatchModel.getManufacturingDate());
@@ -58,8 +53,11 @@ public class ProductBatchService {
 
         for (int i = 0; i < productBatch.getProductQuantity(); ++i) {
             Product product = new Product();
-            product.setProductLine(productLineOptional.get());
+            product.setProductLine(productLine);
             product.setBatch(productBatch);
+            if (stock != null) {
+                product.setStock(stock);
+            }
             product.setStatus(ProductStatus.NEWLY_PRODUCED);
             productRepository.save(product);
         }

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -32,6 +33,7 @@ public class ProductBatchModel {
     private Long factoryId;
 
     @NotNull(message = "productQuantity không thể là null.")
-    @Min(value = 0, message = "productQuantity phải lớn hơn 0")
+    @Min(value = 1, message = "productQuantity must bigger than 1")
+    @Max(value = 100, message = "productQuantity must less than 100")
     private Long productQuantity;
 }

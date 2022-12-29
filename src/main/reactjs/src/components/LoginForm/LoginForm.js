@@ -3,6 +3,7 @@ import Authentication from "../../services/Authentication/Authentication";
 import "./LoginForm.css";
 import img1 from "../img/log.svg";
 import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function LoginForm() {
     const [details, setDetails] = useState({ name: "", password: "" });
@@ -10,7 +11,11 @@ function LoginForm() {
 
     const submitHandler = e => {
         e.preventDefault();
-        Authentication.login(details.name, details.password).then(() => setLoginSuccess(true))
+        Authentication.login(details.name, details.password)
+            .then(() => setLoginSuccess(true))
+            .catch((message) => {
+                toast.error(message, {autoClose: 1500});
+            })
     }
 
     return (

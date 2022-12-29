@@ -2,9 +2,8 @@ package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.ProductBatch;
 import com.uet.productionmove.entity.Stock;
-import com.uet.productionmove.entity.StockTransaction;
+import com.uet.productionmove.entity.ProductBatchTransaction;
 import com.uet.productionmove.exception.InvalidArgumentException;
-import com.uet.productionmove.exception.stock.InvalidStockImportException;
 import com.uet.productionmove.repository.BatchRepository;
 import com.uet.productionmove.repository.StockRepository;
 import com.uet.productionmove.repository.StockTransactionRepository;
@@ -22,7 +21,7 @@ public class StockService {
     public BatchRepository batchRepository;
     private StockTransactionRepository stockTransactionRepository;
 
-    public StockTransaction createStockTransaction(Long productBatchId, Long importStockId)
+    public ProductBatchTransaction createStockTransaction(Long productBatchId, Long importStockId)
             throws InvalidArgumentException {
         if (productBatchId == null || importStockId == null) {
             throw new InvalidArgumentException("Stock import is invalid");
@@ -40,11 +39,19 @@ public class StockService {
         }
 
         Stock exportStock = batchEntityOptional.get().getStock();
-        StockTransaction stockTransaction = new StockTransaction(
+        ProductBatchTransaction productBatchTransaction = new ProductBatchTransaction(
                     batchEntityOptional.get(), exportStock, stockEntityOptional.get()
         );
 
-        return stockTransactionRepository.save(stockTransaction);
+        return stockTransactionRepository.save(productBatchTransaction);
+    }
+
+    public Stock getStockById(Long stockId) throws InvalidArgumentException {
+        Optional<Stock> stockOptional = stockRepository.findById(stockId);
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Stock with ID not exists.");
+        }
+        return stockOptional.get();
     }
 
     @Autowired

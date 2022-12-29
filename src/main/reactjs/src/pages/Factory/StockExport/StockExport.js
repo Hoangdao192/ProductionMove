@@ -3,6 +3,7 @@ import style from './StockExport.module.scss'
 import config from '../../../config.json';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import Authentication from '../../../services/Authentication/Authentication';
+import { toast } from 'react-toastify';
 
 export default function StockExport() {
     const [distributors, setDistributor] = useState([]);
@@ -28,6 +29,8 @@ export default function StockExport() {
             }).then((response) => {
                 if (response.status == 200) {
                     return response.json()
+                } else {
+                    toast.error("Không thể tải dữ liệu");
                 }
             }).then((factory) => {
                 if (factory != undefined) {
@@ -48,11 +51,11 @@ export default function StockExport() {
 
     function validation() {
         if (exportDistributor == -1) {
-            alert("ERROR");
+            toast.error("Bạn chưa chọn đại lý nhận hàng.")
             return false;
         }
         if (exportBatches.length == 0) {
-            alert("ERROR");
+            toast.error("Bạn chưa chọn lô hàng xuất đi.")
             return false;
         }
         return true;
@@ -75,9 +78,11 @@ export default function StockExport() {
                 })
             }).then((response) => {
                 if (response.status == 200) {
-                    alert("OK")
+                    toast.success("Xuất hàng thành công.")
                     resetComponent()
-                } else alert("FAILED")
+                } else {
+                    toast.error("Xuất hàng thất bại.")
+                }
             })
         }
     }

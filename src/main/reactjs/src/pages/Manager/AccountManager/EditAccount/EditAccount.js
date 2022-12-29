@@ -1,14 +1,23 @@
 import style from "./EditAccount.module.scss";
 import React, { useState, useEffect } from "react";
 import config from "../../../../config.json";
-import { UilPlus } from '@iconscout/react-unicons'
+import { UilSave } from '@iconscout/react-unicons'
 import { typeAccounts } from "../AcountItems.js";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Authentication from '../../../../services/Authentication/Authentication'
+import Validator from "../../../../services/validator/Validator";
+import { toast } from "react-toastify";
 
 export default function EditAccount() {
-    const [user, setUser] = useState(useLocation().state.user);
+    let oldUser = useLocation().state.user;
+    const [user, setUser] = useState({
+        ...oldUser,
+        password: "",
+        unitId: oldUser.unit.id,
+        confirmPassword: ""
+    });
 
+    const navigate = useNavigate();
 
     function onSubmitButtonClick(event) {
         event.preventDefault();
@@ -24,46 +33,44 @@ export default function EditAccount() {
                     id: user.id,
                     username: user.username,
                     password: user.password,
-                    role: user.role
+                    role: user.role,
+                    unitId: user.unit.id
                 })
             }).then((response) => {
-                if (response.ok) return response.json()
-            }).then((data) => console.log(data))
+                if (response.status == 200) {
+                    toast.success("Đổi mật khẩu thành công");
+                    navigate(-1)
+                } else {
+                    toast.error("Đổi mật khẩu không thành công");
+                }
+            })
         }
     }
 
     function validation() {
-        if(!/^\S+$/.test(user.username)) {
-            alert("Username is not valid")
+        if (Validator.isEmpty(user.password)) {
+            toast.error("Bạn chưa nhập mật khẩu")
             return false;
         }
-        if (!/^\S{7,20}$/.test(user.password)) {
-            alert("Password must not contain space and length from 8 - 20")
+        if (!Validator.isPasswordValid(user.password)) {
+            toast.error("Mật khẩu phải chưa 8 - 20 kí tự và không có dấu cách.")
             return false;
         }
-
+        if (Validator.isEmpty(user.confirmPassword)) {
+            toast.error("Bạn chưa xác nhận mật khẩu")
+            return false;
+        }
         if (user.password !== user.confirmPassword) {
-            alert("Password and confirm password not the same.")
+            alert("Mật khẩu và xác nhận mật khẩu không giống nhau.")
             return false;
         }
-
-        if (user.role === "None") {
-            alert("You must select role")
-            return false;
-        }
-
-        if (user.unitId === -1) {
-            alert("You must select unit")
-            return false;
-        }
-
         return true;
     }
 
     return (
         <>
             <div className={style.container}>
-                <h2 className={style.title}>Tạo tài khoản</h2>
+                <h2 className={style.title}>Đổi mật khẩu</h2>
                 <form className={style.form} action="" method="post">
                     <div className={style.name}>
                         <div className={style.action}>
@@ -85,6 +92,7 @@ export default function EditAccount() {
                                 type={"password"}
                                 name="password"
                                 id={style.password}
+                                value={user.password}
                                 onChange={(e) => setUser({
                                     ...user,
                                     password: e.target.value
@@ -122,8 +130,8 @@ export default function EditAccount() {
                     </div>
                     <div className={style.submitButton}>
                         <button type="submit" onClick={(e) => onSubmitButtonClick(e)}>
-                                <UilPlus className={style.icon}/>
-                                <span>Tạo tài khoản</span>
+                                <UilSave className={style.icon}/>
+                                <span>Cập nhập</span>
                         </button>
                     </div>
                 </form>

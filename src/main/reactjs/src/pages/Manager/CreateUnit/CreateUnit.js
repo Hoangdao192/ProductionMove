@@ -1,32 +1,30 @@
 import style from './CreateUnit.module.scss'
 import { UilPlus } from '@iconscout/react-unicons'
-import { css, Input } from '@nextui-org/react'
-import { InputLabel, Select, MenuItem, FormControl } from '@mui/material'
-import { useState } from 'react'
+import { useReducer, useState } from 'react'
 import config from '../../../config.json'
 import { typeAccounts } from '../AccountManager/AcountItems'
 import Authentication from '../../../services/Authentication/Authentication';
+import ServerMessageParser from '../../../services/ServerMessageParser';
+import Validator from '../../../services/validator/Validator';
+import { toast } from 'react-toastify'
 
 export default function CreateUnit() {
-
+    const [reducer, forceReset] = useReducer(x => x + 1, 0);
     const [data, setData] = useState({ 
         type: "None",
         name: "",
         address: "",
         phoneNumber: ""
-    })
+    });
 
-    function onPhoneNumberInput(event) {
-        let value = event.target.value;
-        if (value.charAt(value.length - 1) < "0" || value.charAt(value.length - 1) > "9") {
-            if (value.length > 0) {
-                value = value.substr(0, value.length - 1);
-            }
-            setData({
-                ...data,
-                phoneNumber: value
-            })
-        }
+    function resetComponent() {
+        setData({ 
+            type: "None",
+            name: "",
+            address: "",
+            phoneNumber: ""
+        });
+        forceReset();
     }
 
     function onCreateButtonClick(event) {
@@ -37,31 +35,27 @@ export default function CreateUnit() {
     }
 
     function validation() {
-        if (data.type === 'None') {
-            alert('Bạn chưa chọn loại đơn vị')
+        if (Validator.isEmpty(data.type)) {
+            toast.error('Bạn chưa chọn loại đơn vị')
             return false;
         }
-        if (data.name.length == 0) {
-            alert('Tên không được để trống')
+        if (Validator.isEmpty(data.name)) {
+            toast.error('Tên không được để trống')
             return false;
         }
-        if (data.address.length == 0) {
-            alert('Địa chỉ không được để trống')
+        if (Validator.isEmpty(data.address)) {
+            toast.error('Địa chỉ không được để trống')
             return false;
         }
-        if (data.phoneNumber.length == 0) {
-            alert('Số điện thoại không được để trống')
+        if (Validator.isEmpty(data.phoneNumber)) {
+            toast.error('Số điện thoại không được để trống.')
             return false;
         }
-        if (data.phoneNumber.length < 10) {
-            alert('Số điện thoại không hợp lệ (Độ dài ít nhất là 10 kí tự)')
+        if (!Validator.isPhoneNumberValid(data.phoneNumber)) {
+            toast.error('Số điện thoại không hợp lệ')
             return false;
         }
 
-        if (!/^\d+$/.test(data.phoneNumber)) {
-            alert('Sai định dạng số điện thoại')
-            return false;
-        }
         return true;
     }
 
@@ -91,7 +85,14 @@ export default function CreateUnit() {
                 address: data.address,
                 phoneNumber: data.phoneNumber
             })
-        }).then((response) => console.log(response))
+        }).then((response) => {
+            if (response.status == 200) {
+                toast.success("Tạo đơn vị mới thành công")
+                resetComponent()
+            } else {
+                toast.error("Tạo đơn vị mới không thành công")
+            }
+        })
     }
 
     return (
@@ -154,8 +155,6 @@ export default function CreateUnit() {
                             ...data,
                             phoneNumber: e.target.value
                         })}
-                        onKeyDown={(e) => onPhoneNumberInput(e)}
-                        onKeyUp={(e) => onPhoneNumberInput(e)}
                         placeholder='Nhập số điên thoại' name="phoneNumber" 
                         id={style.phoneInput} className={style.input}/>
                 </div>

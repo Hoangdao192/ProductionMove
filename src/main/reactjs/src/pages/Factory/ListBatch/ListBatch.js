@@ -10,6 +10,7 @@ import { useReducer } from 'react';
 import { red } from '@nextui-org/react';
 import Authentication from '../../../services/Authentication/Authentication';
 import { display } from '@mui/system';
+import { toast } from 'react-toastify';
 
 export default function ListBatch() {
     const [productBatchs, setProductBatchs] = useState([])
@@ -32,6 +33,8 @@ export default function ListBatch() {
             }).then((response) => {
                 if (response.status == 200) {
                     return response.json()
+                } else {
+                    toast.error("Không thể tải dữ liệu");
                 }
             }).then((factory) => {
                 if (factory != undefined) {
@@ -57,6 +60,8 @@ export default function ListBatch() {
         .then((response) => {
             if (response.status == 200) {
                 return response.json();
+            } else {
+                toast.error("Không thể tải dữ liệu");
             }
         }).then((data) => {
             if (data != undefined) setInStockBatches(data)
@@ -73,10 +78,11 @@ export default function ListBatch() {
         .then((response) => {
             if (response.status == 200) {
                 return response.json()
+            } else {
+                toast.error("Không thể tải dữ liệu");
             }
         }).then((data) => {
             if (data != undefined) setProductBatchs(data)
-            console.log(data)
         })
     }
 
@@ -90,10 +96,11 @@ export default function ListBatch() {
         .then((response) => {
             if (response.status == 200) {
                 return response.json()
+            } else {
+                toast.error("Không thể tải dữ liệu");
             }
         }).then((data) => {
             if (data != undefined) setNotImportBatchs(data)
-            console.log(data)
         })
     }
 
@@ -110,11 +117,11 @@ export default function ListBatch() {
             body: formData
         }).then((response) => {
             if (response.status == 200) {
-                alert("OK")
+                toast.success("Nhập kho thành công.")
                 forceUpdate()
-            } else response.text();
-        }).then((data) => {
-            if (data != undefined) alert(data)
+            } else {
+                toast.error("Nhập kho không thành công");
+            }
         })
     }
 

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import Authentication from '../../../../services/Authentication/Authentication';
+import { toast } from 'react-toastify';
 
 export default function ListProductLine() {
     const [productLines, setProductLines] = useState([])
@@ -23,6 +24,8 @@ export default function ListProductLine() {
         .then((response) => {
             if (response.status == 200) {
                 return response.json()
+            } else {
+                toast.error("Tải dữ liệu thất bại.");
             }
         }).then((data) => {
             if (data != undefined) setProductLines(data)
@@ -38,12 +41,11 @@ export default function ListProductLine() {
             }
         }).then((response) => {
             if (response.status == 200) {
-                alert("OK")
+                toast.success("Xóa dòng sản phẩm thành công.");
                 forceUpdate()
+            } else {
+                toast.error("Xóa dòng sản phẩm không thành công.");
             }
-            else response.text()
-        }).then((data) => {
-            console.log(data)
         })
     }
 
@@ -75,7 +77,9 @@ export default function ListProductLine() {
                                     <Link to={'/manager/product_line/show'} state={{productLine: productLine}}>
                                         <button className={style.actionButton}>Xem chi tiết</button>
                                     </Link>
-                                    <button className={style.actionButton}>Sửa</button>
+                                    <Link to='/manager/product_line/edit' state={{productLine : productLine}}>
+                                        <button className={style.actionButton}>Sửa</button>
+                                    </Link>
                                     <button className={style.actionButton} 
                                         onClick={(e) => sendDeleteProductLineRequest(productLine.id)}>Xóa</button>
                                 </div>

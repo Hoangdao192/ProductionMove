@@ -8,7 +8,6 @@ import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -180,12 +179,12 @@ public class FactoryService {
 
             productBatch.setStock(distributorStockOptional.get());
             productBatch = batchRepository.save(productBatch);
-            StockTransaction stockTransaction = new StockTransaction();
-            stockTransaction.setBatch(productBatch);
-            stockTransaction.setExportStock(factoryStockOptional.get());
-            stockTransaction.setImportStock(distributorStockOptional.get());
-            stockTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
-            stockTransactionRepository.save(stockTransaction);
+            ProductBatchTransaction productBatchTransaction = new ProductBatchTransaction();
+            productBatchTransaction.setBatch(productBatch);
+            productBatchTransaction.setExportStock(factoryStockOptional.get());
+            productBatchTransaction.setImportStock(distributorStockOptional.get());
+            productBatchTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
+            stockTransactionRepository.save(productBatchTransaction);
         }
     }
 

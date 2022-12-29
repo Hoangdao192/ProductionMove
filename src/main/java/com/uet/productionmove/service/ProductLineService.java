@@ -52,10 +52,11 @@ public class ProductLineService {
         this.productLineRepository.deleteById(productLineId);
     }
 
-    public void updateProductLine(ProductLine productLine) {
-        if (productLineRepository.existsById(productLine.getId())) {
-            this.productLineRepository.save(productLine);
+    public ProductLine updateProductLine(ProductLine productLine) throws InvalidArgumentException {
+        if (!productLineRepository.existsById(productLine.getId())) {
+            throw new InvalidArgumentException("ProductLine with ID not exists.");
         }
+        return this.productLineRepository.save(productLine);
     }
 
     // USE production_move;

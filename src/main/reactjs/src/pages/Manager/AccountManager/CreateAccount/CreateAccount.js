@@ -1,22 +1,47 @@
 import style from "./CreateAccount.module.scss";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import config from "../../../../config.json";
 import { UilPlus } from '@iconscout/react-unicons'
-import { typeAccounts } from "../AcountItems.js";
 import Authentication from '../../../../services/Authentication/Authentication'
+import { toast } from "react-toastify";
+import Validator from "../../../../services/validator/Validator";
 
-export default function CreateAccount(props) {
+const typeAccounts = [
+    { key: "Manufacture", value: "Cơ sở sản xuất"},
+    { key: "Distributor", value: "Đại lý"},
+    { key: "Warranty", value: "Trung tâm bảo hành"}
+];
+typeAccounts["Manufacture"] = "Cơ sở sản xuất";
+typeAccounts["Distributor"] = "Đại lý";
+typeAccounts["Warranty"] = "Trung tâm bảo hành";
+
+export default function CreateAccount() {
+    const [reducer, forceReset] = useReducer(x => x + 1, 0);
     const [user, setUser] = useState({
         username: "",
         password: "",
         confirmPassword: "",
         unitId: -1,
-        role: "Manufacture"
+        role: "None"
     });
     const [units, setUnits] = useState([{
         unitId: -1,
         name: " - Chưa chọn - "
     }]);
+
+    function resetComponent() {
+        setUser({
+            username: "",
+            password: "",
+            confirmPassword: "",
+            unitId: -1,
+            role: "None"
+        });
+        setUnits([{
+            unitId: -1,
+            name: " - Chưa chọn - "
+        }]);
+    }
 
     function onUserRoleSelect(event) {
         setUser({
@@ -38,7 +63,7 @@ export default function CreateAccount(props) {
                 url = config.server.api.warranty.list.url;
                 break;
         }
-        console.log(url)
+
         if (url !== "") {
             fetch(url, {
                 method: "GET",
@@ -46,27 +71,23 @@ export default function CreateAccount(props) {
                     'Authorization': Authentication.generateAuthorizationHeader()
                 }
             }).then((response) => {
-                return response.json()
+                if (response.status == 200) {
+                    return response.json();
+                } else toast.warn("Không thể tải dữ liệu.")
             }).then((data) => {
-                console.log(data)
-                setUnits([{
-                    unitId: -1,
-                    name: " - Chưa chọn - "
-                }].concat(data))
+                if (data != undefined) {
+                    setUnits([{
+                        unitId: -1,
+                        name: " - Chưa chọn - "
+                    }].concat(data))
+                }
             })
         }
-    }
-
-    // Thẩm định cuối
-    function validationForm(event) {
-        event.preventDefault();
-        
     }
 
     function onSubmitButtonClick(event) {
         event.preventDefault();
         if (validation()) {
-            console.log(user)
             fetch(config.server.api.account.create.url, {
                 method: 'POST',
                 headers: {
@@ -80,33 +101,48 @@ export default function CreateAccount(props) {
                     role: user.role == "Warranty" ? "Warranty center" : user.role
                 })
             }).then((response) => {
-                if (response.ok) return response.json()
-            }).then((data) => console.log(data))
+                if (response.status == 200) {
+                    toast.success("Tạo tài khoản thành công.")
+                    resetComponent();
+                } else {
+                    toast.error("Tạo tài khoản không thành công.")
+                }
+            })
         }
     }
 
     function validation() {
-        if(!/^\S+$/.test(user.username)) {
-            alert("Username is not valid")
+        if (Validator.isEmpty(user.username)) {
+            toast.error("Tên tài khoản không được để trống.")
             return false;
         }
-        if (!/^\S{7,20}$/.test(user.password)) {
-            alert("Password must not contain space and length from 8 - 20")
+        if(!Validator.isUserNameValid(user.username)) {
+            toast.error("Tên tài khoản không chứa dấu cách.")
             return false;
         }
-
+        if (Validator.isEmpty(user.password)) {
+            toast.error("Mật khẩu không được để trống.")
+            return false;
+        }
+        if (!Validator.isPasswordValid(user.password)) {
+            toast.error("Mật khẩu phải từ 8 đến 20 kí tự và không chứa dấu cách.")
+            return false;
+        }
+        if (Validator.isEmpty(user.confirmPassword)) {
+            toast.error("Bạn chưa xác nhận mật khẩu")
+        }
         if (user.password !== user.confirmPassword) {
-            alert("Password and confirm password not the same.")
+            toast.error("Mật khẩu và xác nhận mật khẩu không giống nhau.")
             return false;
         }
 
-        if (user.role === "None") {
-            alert("You must select role")
+        if (Validator.isEmpty(user.role)) {
+            toast.error("Bạn chưa chọn loại tài khoản")
             return false;
         }
 
         if (user.unitId === -1) {
-            alert("You must select unit")
+            toast.error("Bạn chưa chọn đơn vị cấp tài khoản")
             return false;
         }
 

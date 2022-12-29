@@ -27,6 +27,9 @@
                 }
             },
             "productLine" : {
+                "update" : {
+                    "url" : "http://localhost:5000/api/product_line/update"
+                },
                 "create" : {
                     "url" : "http://localhost:5000/api/product_line/create"
                 },

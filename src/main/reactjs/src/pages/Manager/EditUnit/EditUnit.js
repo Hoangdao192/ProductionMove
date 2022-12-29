@@ -1,32 +1,19 @@
 import style from './EditUnit.module.scss'
-import { UilPlus } from '@iconscout/react-unicons'
-import { css, Input } from '@nextui-org/react'
-import { InputLabel, Select, MenuItem, FormControl } from '@mui/material'
 import { UilSave } from '@iconscout/react-unicons'
 import { useState } from 'react'
 import config from '../../../config.json'
 import { typeAccounts } from '../AccountManager/AcountItems'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Authentication from '../../../services/Authentication/Authentication';
+import Validator from '../../../services/validator/Validator'
+import { toast } from 'react-toastify'
 
 export default function EditUnit() {
 
     const { unit } = useLocation().state
     const [data, setData] = useState(unit)
-    console.log(unit)
 
-    function onPhoneNumberInput(event) {
-        let value = event.target.value;
-        if (value.charAt(value.length - 1) < "0" || value.charAt(value.length - 1) > "9") {
-            if (value.length > 0) {
-                value = value.substr(0, value.length - 1);
-            }
-            setData({
-                ...data,
-                phoneNumber: value
-            })
-        }
-    }
+    const navigate = useNavigate()
 
     function onCreateButtonClick(event) {
         event.preventDefault();
@@ -36,27 +23,23 @@ export default function EditUnit() {
     }
 
     function validation() {
-        if (data.name.length == 0) {
-            alert('Tên không được để trống')
+        if (Validator.isEmpty(data.name)) {
+            toast.error('Tên không được để trống')
             return false;
         }
-        if (data.address.length == 0) {
-            alert('Địa chỉ không được để trống')
+        if (Validator.isEmpty(data.address)) {
+            toast.error('Địa chỉ không được để trống')
             return false;
         }
-        if (data.phoneNumber.length == 0) {
-            alert('Số điện thoại không được để trống')
+        if (Validator.isEmpty(data.phoneNumber)) {
+            toast.error('Số điện thoại không được để trống.')
             return false;
         }
-        if (data.phoneNumber.length < 10) {
-            alert('Số điện thoại không hợp lệ (Độ dài ít nhất là 10 kí tự)')
+        if (!Validator.isPhoneNumberValid(data.phoneNumber)) {
+            toast.error('Số điện thoại không hợp lệ')
             return false;
         }
 
-        if (!/^\d+$/.test(data.phoneNumber)) {
-            alert('Sai định dạng số điện thoại')
-            return false;
-        }
         return true;
     }
 
@@ -87,7 +70,14 @@ export default function EditUnit() {
                 address: data.address,
                 phoneNumber: data.phoneNumber
             })
-        }).then((response) => console.log(response))
+        }).then((response) => {
+            if (response.status == 200) {
+                toast.success("Cập nhập đơn vị thành công")
+                navigate(-1)
+            } else {
+                toast.error("Cập nhập đơn vị không thành công")
+            }
+        })
     }
 
     return (
@@ -140,8 +130,6 @@ export default function EditUnit() {
                             ...data,
                             phoneNumber: e.target.value
                         })}
-                        onKeyDown={(e) => onPhoneNumberInput(e)}
-                        onKeyUp={(e) => onPhoneNumberInput(e)}
                         placeholder='Nhập số điên thoại' name="phoneNumber" 
                         id={style.phoneInput} className={style.input}/>
                 </div>

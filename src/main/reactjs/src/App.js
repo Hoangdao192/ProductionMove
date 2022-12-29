@@ -5,13 +5,24 @@ import BlankLayout from "./components/Layouts/BlankLayout";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import { NextUIProvider, Container } from '@nextui-org/react'
 import './App.css';
+import { ToastContainer } from "react-toastify";
 
 function App() {
 	return (
 		<BrowserRouter>
             <NextUIProvider>
-            
                     <div className="App">
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={1500}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"/>
                             <Routes>
                                     {
                                         publicRoutes.map(

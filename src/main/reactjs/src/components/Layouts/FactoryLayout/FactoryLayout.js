@@ -9,7 +9,8 @@ import {
     UilChart,
     UilSignOutAlt,
     UilBuilding,
-    UilArchive
+    UilArchive,
+    UilLaptop
 } from "@iconscout/react-unicons";
 
 function FactoryLayout ({ children }) {
@@ -40,6 +41,21 @@ function FactoryLayout ({ children }) {
                     action: "/factory/warehouse/product/list"
                 }
             ]
+        },
+        {
+            heading: "Quản lý sản phẩm",
+            icon: UilLaptop,
+            children: [
+                {
+                    heading: "Danh sách sản phẩm",
+                    action: "/factory/warehouse/product/list"
+                },
+                {
+                    heading: "Xuất kho",
+                    action: "/factory/warehouse/product/list"
+                }
+            ]
+           
         },
         {
             icon: UilChart,

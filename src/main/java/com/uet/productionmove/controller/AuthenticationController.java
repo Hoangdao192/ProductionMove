@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class AuthenticationController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
-    public Map<String, String> authenticateUser(@RequestBody LoginRequestModel loginRequestModel) {
+    public Map<String, String> authenticateUser(@RequestBody @Valid LoginRequestModel loginRequestModel) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestModel.getUsername(),

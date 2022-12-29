@@ -8,18 +8,16 @@ import { useReducer } from 'react';
 
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import Authentication from '../../../services/Authentication/Authentication';
+import { toast } from 'react-toastify';
 
 export default function ShowUnit () {
 
     const [factories, setFactories] = useState([]);
-    const [distributors, setDistributors] = useState([]);
-    const [warrantyCenters, setwarrantyCenters] = useState([]);
     const [unitType, setUnitType] = useState('Manufacture');
     const [ignore, forceUpdate] = useReducer(x => x + 1, 0);
 
     function onUnitTypeSelect(e) {
         setUnitType(e.target.value)
-        // setFactories([])
         loadData(e.target.value)
     }
 
@@ -46,9 +44,11 @@ export default function ShowUnit () {
         }).then((response) => {
             if (response.status == 200) {
                 return response.json()
-            } else setFactories([])
+            } else {
+                toast.info("Không thể tải thông tin.")
+                setFactories([])
+            }
         }).then((data) => {
-            console.log(data)
             if (data != undefined) setFactories(data)
         })
     }
@@ -82,44 +82,17 @@ export default function ShowUnit () {
                 body: formData
             }).then((response) => {
                 if (response.status == 200) {
+                    toast.success("Xóa đơn vị thành công.");
                     forceUpdate();
+                } else {
+                    toast.error("Xóa đơn vị không thành công.");
                 }
-                return response.text();
-            }).then((response) => {
-                console.log(response)
             })
         }
     }
 
     useEffect(() => {
-
-        let url = "";
-
-        switch(unitType) {
-            case 'Manufacture': 
-                url = config.server.api.factory.list.url; 
-                break;
-            case 'Distributor':
-                url = config.server.api.distributor.list.url;
-                break;
-            case 'Warranty':
-                url = config.server.api.warranty.list.url;
-                break;
-        }
-
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': Authentication.generateAuthorizationHeader()
-            }
-        }).then((response) => {
-            if (response.status == 200) {
-                return response.json()
-            } else setFactories([])
-        }).then((data) => {
-            console.log(data)
-            if (data != undefined) setFactories(data)
-        })
+        loadData(unitType)
     },[ignore])
 
     return (

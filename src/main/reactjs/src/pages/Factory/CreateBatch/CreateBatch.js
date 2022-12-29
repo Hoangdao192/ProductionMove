@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { UilPlus } from '@iconscout/react-unicons'
 import Authentication from '../../../services/Authentication/Authentication';
+import Validator from '../../../services/validator/Validator';
+import { toast } from 'react-toastify';
 
 export default function CreateBatch() {
     const [reducer, setReducer] = useReducer(x => x + 1, 0)
@@ -67,35 +69,34 @@ export default function CreateBatch() {
     function validation() {
         console.log(productBatch)
 
-        if (productBatch.productLineId == "None") {
-            alert("empty field")
+        if (Validator.isEmpty(productBatch.productLineId)) {
+            toast.error("Bạn chưa chọn dòng sản phẩm")
             return false;
         }
 
-        if (productBatch.manufactureDate == "") {
-            alert("empty field")
+        if (Validator.isEmpty(productBatch.manufactureDate)) {
+            toast.error("Bạn chưa chọn ngày sản xuất")
             return false;
         }
 
-        if (productBatch.productQuantity == "") {
-            alert("empty field")
+        if (Validator.isEmpty(productBatch.warrantyPeriod)) {
+            toast.error("Bạn chưa nhập thời gian bảo hành");
             return false;
         }
-
-        if (productBatch.productQuantity < 1 || productBatch.productQuantity > 100) {
-            alert("too big")
-            return false;
-        }
-
-        if (productBatch.warrantyPeriod == "") {
-            alert("empty");
-            return false;
-        }
-
         if (productBatch.warrantyPeriod < 1 || productBatch.warrantyPeriod > 1000) {
-            alert("Invalid");
+            toast.error("Thời gian bảo hành nằm trong khoảng 1 - 1000");
             return false;
         }
+
+        if (Validator.isEmpty(productBatch.productQuantity)) {
+            toast.error("Bạn chưa nhập số lượng sản phẩm")
+            return false;
+        }
+        if (productBatch.productQuantity < 1 || productBatch.productQuantity > 100) {
+            toast.error("Số lượng sản phẩm nằm trong khoảng 1 - 100")
+            return false;
+        }
+      
         return true;
     }
 
@@ -128,11 +129,9 @@ export default function CreateBatch() {
                 })
             }).then((response) => {
                 if (response.status == 200) {
-                    alert("OK")
+                    toast.success("Tạo lô sản phẩm thành công")
                     resetComponent()
-                } else response.text()
-            }).then((data) => {
-                if (data != undefined) console.log(data)
+                } else toast.error("Tạo lô sản phẩm không thành công")
             })
         }
     }

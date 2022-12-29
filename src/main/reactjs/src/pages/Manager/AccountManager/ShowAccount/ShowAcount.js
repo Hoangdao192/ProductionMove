@@ -2,22 +2,23 @@ import style from "./ShowAcount.module.scss";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { acounts, typeAccounts } from "../AcountItems.js";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
-import { MdDelete, MdEdit } from "react-icons/md";
-import userAvatar from "./user.jpg";
 import config from "../../../../config.json";
 
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 
-import EditAcount from "../Edit/EditAcount";
 import { useReducer } from "react";
 import Authentication from "../../../../services/Authentication/Authentication";
+import { toast } from "react-toastify";
 
 function ShowAcount() {
     const [users, setUsers] = useState([]);
     const [reset, setRest] = useState([]);
     const [ignore, forceUpdate] = useReducer(x => x + 1, 0)
-    const navigate = useNavigate()
+
+    function resetComponent() {
+        setUsers([]);
+        forceUpdate();
+    }
 
     useEffect(() => {
         let request = new XMLHttpRequest();
@@ -25,8 +26,9 @@ function ShowAcount() {
         request.setRequestHeader('Authorization', Authentication.generateAuthorizationHeader());
         request.onload = () => {
             if (request.status == 200) {
-                console.log(JSON.parse(request.response));
                 setUsers(JSON.parse(request.response).content.users);
+            } else {
+                toast.error("Không thể tải dữ liệu");
             }
         }
         request.send();
@@ -43,10 +45,8 @@ function ShowAcount() {
             body: formData
         }).then((response) => {
             if (response.status == 200) {
-                console.log("OKKKK")
-                forceUpdate();
-                setRest("")
-                navigate("/manager/account/list")
+                toast.success("Xóa tài khoản thành công.")
+                resetComponent();
             }
         })
     }
@@ -65,6 +65,7 @@ function ShowAcount() {
                         <TableCell align="center">Mã tài khoản</TableCell>
                         <TableCell align="center">Tên tài khoản</TableCell>
                         <TableCell align="center">Loại tài khoản</TableCell>
+                        {/* <TableCell align="center">Tên đơn vị</TableCell> */}
                         <TableCell align="center">Tùy chọn</TableCell>
                     </TableRow>
                     </TableHead>

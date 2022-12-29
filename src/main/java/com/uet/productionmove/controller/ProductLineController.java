@@ -54,8 +54,8 @@ public class ProductLineController {
 
     @PostMapping(path = "/update")
     @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
-    public String updateProductLine(@RequestBody ProductLine productLine) {
-        productLineService.updateProductLine(productLine);
-        return "";
+    public ResponseEntity<ProductLine> updateProductLine(@RequestBody ProductLine productLine) throws InvalidArgumentException {
+        productLine = productLineService.updateProductLine(productLine);
+        return ResponseEntity.ok(productLine);
     }
 }

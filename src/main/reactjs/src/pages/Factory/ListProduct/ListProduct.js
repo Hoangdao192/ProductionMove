@@ -7,6 +7,8 @@ import {
     TableContainer, TableHead, TableRow, 
     Box, Tab, Tabs, TabPanel, Typography} from '@mui/material';
 import { useEffect } from 'react';
+import ProductStatus from '../../Data/ProductStatus';
+import Util from '../../../util/Util';
 
 export default function ListProduct() {
 
@@ -163,8 +165,10 @@ export default function ListProduct() {
                                     <TableCell align="center">{product.batch.id}</TableCell>
                                     <TableCell align="center">{product.productLine.id}</TableCell>
                                     <TableCell align="center">{product.productLine.productName}</TableCell>
-                                    <TableCell align="center">{product.batch.manufacturingDate}</TableCell>
-                                    <TableCell align="center">{product.status}</TableCell>
+                                    <TableCell align="center">
+                                        {Util.convertSQLDateToNormalDate(product.batch.manufacturingDate)}
+                                    </TableCell>
+                                    <TableCell align="center">{ProductStatus[product.status]}</TableCell>
                                     {/* <TableCell align="center">
                                         <div className={style.action}>
                                             <button className={style.button}>Sửa</button>

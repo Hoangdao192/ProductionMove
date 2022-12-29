@@ -19,20 +19,6 @@ function ManagerLayout ({ children }) {
             action: "/manager/home"
         },
         {
-            icon: UilClipboardAlt,
-            heading: "Đơn hàng",
-            children: [
-                {
-                    heading: "Tạo mới",
-                    action: "/distributor/order/create"
-                },
-                {
-                    heading: "Quản lý đơn hàng",
-                    action: "/distributor/order/list"
-                }
-            ]
-        },
-        {
             icon: UilBuilding,
             heading: "Đơn vị",
             children: [
@@ -73,10 +59,6 @@ function ManagerLayout ({ children }) {
                     action: "/manager/product_line/list"
                 }
             ]
-        },
-        {
-            icon: UilChart,
-            heading: "Analytics"
         },
         {
             icon: UilSignOutAlt,

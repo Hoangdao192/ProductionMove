@@ -1,41 +1,16 @@
-import style from './CreateProductLine.module.scss'
-import { UilPlus } from '@iconscout/react-unicons'
+import style from './EditProductLine.module.scss'
+import { UilSave } from '@iconscout/react-unicons'
 import { useState } from 'react'
 import config from '../../../../config.json';
 import Authentication from '../../../../services/Authentication/Authentication';
 import Validator from '../../../../services/validator/Validator';
 import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function CreateProductLine() {
-    const [productLine, setProductLine] = useState({
-        productName: "",
-        audioAndSpeaker: "",
-        battery: "",
-        camera: "",
-        display: "",
-        hardDrive: "",
-        memory: "",
-        operatingSystem: "",
-        processor: "",
-        videoCard: "",
-        wireless: ""
-    })
+export default function EditProductLine() {
 
-    function resetComponent() {
-        setProductLine({
-            productName: "",
-            audioAndSpeaker: "",
-            battery: "",
-            camera: "",
-            display: "",
-            hardDrive: "",
-            memory: "",
-            operatingSystem: "",
-            processor: "",
-            videoCard: "",
-            wireless: ""
-        })
-    }
+    const [productLine, setProductLine] = useState(useLocation().state.productLine)
+    const navigate = useNavigate();
 
     function validation() {
         if (Validator.isEmpty(productLine.productName)) {
@@ -86,7 +61,7 @@ export default function CreateProductLine() {
     }
 
     function sendCreateProductLineRequest() {
-        let url = config.server.api.productLine.create.url;
+        let url = config.server.api.productLine.update.url;
         fetch(url, {
             method: "POST",
             headers: {
@@ -96,10 +71,10 @@ export default function CreateProductLine() {
             body: JSON.stringify(productLine)
         }).then((response) => {
             if (response.status == 200) {
-                toast.success("Tạo dòng sản phẩm thành công.")
-                resetComponent()
+                toast.success("Cập nhập dòng sản phẩm thành công.")
+                navigate(-1)
             } else {
-                toast.success("Tạo dòng sản phẩm không thành công.")
+                toast.success("Cập nhập dòng sản phẩm không thành công.")
             }
         })
     }
@@ -230,8 +205,8 @@ export default function CreateProductLine() {
                 </div>
 
                 <button onClick={(e) => onSubmitButtonClick()} className={style.createButton}>
-                    <UilPlus className={style.icon}/>
-                    <span>Tạo dòng sản phẩm</span>
+                    <UilSave className={style.icon}/>
+                    <span>Cập nhập dòng sản phẩm</span>
                 </button>
             </div>
         </div>

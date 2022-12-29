@@ -31,12 +31,11 @@ public class ProductBatch {
     private Long warrantyPeriod;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    // @JsonBackReference
     @JoinColumn(name = "factory_id", nullable = false, updatable = false)
+    //  Cở sở sản xuất ra lô hàng
     private Factory factory;
 
     @ManyToOne
-    // @JsonBackReference
     @JoinColumn(name = "product_line_id", nullable = false, updatable = false)
     private ProductLine productLine;
 

@@ -43,6 +43,7 @@ import DistributorListWarranty from '../pages/Distributor/Warranty/ListWarranty'
 import ReturnWarrantyFactory from "../pages/WarrantyCenter/Warranty/ReturnWarrantyFactory";
 import FactoryProductList from '../pages/Factory/ListProduct';
 import ProductRecall from "../pages/Distributor/ProductRecall";
+import EditProductLine from "../pages/Manager/ProductLine/EditProductLine";
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -56,6 +57,7 @@ const privateRoutes = [
     {path: '/manager/product_line/create', layout: ManagerLayout, component: CreateProductLine, authorization : ['Admin']},
     {path: '/manager/product_line/list', layout: ManagerLayout, component: ListProductLine, authorization : ['Admin']},
     {path: '/manager/product_line/show', layout: ManagerLayout, component: ShowProductLine, authorization : ['Admin']},
+    {path: '/manager/product_line/edit', layout: ManagerLayout, component: EditProductLine, authorization : ['Admin']},
 
     {path: '/distributor/home', layout: DistributorLayout, component: DistributorHome, authorization : ['Distributor']},
     {path: '/distributor/order/create', layout: DistributorLayout, component: CreateOrder, authorization : ['Distributor']},
