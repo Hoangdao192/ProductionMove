@@ -9,8 +9,8 @@ public class ProductTransaction {
     private Long id;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "batch_id", nullable = false)
-    private ProductBatch batch;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "export_stock_id")

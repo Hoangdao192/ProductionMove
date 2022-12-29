@@ -52,7 +52,7 @@ function FactoryLayout ({ children }) {
                 },
                 {
                     heading: "Xuất kho",
-                    action: "/factory/warehouse/product/list"
+                    action: "/factory/warehouse/product/export"
                 }
             ]
            

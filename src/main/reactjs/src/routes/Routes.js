@@ -44,6 +44,7 @@ import ReturnWarrantyFactory from "../pages/WarrantyCenter/Warranty/ReturnWarran
 import FactoryProductList from '../pages/Factory/ListProduct';
 import ProductRecall from "../pages/Distributor/ProductRecall";
 import EditProductLine from "../pages/Manager/ProductLine/EditProductLine";
+import ProductExport from "../pages/Factory/ProductExport/ProductExport";
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -80,6 +81,7 @@ const privateRoutes = [
     {path: '/factory/warehouse/list_batch', layout: FactoryLayout, component: ListBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/product/list', layout: FactoryLayout, component: FactoryProductList, authorization : ['Admin', 'Manufacture']},
+    {path: '/factory/warehouse/product/export', layout: FactoryLayout, component: ProductExport, authorization : ['Admin', 'Manufacture']},
 
     {path: '/warranty/home', layout: WarrantyCenterLayout, component: WarrantyCenterHome, authorization : ['Warranty center']},
     {path: '/warranty/warranty/create', layout: WarrantyCenterLayout, component: CreateWarranty, authorization : ['Warranty center']},

@@ -3,6 +3,7 @@ package com.uet.productionmove.service;
 import com.uet.productionmove.entity.ProductBatch;
 import com.uet.productionmove.entity.Stock;
 import com.uet.productionmove.entity.ProductBatchTransaction;
+import com.uet.productionmove.entity.Unit;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.repository.BatchRepository;
 import com.uet.productionmove.repository.StockRepository;
@@ -20,6 +21,14 @@ public class StockService {
     private ProductBatchService productBatchService;
     public BatchRepository batchRepository;
     private StockTransactionRepository stockTransactionRepository;
+
+    public Stock getStockByStockOwner(Unit unit) throws InvalidArgumentException {
+        Optional<Stock> stockOptional = stockRepository.findByStockOwner(unit);
+        if (stockOptional.isEmpty()) {
+            throw new InvalidArgumentException("Factory does not have any stock.");
+        }
+        return stockOptional.get();
+    }
 
     public ProductBatchTransaction createStockTransaction(Long productBatchId, Long importStockId)
             throws InvalidArgumentException {

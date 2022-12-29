@@ -24,17 +24,19 @@ public class FactoryService {
     @Autowired
     private StockRepository stockRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private UnitRepository unitRepository;
-    @Autowired
-    private UserService userService;
     @Autowired
     private StockTransactionRepository stockTransactionRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private ErrorProductRepository errorProductRepository;
+    @Autowired
+    private DistributorService distributorService;
+    @Autowired
+    private StockService stockService;
+    @Autowired
+    private ProductBatchService productBatchService;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -132,57 +134,43 @@ public class FactoryService {
         batchRepository.save(productBatch);
     }
 
-    public void exportBatchToDistributor(FactoryExportModel factoryExportModel) throws InvalidArgumentException {
-        Optional<Factory> factoryOptional = factoryRepository.findById(factoryExportModel.getFactoryId());
-        Optional<Distributor> distributorOptional = distributorRepository
-                .findById(factoryExportModel.getDistributorId());
+    /**
+     * Cơ sở sản xuất xuất hàng cho đại lý
+     */
+    public void exportBatchToDistributor(FactoryExportModel factoryExportModel)
+            throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryExportModel.getFactoryId());
+        Distributor distributor =
+                distributorService.getDistributorById(factoryExportModel.getDistributorId());
 
-        if (factoryOptional.isEmpty()) {
-            throw new InvalidArgumentException("Factory with ID not exists");
-        }
-        if (distributorOptional.isEmpty()) {
-            throw new InvalidArgumentException("Distributor with ID not exists");
-        }
-
-        Optional<Stock> factoryStockOptional = stockRepository.findByStockOwner(factoryOptional.get().getUnit());
-        if (factoryStockOptional.isEmpty()) {
-            throw new InvalidArgumentException("Factory does not have any stock.");
-        }
-
-        Optional<Stock> distributorStockOptional = stockRepository
-                .findByStockOwner(distributorOptional.get().getUnit());
-        if (distributorStockOptional.isEmpty()) {
-            throw new InvalidArgumentException("Distributor does not have any stock.");
-        }
+        Stock factoryStock = stockService.getStockByStockOwner(factory.getUnit());
+        Stock distributorStock = stockService.getStockByStockOwner(distributor.getUnit());
 
         for (int i = 0; i < factoryExportModel.getExportBatchIds().size(); ++i) {
             Long batchId = factoryExportModel.getExportBatchIds().get(i);
-            Optional<ProductBatch> productBatchOptional = batchRepository.findById(batchId);
-            if (productBatchOptional.isEmpty()) {
-                throw new InvalidArgumentException("Product batch with ID not exists");
-            }
-            ProductBatch productBatch = productBatchOptional.get();
+            ProductBatch productBatch = productBatchService.getProductBatchById(batchId);
+
             if (productBatch.getStock() == null) {
                 throw new InvalidArgumentException("Product batch does not in any stock.");
             }
-            if (productBatch.getStock().getId() != factoryStockOptional.get().getId()) {
+            if (productBatch.getStock().getId() != factoryStock.getId()) {
                 throw new InvalidArgumentException("Product batch does not in Factory's stock.");
             }
 
-            // Thay đổi trạng thái của các sản phẩm trong lô hàng thành "Đã được đưa về đại
-            // lý"
+            // Thay đổi trạng thái của các sản phẩm trong lô hàng thành "Đã được đưa về đại lý"
             List<Product> products = productRepository.findByBatch(productBatch);
             products.forEach((product) -> {
                 product.setStatus(ProductStatus.AGENCY);
+                product.setStock(distributorStock);
                 productRepository.save(product);
             });
 
-            productBatch.setStock(distributorStockOptional.get());
+            productBatch.setStock(distributorStock);
             productBatch = batchRepository.save(productBatch);
             ProductBatchTransaction productBatchTransaction = new ProductBatchTransaction();
             productBatchTransaction.setBatch(productBatch);
-            productBatchTransaction.setExportStock(factoryStockOptional.get());
-            productBatchTransaction.setImportStock(distributorStockOptional.get());
+            productBatchTransaction.setExportStock(factoryStock);
+            productBatchTransaction.setImportStock(distributorStock);
             productBatchTransaction.setTransactionStatus(StockTransactionStatus.EXPORTING);
             stockTransactionRepository.save(productBatchTransaction);
         }

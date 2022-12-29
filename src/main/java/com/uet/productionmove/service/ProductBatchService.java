@@ -64,6 +64,14 @@ public class ProductBatchService {
         return productBatch;
     }
 
+    public ProductBatch getProductBatchById(Long productBatchId) throws InvalidArgumentException {
+        Optional<ProductBatch> productBatchOptional = batchRepository.findById(productBatchId);
+        if (productBatchOptional.isEmpty()) {
+            throw new InvalidArgumentException("Product batch with ID not exists");
+        }
+        return productBatchOptional.get();
+    }
+
     public List<ProductBatch> getAllProductBatchByFactoryId(Long factoryId) throws InvalidArgumentException {
         Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
         if (factoryOptional.isEmpty()) {
