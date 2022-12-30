@@ -148,9 +148,8 @@ export default function ListBatch() {
                     <Tabs sx={{color: 'black', '& button': {color: 'black'}}} 
                         onChange={(e, value) => setPage(parseInt(value))} 
                         value={page.toString()} aria-label="basic tabs example">
-                        <Tab label="Trong kho" value="0"/>
-                        <Tab label="Chưa nhập kho" value="1"/>
-                        <Tab label="Đã sản xuất" value="2"/>
+                        <Tab label="Chưa nhập kho" value="0"/>
+                        <Tab label="Đã sản xuất" value="1"/>
                     </Tabs>
                 </Box>
                 <div style={{
@@ -162,11 +161,6 @@ export default function ListBatch() {
                     display: 'none'
                 }} value="1" index={1}>
                     Item Two
-                </div>
-                <div style={{
-                    display: 'none'
-                }} value="2" index={2}>
-                    Item Three
                 </div>
             </div>
         )
@@ -316,9 +310,8 @@ export default function ListBatch() {
             </p>
             <TabLayout/>
             {
-                page == 0 ? <InStockBatchTable/> :
-                page == 1 ? <NotImportBatchTable/> :
-                page == 2 ? <ProducedBatchTable/> : <></>
+                page == 0 ? <NotImportBatchTable/> :
+                page == 1 ? <ProducedBatchTable/> : <></>
             }
         </div>
     )

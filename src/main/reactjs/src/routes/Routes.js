@@ -23,7 +23,6 @@ import ShowProductLine from "../pages/Manager/ProductLine/ShowProductLine/ShowPr
 import ShowOrderDetail from "../pages/Distributor/ShowOrderDetail";
 import CreateBatch from "../pages/Factory/CreateBatch";
 import ListBatch from "../pages/Factory/ListBatch";
-import StockExport from "../pages/Factory/StockExport";
 import NotFound from "../pages/NotFound";
 import Logout from "../pages/Logout";
 import DistributorLayout from "../components/Layouts/DistributorLayout";
@@ -34,7 +33,6 @@ import CreateCustomer from "../pages/Distributor/Customer/CreateCustomer";
 import ListCustomer from "../pages/Distributor/Customer/ListCustomer";
 import EditCustomer from "../pages/Distributor/Customer/EditCustomer";
 import WarrantyCenterLayout from "../components/Layouts/WarrantyCenterLayout";
-import CreateWarranty from "../pages/WarrantyCenter/Warranty/CreateWarranty";
 import ListProduct from "../pages/Distributor/Stock/ListProduct";
 import ListWarranty from "../pages/WarrantyCenter/Warranty/ListWarranty";
 
@@ -47,6 +45,9 @@ import EditProductLine from "../pages/Manager/ProductLine/EditProductLine";
 import ProductExport from "../pages/Factory/ProductExport/ProductExport";
 import ImportProduct from "../pages/Distributor/Stock/ImportProduct";
 import ExportProduct from "../pages/Distributor/Stock/ExportProduct/ExportProduct";
+import WarrantyHistory from "../pages/WarrantyCenter/Warranty/WarrantyHistory";
+
+import FactoryImportProduct from '../pages/Factory/ImportProduct';
 
 const privateRoutes = [
     // {path: '/login', component: Login},
@@ -82,13 +83,15 @@ const privateRoutes = [
     {path: '/factory/home', layout: FactoryLayout, component: FactoryHome, authorization : ['Manufacture']},
     {path: '/factory/warehouse/create_batch', layout: FactoryLayout, component: CreateBatch, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/list_batch', layout: FactoryLayout, component: ListBatch, authorization : ['Admin', 'Manufacture']},
-    {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport, authorization : ['Admin', 'Manufacture']},
+    // {path: '/factory/warehouse/export', layout: FactoryLayout, component: StockExport, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/product/list', layout: FactoryLayout, component: FactoryProductList, authorization : ['Admin', 'Manufacture']},
     {path: '/factory/warehouse/product/export', layout: FactoryLayout, component: ProductExport, authorization : ['Admin', 'Manufacture']},
+    {path: '/factory/warehouse/product/import', layout: FactoryLayout, component: FactoryImportProduct, authorization : ['Admin', 'Manufacture']},
 
     {path: '/warranty/home', layout: WarrantyCenterLayout, component: WarrantyCenterHome, authorization : ['Warranty center']},
-    {path: '/warranty/warranty/create', layout: WarrantyCenterLayout, component: CreateWarranty, authorization : ['Warranty center']},
+    // {path: '/warranty/warranty/create', layout: WarrantyCenterLayout, component: CreateWarranty, authorization : ['Warranty center']},
     {path: '/warranty/warranty/list', layout: WarrantyCenterLayout, component: ListWarranty, authorization : ['Warranty center']},
+    {path: '/warranty/warranty/history', layout: WarrantyCenterLayout, component: WarrantyHistory, authorization : ['Warranty center']},
     {path: '/warranty/warranty/return', layout: WarrantyCenterLayout, component: ReturnWarrantyFactory, authorization : ['Warranty center']},
 
     {path: '/home', component: Home},

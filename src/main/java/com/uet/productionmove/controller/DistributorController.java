@@ -71,6 +71,13 @@ public class DistributorController {
         return ResponseEntity.ok(distributorService.getAllProductInStock(distributorId));
     }
 
+    @GetMapping(path = "stock/product/list/saleable")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
+    public ResponseEntity<List<Product>> getAllProductSaleableInStock(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getAllSellableProductInStock(distributorId));
+    }
+
     @GetMapping(path = "sold/list")
     @PreAuthorize("hasAnyAuthority('Admin', 'Distributor') and isAuthenticated()")
     public ResponseEntity<List<SoldProductModel>> getAllSoldProduct(@RequestParam Long distributorId)
@@ -132,7 +139,7 @@ public class DistributorController {
         return ResponseEntity.ok("Success");
     }
 
-    @PostMapping(path = "/productTransaction/export")
+    @PostMapping(path = "/stock/export")
     public ResponseEntity<String> exportProductToFactory(@RequestBody @Valid DistributorExportModel distributorExportModel)
             throws InvalidArgumentException{
         distributorService.exportProductToFactory(distributorExportModel);

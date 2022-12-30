@@ -164,7 +164,10 @@
                     },
                     "product" : {
                         "list" : {
-                            "url" : "http://localhost:5000/api/distributor/stock/product/list"
+                            "url" : "http://localhost:5000/api/distributor/stock/product/list",
+                            "sellable" : {
+                                "url" : "http://localhost:5000/api/distributor/stock/product/list/saleable"
+                            }
                         }
                     }
                 },
@@ -192,6 +195,15 @@
                 },
                 "stock" : {
                     "product" : {
+                        "incoming" : {
+                            "url" : "http://localhost:5000/api/factory/stock/product/incoming"
+                        },
+                        "import" : {
+                            "url" : "http://localhost:5000/api/factory/stock/product/import"
+                        },
+                        "errorReturn": {
+                            "url" : "http://localhost:5000/api/factory/stock/product/errorReturn"
+                        },
                         "statusStatistic" : {
                             "url" : "http://localhost:5000/api/factory/productStatusStatistic"
                         },
@@ -220,9 +232,13 @@
                         },
                         "errorList" : {
                             "url": "http://localhost:5000/api/factory/stock/product/errorList"
+                            
                         },
                         "list" : {
-                            "url" : "http://localhost:5000/api/factory/stock/product/list"
+                            "url" : "http://localhost:5000/api/factory/stock/product/list",
+                            "exportAble" : {
+                                "url" : "http://localhost:5000/api/factory/stock/product/list/exportable"
+                            }
                         }
                     },
                     "export" : {
@@ -255,6 +271,9 @@
                     "url" : "http://localhost:5000/api/warranty/delete"
                 },
                 "warranty" : {
+                    "history": {
+                        "url" : "http://localhost:5000/api/warranty/warranty/history"
+                    },
                     "statistic" : {
                         "url" : "http://localhost:5000/api/warranty/warrantyStatistic"
                     },

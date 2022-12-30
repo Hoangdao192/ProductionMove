@@ -32,26 +32,21 @@ function FactoryLayout ({ children }) {
                     heading: "Quản lý lô sản phẩm",
                     action: "/factory/warehouse/list_batch"
                 },
+                ,
                 {
-                    heading: "Xuất kho",
-                    action: "/factory/warehouse/export"
-                }
-            ]
-        },
-        {
-            heading: "Quản lý sản phẩm",
-            icon: UilLaptop,
-            children: [
-                {
-                    heading: "Danh sách sản phẩm",
-                    action: "/factory/warehouse/product/list"
+                    heading: "Nhập kho",
+                    action: "/factory/warehouse/product/import"
                 },
                 {
                     heading: "Xuất kho",
                     action: "/factory/warehouse/product/export"
                 }
             ]
-           
+        },
+        {
+            heading: "Quản lý sản phẩm",
+            icon: UilLaptop,
+            action: "/factory/warehouse/product/list"
         },
         {
             icon: UilSignOutAlt,

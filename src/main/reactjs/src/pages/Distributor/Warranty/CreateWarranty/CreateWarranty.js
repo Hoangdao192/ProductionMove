@@ -10,12 +10,15 @@ import TextField from "@mui/material/TextField";
 import List from "@mui/material/List";
 import {ListItem, Paper} from "@mui/material";
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function CreateWarranty() {
     const [customer, setCustomer] = useState({});
     const [product, setProduct] = useState({});
     const [isCustomerValidated, setCustomerValidate] = useState(false);
     const [isProductValidated, setProductValidate] = useState(false);
+    const [customerId, setCustomerId] = useState("");
+    const [productId, setProductId] = useState("");
 
     const [warrantyCenterList, setWarrantyCenterList] = useState([])
 
@@ -26,12 +29,14 @@ export default function CreateWarranty() {
         customerProductId: "",
         startWarrantyDate: "",
         warrantyDate: "",
-        warrantyCenterId: ""
+        warrantyCenterId: "-1"
     })
 
     function resetComponent() {
         setCustomer({});
         setProduct({});
+        setCustomerId("");
+        setProductId("");
         setCustomerValidate(false);
         setProductValidate(false);
         setWarranty({
@@ -39,7 +44,7 @@ export default function CreateWarranty() {
             customerProductId: "",
             startWarrantyDate: "",
             warrantyDate: "",
-            warrantyCenterId: ""
+            warrantyCenterId: "-1"
         })
         forceUpdate()
     }
@@ -68,22 +73,22 @@ export default function CreateWarranty() {
     }
     function validation() {
         if (warranty.warrantyCenterId == "-1") {
-            alert("Bạn chưa chọn trung tâm nhận bảo hành");
+            toast.error("Bạn chưa chọn trung tâm nhận bảo hành");
             return false;
         }
 
         if (!isCustomerValidated) {
-            alert("Bạn chưa nhập mã khách hàng hoặc khách hàng không tồn tại")
+            toast.error("Bạn chưa nhập mã khách hàng hoặc khách hàng không tồn tại")
             return false;
         }
 
         if (!isProductValidated) {
-            alert("Bạn chưa nhập mã sản phẩm hoặc sản phẩm không tồn tại.")
+            toast.error("Bạn chưa nhập mã sản phẩm hoặc sản phẩm không tồn tại.")
             return false;
         }
 
         if (warranty.startWarrantyDate == "") {
-            alert("Bạn chưa chọn ngày bắt đầu bảo hành hoặc ngày đã chọn không hợp lệ.")
+            toast.error("Bạn chưa chọn ngày bắt đầu bảo hành hoặc ngày đã chọn không hợp lệ.")
             return false;
         }
         return true;
@@ -98,7 +103,7 @@ export default function CreateWarranty() {
         }).then((response) => {
             if (response.status == 200) {
                 return response.json()
-            }
+            } else toast.error("Không thể tải dữ liệu trung tâm bảo hành")
         }).then((data) => {
             if (data != undefined) {
                 setWarrantyCenterList(data)
@@ -124,10 +129,10 @@ export default function CreateWarranty() {
             })
         }).then((response) => {
             if (response.status == 200) {
-                alert("Tạo đơn bảo hành thành công.")
-                forceUpdate()
+                resetComponent()
+                toast.success("Tạo đơn bảo hành thành công.")
             } else {
-                alert("Không thành công")
+                toast.error("Tạo đơn bảo hành không thành công")
             }
         })
     }
@@ -139,7 +144,7 @@ export default function CreateWarranty() {
         // }
 
         if (!/^\d+$/.test(customerId)) {
-            alert("Mã khách hàng không hợp lệ")
+            toast.error("Mã khách hàng không hợp lệ")
             return;
         }
 
@@ -152,7 +157,7 @@ export default function CreateWarranty() {
             if (response.status == 200) {
                 return response.json()
             } else {
-                alert("Người dùng không tồn tại")
+                toast.error("Khách hàng không tồn tại")
                 setCustomerValidate(false)
                 setCustomer({})
             }
@@ -166,7 +171,7 @@ export default function CreateWarranty() {
 
     function loadProduct(productId) {
         if (!/^\d+$/.test(productId)) {
-            alert("Mã sản phẩm không hợp lệ")
+            toast.error("Mã sản phẩm không hợp lệ")
             return;
         }
 
@@ -179,13 +184,12 @@ export default function CreateWarranty() {
             if (response.status == 200) {
                 return response.json()
             } else {
-                alert("Sản phẩm không tồn tại")
+                toast.error("Sản phẩm không tồn tại")
                 setProductValidate(false)
                 setProduct({})
             }
         }).then((data) => {
             if (data != undefined) {
-                console.log(data)
                 setProductValidate(true)
                 setProduct(data);
             }
@@ -205,7 +209,8 @@ export default function CreateWarranty() {
             
             <div>
                 <label htmlFor="" className={style.label}>Mã khách hàng</label>
-                <input onBlur={(e) => loadCustomer(e.target.value)} type="text" className={style.input} placeholder="Nhập mã khách hàng"/>
+                <input value={customerId} onChange={(e) => setCustomerId(e.target.value)}
+                 onBlur={(e) => loadCustomer(e.target.value)} type="text" className={style.input} placeholder="Nhập mã khách hàng"/>
             </div>
             { isCustomerValidated ? <div className={style.customerInfo}>
                 <Typography variant="h6" gutterBottom>
@@ -226,7 +231,8 @@ export default function CreateWarranty() {
             </div> : <></>}
             <div>
                 <label htmlFor="" className={style.label}>Mã sản phẩm</label>
-                <input onBlur={(e) => loadProduct(e.target.value)}  type="text" className={style.input} placeholder="Nhập mã sản phẩm"/>
+                <input value={productId} onChange={(e) => setProductId(e.target.value)}
+                onBlur={(e) => loadProduct(e.target.value)}  type="text" className={style.input} placeholder="Nhập mã sản phẩm"/>
             </div>
             { isProductValidated ? <div className={style.productInfo}>
                 <Typography variant="h6">

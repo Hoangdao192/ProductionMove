@@ -2,10 +2,7 @@ package com.uet.productionmove.service;
 
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
-import com.uet.productionmove.model.FactoryExportModel;
-import com.uet.productionmove.model.FactoryExportProductModel;
-import com.uet.productionmove.model.FactoryModel;
-import com.uet.productionmove.model.ProductTransactionModel;
+import com.uet.productionmove.model.*;
 import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +38,11 @@ public class FactoryService {
     private ProductService productService;
     @Autowired
     private WarrantyCenterRepository warrantyCenterRepository;
+    @Autowired
+    private ProductWarrantyRepository productWarrantyRepository;
+    @Autowired
+    private ProductTransactionRepository transactionRepository;
+    private WarrantyCenterService warrantyCenterService;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -118,6 +120,41 @@ public class FactoryService {
         return factoryModels;
     }
 
+    public void returnErrorWarrantyFactory(Long productWarrantyId) throws InvalidArgumentException {
+        ProductWarranty productWarranty = warrantyCenterService.getProductWarrantyById(productWarrantyId);
+        productWarranty.setStatus(ProductWarrantyStatus.ERROR_RETURNED_WARRANTY);
+        productWarrantyRepository.save(productWarranty);
+
+        Product product = productWarranty.getCustomerProduct().getProduct();
+        Factory factory = product.getBatch().getFactory();
+        Stock stock = stockService.getStockByStockOwner(factory.getUnit());
+        product.setStatus(ProductStatus.ERROR_RETURNED_FACTORY);
+        product.setStock(stock);
+        productRepository.save(product);
+    }
+
+    public List<DistributorProductTransactionModel> getAllInComingProductTransaction(Long factoryId)
+            throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        Stock stock = stockService.getStockByStockOwner(factory.getUnit());
+        List<DistributorProductTransactionModel> transactionModels = new ArrayList<>();
+        List<ProductTransaction> productTransactions = transactionRepository
+                .findAllByImportStockAndTransactionStatus(stock, StockTransactionStatus.EXPORTING);
+        for (int i = 0; i < productTransactions.size(); ++i) {
+            ProductTransaction productTransaction = productTransactions.get(i);
+            DistributorProductTransactionModel distributorTransaction = new DistributorProductTransactionModel(
+                    productTransaction.getId(), productTransaction.getExportStock(),
+                    productTransaction.getImportStock(), productTransaction.getTransactionStatus(),
+                    productTransaction.getProductTransactionDetails()
+            );
+            Distributor distributor = distributorService.getDistributorByUnitId(
+                    productTransaction.getExportStock().getStockOwner().getId());
+            distributorTransaction.setDistributor(distributor);
+            transactionModels.add(distributorTransaction);
+        }
+        return transactionModels;
+    }
+
     public void importProducedBatchIntoStock(Long factoryId, Long batchId) throws InvalidArgumentException {
         Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
         Optional<ProductBatch> productBatchOptional = batchRepository.findById(batchId);
@@ -135,7 +172,13 @@ public class FactoryService {
 
         ProductBatch productBatch = productBatchOptional.get();
         productBatch.setStock(stockOptional.get());
-        batchRepository.save(productBatch);
+        productBatch = batchRepository.save(productBatch);
+
+        List<Product> products = productRepository.findByBatch(productBatch);
+        products.forEach(product -> {
+            product.setStock(stockOptional.get());
+            productRepository.save(product);
+        });
     }
 
     /**
@@ -213,6 +256,9 @@ public class FactoryService {
                 throw new InvalidArgumentException("Sản phẩm không nằm trong kho.");
             }
 
+            product.setStock(null);
+            product = productRepository.save(product);
+
             ProductTransactionDetail productTransactionDetail = new ProductTransactionDetail();
             productTransactionDetail.setProduct(product);
             productTransactionDetail.setProductTransaction(productTransaction);
@@ -220,6 +266,27 @@ public class FactoryService {
         }
 
         return productTransaction;
+    }
+
+    public void importProductTransaction(Long productTransactionId) throws InvalidArgumentException {
+        Optional<ProductTransaction> productTransactionOptional =
+                transactionRepository.findById(productTransactionId);
+        if (productTransactionOptional.isEmpty()) {
+            throw new InvalidArgumentException("ProductTransaction with ID not exists.");
+        }
+        ProductTransaction productTransaction = productTransactionOptional.get();
+        //  Kiểm tra và cập nhập trạng thái đơn vận chuyển
+        if (productTransaction.getTransactionStatus().equals(StockTransactionStatus.EXPORT_DONE)) {
+            throw new InvalidArgumentException("ProductTransaction was imported.");
+        }
+        productTransaction.setTransactionStatus(StockTransactionStatus.EXPORT_DONE);
+        productTransaction.getProductTransactionDetails().forEach(transactionDetail -> {
+            //  Cập nhập trạng thái sản phẩm
+            Product product = transactionDetail.getProduct();
+            product.setStatus(ProductStatus.RETURNED_FACTORY);
+            product.setStock(productTransaction.getImportStock());
+            productRepository.save(product);
+        });
     }
 
     public List<ProductBatch> getAllProductBatchInStock(Long factoryId) throws InvalidArgumentException {
@@ -251,6 +318,12 @@ public class FactoryService {
         Factory factory = getFactoryById(factoryId);
         Stock stock = stockService.getStockByStockOwner(factory.getUnit());
         return productRepository.findAllByStock(stock);
+    }
+
+    public List<Product> getAllExportableProductInStock(Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        Stock stock = stockService.getStockByStockOwner(factory.getUnit());
+        return productRepository.findAllByStockAndStatus(stock, ProductStatus.NEWLY_PRODUCED);
     }
 
     public List<ErrorProduct> getAllErrorProductInStock(Long factoryId) throws InvalidArgumentException {
@@ -477,5 +550,10 @@ public class FactoryService {
     @Autowired
     public void setProductService(ProductService productService) {
         this.productService = productService;
+    }
+
+    @Autowired
+    public void setWarrantyCenterService(WarrantyCenterService warrantyCenterService) {
+        this.warrantyCenterService = warrantyCenterService;
     }
 }

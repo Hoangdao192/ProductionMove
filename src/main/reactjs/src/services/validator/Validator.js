@@ -1,4 +1,8 @@
 class Validator {
+    containNumberOnly(text) {
+        return /^\d+$/.test(text);
+    }
+
     isPhoneNumberValid(phoneNumber) {
         if (phoneNumber.length < 10 || phoneNumber.length > 15) return false;
         return /^\d+$/.test(phoneNumber);

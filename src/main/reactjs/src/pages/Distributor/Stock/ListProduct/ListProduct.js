@@ -9,8 +9,7 @@ import { useReducer } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-const productStatus = [];
-productStatus['Agency'] = "Tốt"
+import productStatus from '../../../Data/ProductStatus';
 
 export default function ListProduct() {
     const [reducer, forceUpdate] = useReducer(x => x + 1, 0);

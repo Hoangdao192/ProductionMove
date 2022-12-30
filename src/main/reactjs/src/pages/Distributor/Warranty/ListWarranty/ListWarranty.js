@@ -7,12 +7,15 @@ import {
 import config from '../../../../config.json';
 import Authentication from "../../../../services/Authentication/Authentication";
 import { useReducer } from "react";
+import { toast } from "react-toastify";
 
 let status = [];
 status['Waiting'] = "Đang chờ bảo hành";
 status['Doing'] = "Đang được bảo hành";
 status['Done'] = "Đã bảo hành xong";
 status['Returned'] = "Đã trả lại khách hàng";
+status['Cannot warranty'] = "Lỗi cần trả về nhà máy";
+status['Error returned warranty'] = "Lỗi đã trả về nhà máy";
 
 function ShowWarrantyForm() {
     const [productWarrantyList, setProductWarrantyList] = useState([]);
@@ -92,9 +95,27 @@ function ShowWarrantyForm() {
             body: formData
         }).then((response) => {
             if (response.status == 200) {
-                alert("Thành công")
+                toast.success("Thành công")
                 forceUpdate()
-            } else alert("Không thành công")
+            } else toast.error("Không thành công")
+        })
+    }
+
+    function sendReturnProductFactoryRequest(productWarrantyId) {
+        let url = config.server.api.factory.stock.product.errorReturn.url;
+        let formData = new FormData();
+        formData.append("productWarrantyId", productWarrantyId);
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            },
+            body: formData
+        }).then((response) => {
+            if (response.status == 200) {
+                toast.success("Thành công")
+                forceUpdate()
+            } else toast.error("Không thành công")
         })
     }
 
@@ -183,7 +204,15 @@ function ShowWarrantyForm() {
                             {   productWarranty.status == "Done" ?
                                 <TableCell align="center">
                                     <div className={style.action}>
-                                        <button onClick={(e) => sendReturnProductCustomerRequest(productWarranty.id)} className={style.editButton}>Đã trả lại máy cho khách hàng</button>
+                                        <button onClick={(e) => sendReturnProductCustomerRequest(productWarranty.id)} 
+                                        className={style.editButton}>Trả lại khách hàng</button>
+                                    </div>
+                                </TableCell> : 
+                                productWarranty.status == "Cannot warranty" ?
+                                <TableCell align="center">
+                                    <div className={style.action}>
+                                        <button onClick={(e) => sendReturnProductFactoryRequest(productWarranty.id)} 
+                                        className={style.editButton}>Trả lại nhà máy</button>
                                     </div>
                                 </TableCell> : <></>
                             }

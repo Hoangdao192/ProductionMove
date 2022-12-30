@@ -9,12 +9,14 @@ import com.uet.productionmove.model.WarrantyCenterModel;
 import com.uet.productionmove.service.ProductService;
 import com.uet.productionmove.service.WarrantyCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -104,20 +106,33 @@ public class WarrantyCenterController {
     }
 
     @PostMapping(path = "/warranty/finish")
-    public ResponseEntity<String> finishWarranty(@RequestParam Long productWarrantyId)
+    public ResponseEntity<String> finishWarranty(
+            @RequestParam Long productWarrantyId,
+            @DateTimeFormat(pattern="yyyy-MM-dd")
+            @RequestParam LocalDate endWarrantyDate)
             throws InvalidArgumentException {
-        warrantyCenterService.finishWarranty(productWarrantyId);
+        warrantyCenterService.finishWarranty(productWarrantyId, endWarrantyDate);
         return ResponseEntity.ok("Successful");
     }
 
     @PostMapping(path = "/warranty/return_factory")
     public ResponseEntity<ErrorProduct> returnErrorProductToFactory(
-            @RequestParam Long productWarrantyId, @RequestParam Long factoryId,
+            @RequestParam Long productWarrantyId,
             @RequestParam @Valid @NotEmpty(message = "error cannot be empty") String error
     ) throws InvalidArgumentException {
         return ResponseEntity.ok(
-                warrantyCenterService.returnWarrantyFactory(
-                        productWarrantyId, factoryId, error));
+                warrantyCenterService.returnErrorWarrantyDistributor(
+                        productWarrantyId, error));
+    }
+
+    @PostMapping(path = "/warranty/error")
+    public ResponseEntity<ErrorProduct> notifyErrorProductToDistributor(
+            @RequestParam Long productWarrantyId,
+            @RequestParam @Valid @NotEmpty(message = "error cannot be empty") String error
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(
+                warrantyCenterService.returnErrorWarrantyDistributor(
+                        productWarrantyId, error));
     }
 
     @GetMapping(path = "warranty/doing")
@@ -125,6 +140,12 @@ public class WarrantyCenterController {
             throws InvalidArgumentException
     {
         return ResponseEntity.ok(warrantyCenterService.getAllDoingProductWarranty(warrantyCenterId));
+    }
+
+    @GetMapping(path = "warranty/history")
+    public ResponseEntity<List<ProductWarranty>> getProductWarrantyHistory(@RequestParam Long warrantyCenterId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(warrantyCenterService.getAllProductWarrantyHistory(warrantyCenterId));
     }
 
     @GetMapping(path = "warrantyStatistic")

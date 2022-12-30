@@ -5,8 +5,21 @@ import config from '../../../config.json';
 import { useEffect } from 'react';
 import { useReducer } from 'react';
 import Authentication from "../../../services/Authentication/Authentication";
+import Validator from '../../../services/validator/Validator';
+import { toast } from 'react-toastify';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function CreateOrder() {
+    const [isDialogOpen, setDialogVisibility] = useState(false);
+    const [productsInStock, setProductsInStock] = useState([]);
+
     const [reducer, setReducer] = useReducer(x => x + 1, 0)
     const [products, setProducts] = useState([])
     const [orderDetail, setOrderDetail] = useState({
@@ -65,23 +78,28 @@ export default function CreateOrder() {
     }
 
     function validation() {
-        if (!/^\d+$/.test(order.customerId)) {
-            alert("Invalid customer id")
+        if (Validator.isEmpty(order.customerId)) {
+            toast.error("Mã khách hàng không được để trống.")
             return false;
         }
 
-        if (order.orderDate == "") {
-            alert("Invalid orderDate");
+        if (!Validator.containNumberOnly(order.customerId)) {
+            toast.error("Mã khách hàng phải là số")
+            return false;
+        }
+
+        if (Validator.isEmpty(order.orderDate)) {
+            toast.error("Bạn chưa nhập ngày mua hàng hoặc ngày mua hàng không hợp lệ.");
             return false;
         }
 
         if (orderDetailList.length == 0) {
-            alert("Invalid order detail");
+            toast.error("Danh sách mua hàng trống");
             return false;
         }
 
         if (!isCustomerValid) {
-            alert("Invalid customer");
+            toast.error("Khách hàng không hợp lệ");
             return false;
         }
         return true;
@@ -104,11 +122,9 @@ export default function CreateOrder() {
                 })
             }).then((response) => {
                 if (response.status == 200) {
-                    alert("Success")
+                    toast.success("Tạo đơn hàng thành công");
                     resetComponent()
-                } else {
-                    handleRequestError(response)
-                }
+                } else toast.error("Tạo đơn hàng không thành công");
             }).catch((error) => {
                 console.log("ERROR")
                 console.log(error)
@@ -168,14 +184,10 @@ export default function CreateOrder() {
         if (orderDetail.productLineId == "None" || orderDetail.productLineId == "") {
             return false;
         }
-        if (!/^\d+$/.test(orderDetail.productId)) {
-            alert("Invalid")
-            return false;
-        }
 
         for (let i = 0; i < orderDetailList.length; ++i) {
             if (orderDetailList[i].productId === orderDetail.productId) {
-                alert("Product id exisst");
+                toast.error("Bạn chọn sản phẩm này rồi");
                 return false;
             }
         }
@@ -184,8 +196,7 @@ export default function CreateOrder() {
 
     function addOrderDetail(newOrderDetail) {
         if (!validateOrderDetail(newOrderDetail)) {
-            alert("Invalid order detail");
-            return;
+            return false;
         }
 
         newOrderDetail.quantity = parseInt(newOrderDetail.quantity);
@@ -196,6 +207,8 @@ export default function CreateOrder() {
                 newOrderDetail
             ]
         )
+
+        return true;
     }
 
     function deleteOrderDetail(deleteOrderDetail) {
@@ -235,15 +248,88 @@ export default function CreateOrder() {
         setShowAddProduct(false)
     }
 
+    function loadProduct(distributorId) {
+        let url = config.server.api.distributor.stock.product.list.sellable.url;
+        fetch(url + "?distributorId=" + distributorId, {
+            headers: {
+                'Authorization': Authentication.generateAuthorizationHeader()
+            }  
+        }).then((response) => {
+            if (response.status == 200) {
+                return response.json()
+            } else toast.error("Không thể tải dữ liệu");
+        }).then((data) => setProductsInStock(data));
+    }
+
     useEffect(() => {
         loadDistributor().then((distributor) => {
             setDistributor(distributor);
             loadProductLine();
+            loadProduct(distributor.id)
         })
     }, [reducer])
 
+
+    function PickProductDialog() {
+        function ProductTable() {
+            return (
+                <TableContainer>
+                    <Table  aria-label="simple table">
+                        <TableHead>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell align="center">Mã sản phẩm</TableCell>
+                            <TableCell align="center">Mã dòng sản phẩm</TableCell>
+                            <TableCell align="center">Tên sản phẩm</TableCell>
+                        </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {productsInStock.map((product, index) => (
+                            <TableRow
+                                key={index}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell align="center">
+                                    <Button onClick={(e)  => {
+                                        if (addOrderDetail({
+                                            productLineId: product.productLine.id,
+                                            productId: product.id,
+                                            quantity: 1,
+                                            productName: product.productLine.productName
+                                        })) setDialogVisibility(false); 
+                                    }}>Chọn</Button>
+                                </TableCell>
+                                <TableCell align="center">{product.id}</TableCell>
+                                <TableCell align="center">{product.productLine.id}</TableCell>
+                                <TableCell align="center">{product.productLine.productName}</TableCell>
+                            </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )
+        }
+
+        function onClose(e) {
+
+        }
+
+        return (
+            <Dialog open={isDialogOpen} onClose={(e) => onClose(e)}>
+                <DialogTitle>Chọn sản phẩm</DialogTitle>
+                <DialogContent>
+                    <ProductTable/>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={(e) => setDialogVisibility(false)}>Hủy</Button>
+                </DialogActions>
+            </Dialog>
+        )
+    }
+
     return (
         <div className={style.createOrder}>
+            <PickProductDialog/>
             <div className={style.form}>
                 <p className={style.title}>Tạo đơn hàng</p>
                 <label className={style.label} htmlFor={style.dateInput}>Ngày mua hàng</label>
@@ -275,46 +361,11 @@ export default function CreateOrder() {
 
                 <p className={style.orderDetailTitle}>Chi tiết đơn hàng</p>
 
-                {!isAddProductShow ? <button onClick={(e) => setShowAddProduct(true)} 
+                <button onClick={(e) => setDialogVisibility(true)} 
                 type='button' className={style.addProductButton}>
                     <UilPlus className={style.icon}/>
                     Thêm sản phẩm
-                </button> :
-
-                <div className={style.addProduct}>
-                    <div>
-                        <label className={style.label} htmlFor="">Dòng sản phẩm</label>
-                        <select name="" id="" className={style.select}
-                            onChange={(e) => {
-                                setOrderDetail({
-                                    ...orderDetail,
-                                    productLineId: e.target.value,
-                                    productName: e.target.options[e.target.selectedIndex].text
-                                })
-                            }}
-                        >
-                            <option value="None"> - Chưa chọn - </option>
-                            {
-                                products.map((product, index) => {
-                                    return (
-                                        <option value={product.id}>{product.productName}</option>
-                                    )
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div>
-                        <label className={style.label} htmlFor="">Mã máy</label>
-                            <input onChange={(e) => {
-                                setOrderDetail({
-                                    ...orderDetail,
-                                    productId: e.target.value
-                                }) }}
-                                value={orderDetail.productId} placeholder='Nhập mã máy' type="text" className={style.input}/>
-                    </div>
-                    <button type='button' onClick={(e) => {acceptAddProduct(e)}}>Chấp nhận</button>
-                    <button type='button' onClick={(e) => {cancelAddProduct(e)}}>Hủy</button>
-                </div>}
+                </button>
 
                 <table className={style.table}>
                     <thead>

@@ -5,42 +5,21 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { UilRedo } from '@iconscout/react-unicons'
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export default function ReturnWarrantyFactory() {
     const productWarranty = useLocation().state.productWarranty;
-    const [factories, setFactories] = useState([]);
+
     const [requestParams, setRequestParam] = useState({
         productWarrantyId: productWarranty.id,
-        factoryId: "-1",
         error: ""
     })
 
     const navigate = useNavigate();
 
-    function loadFactory() {
-        let url = config.server.api.factory.list.url;
-        fetch(url, {
-            headers: {
-                'Authorization': Authentication.generateAuthorizationHeader()
-            }
-        }).then((response) => {
-            if (response.status == 200) {
-                return response.json()
-            } else alert("Không thể tải danh sách cơ sở sản xuất")
-        }).then((data) => {
-            if (data != undefined) {
-                setFactories(data);
-            }
-        })
-    }
-
     function validation() {
-        if (requestParams.factoryId == "-1") {
-            alert("Bạn chưa chọn nhà máy")
-            return false;
-        }
         if (requestParams.error == "") {
-            alert("Bạn chưa nhập thông tin lỗi");
+            toast.error("Bạn chưa nhập thông tin lỗi");
             return false;
         }
         return true;
@@ -51,7 +30,6 @@ export default function ReturnWarrantyFactory() {
             let url = config.server.api.warranty.warranty.returnFactory.url;
             let formData = new FormData();
             formData.append("productWarrantyId", requestParams.productWarrantyId);
-            formData.append("factoryId", requestParams.factoryId);
             formData.append("error", requestParams.error);
             fetch(url, {
                 method: "POST",
@@ -61,21 +39,17 @@ export default function ReturnWarrantyFactory() {
                 body: formData
             }).then((response) => {
                 if (response.status == 200) {
-                    alert("Thành công");
+                    toast.success("Thành công");
                     navigate(-1)
-                } else alert("Không thành công")
+                } else toast.error("Không thành công")
             })
         }
     }
 
-    useEffect(() => {
-        loadFactory();
-    }, [])
-
     return (
         <div className={style.container}>
             <p className={style.title}>
-                Trả về nhà máy
+                Thông báo lỗi
             </p>
             <div className={style.infoContainer}>
                 <div className={style.warrantyInfo}>
@@ -123,25 +97,6 @@ export default function ReturnWarrantyFactory() {
                     </div>
                 </div>
             </div>
-            
-
-            <div className={style.inputContainer}>
-                <label htmlFor="" className={style.lable}>Chọn nhà máy</label>
-                <select name="" id="" className={style.select} value={requestParams.factoryId}
-                    onChange={(e) => setRequestParam({
-                        ...requestParams,
-                        factoryId: e.target.value
-                    })}>
-                    <option value="-1"> - Chưa chọn - </option>
-                    {
-                        factories.map((factory, index) => {
-                            return (
-                                <option value={factory.id} key={index}>{factory.name}</option>
-                            )
-                        })
-                    }
-                </select>
-            </div>
             <div className={style.errorInput}>
                 <label htmlFor="">Thông tin lỗi</label>
                 <input value={requestParams.error} 
@@ -152,7 +107,7 @@ export default function ReturnWarrantyFactory() {
             </div>
             <button onClick={(e) => sendReturnFactoryRequest()} className={style.actionButton}>
                 <UilRedo className={style.icon}/>
-                <span>Trả về nhà máy</span>
+                <span>Thông báo đại lý</span>
             </button>
         </div>
     )

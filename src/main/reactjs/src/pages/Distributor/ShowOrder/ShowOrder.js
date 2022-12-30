@@ -6,6 +6,7 @@ import { useReducer } from 'react';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import { Link } from 'react-router-dom';
 import Authentication from '../../../services/Authentication/Authentication';
+import { toast } from 'react-toastify';
 
 export default function ShowOrder() {
     const [orders, setOrders] = useState([]);
@@ -69,10 +70,10 @@ export default function ShowOrder() {
             }
         }).then((response) => {
             if (response.status == 200) {
-                alert("OK")
+                toast.success("Xóa đơn hàng thành công")
                 forceUpdate()
             } else{
-                response.text().then((data) => alert(data))
+                toast.success("Xóa đơn hàng thất bại")
             }
         })
     }
@@ -111,9 +112,9 @@ export default function ShowOrder() {
                                     <Link to={'/distributor/order_detail/get'} state={{order: order}}>
                                         <button className={style.button}>Xem chi tiết</button>
                                     </Link>
-                                    <button className={style.button}>Sửa</button>
+                                    {/* <button className={style.button}>Sửa</button>
                                     <button onClick={(e) => sendDeleteOrderRequest(order.id)} 
-                                        className={style.button}>Xóa</button>
+                                        className={style.button}>Xóa</button> */}
                                 </div>
                             </TableCell>
                         </TableRow>

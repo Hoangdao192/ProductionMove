@@ -1,4 +1,4 @@
-.ShowWarrantyForm {
+.container {
     width: 100%;
     display: inline-block;
     position: relative;
@@ -77,26 +77,4 @@
     gap: 0.5rem;
     justify-content: center;
     flex-direction: column;
-}
-
-.label {
-    display: block;
-    padding: 10px;
-    padding-left: 0;
-    border-radius: 0.75rem;
-    // border: 2px solid gray;
-    margin-right: 1rem;
-}
-
-.input {
-    display: inline-block;
-    padding: 10px;
-    border-radius: 0.75rem;
-    border: 2px solid gray;
-    transition: 0.3s;
-    width: 20rem;
-}
-
-.input:focus {
-    border: 2px solid black;
 }

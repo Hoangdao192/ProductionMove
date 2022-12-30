@@ -8,6 +8,7 @@ import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,9 @@ public class WarrantyCenterService {
     private FactoryService factoryService;
     @Autowired
     private ErrorProductRepository errorProductRepository;
+    @Autowired
+    private StockRepository stockRepository;
+    private StockService stockService;
 
     public WarrantyCenter getWarrantyCenterById(Long warrantyCenterId)
             throws InvalidArgumentException {
@@ -50,6 +54,12 @@ public class WarrantyCenterService {
         Unit unit = new Unit();
         unit.setType(UserType.WARRANTY_CENTER);
         unit = unitRepository.save(unit);
+
+        Stock stock = new Stock();
+        stock.setAddress(warrantyCenterModel.getAddress());
+        stock.setName(warrantyCenterModel.getName());
+        stock.setStockOwner(unit);
+        stockRepository.save(stock);
 
         WarrantyCenter warrantyCenter = new WarrantyCenter(
                 unit,
@@ -195,6 +205,9 @@ public class WarrantyCenterService {
 
         Product product = productWarranty.getCustomerProduct().getProduct();
         product.setStatus(ProductStatus.UNDER_WARRANTY);
+        Stock stock = stockService
+                .getStockByStockOwner(productWarranty.getWarrantyCenter().getUnit());
+        product.setStock(stock);
 
         productWarrantyRepository.save(productWarranty);
         productRepository.save(product);
@@ -203,32 +216,41 @@ public class WarrantyCenterService {
     /**
      * Xác nhận bảo hành thành công
      */
-    public void finishWarranty(Long productWarrantyId) throws InvalidArgumentException {
+    public void finishWarranty(Long productWarrantyId, LocalDate endWarrantyDate) throws InvalidArgumentException {
         ProductWarranty productWarranty = getProductWarrantyById(productWarrantyId);
         if (productWarranty.getStatus().equals(ProductWarrantyStatus.DONE)) {
             throw new InvalidArgumentException("ProductWarranty status is Done already.");
         }
 
         productWarranty.setStatus(ProductWarrantyStatus.DONE);
+        productWarranty.setEndWarrantyDate(endWarrantyDate);
 
         Product product = productWarranty.getCustomerProduct().getProduct();
         product.setStatus(ProductStatus.DONE_WARRANTY);
+        Distributor distributor = productWarranty.getRequestWarrantyDistributor();
+        Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
+        product.setStock(stock);
 
         productWarrantyRepository.save(productWarranty);
         productRepository.save(product);
     }
 
     /**
-     * Trung tâm bảo hành trả sản phẩm lỗi cho cơ sở sản xuất
+     * Trung tâm bảo hành trả sản phẩm lỗi cho đại lý
      */
-    public ErrorProduct returnWarrantyFactory(Long productWarrantyId, Long factoryId, String error)
+    public ErrorProduct returnErrorWarrantyDistributor(Long productWarrantyId, String error)
             throws InvalidArgumentException {
         ProductWarranty productWarranty = getProductWarrantyById(productWarrantyId);
-        Factory factory = factoryService.getFactoryById(factoryId);
+
+        Distributor distributor = productWarranty.getRequestWarrantyDistributor();
+        Stock distributorStock = stockService.getStockByStockOwner(distributor.getUnit());
 
         Product product = productWarranty.getCustomerProduct().getProduct();
+        Factory factory = product.getBatch().getFactory();
+
         product.setStatus(ProductStatus.ERROR_FACTORY);
-        productRepository.save(product);
+        product.setStock(distributorStock);
+        product = productRepository.save(product);
 
         productWarranty.setStatus(ProductWarrantyStatus.CANNOT_WARRANTY);
         productWarrantyRepository.save(productWarranty);
@@ -241,6 +263,17 @@ public class WarrantyCenterService {
         return errorProductRepository.save(errorProduct);
     }
 
+    public List<ProductWarranty> getAllProductWarrantyHistory(Long warrantyCenterId) throws InvalidArgumentException {
+        WarrantyCenter warrantyCenter = getWarrantyCenterById(warrantyCenterId);
+        List<ProductWarranty> productWarranties = new ArrayList<>();
+        productWarranties.addAll(
+                productWarrantyRepository.findAllByWarrantyCenterAndStatus(warrantyCenter, ProductWarrantyStatus.DONE));
+        productWarranties.addAll(
+            productWarrantyRepository.findAllByWarrantyCenterAndStatus(warrantyCenter, ProductWarrantyStatus.CANNOT_WARRANTY)
+        );
+        return productWarranties;
+    }
+
     @Autowired
     public void setWarrantyCenterRepository(
             WarrantyCenterRepository warrantyCenterRepository) {
@@ -250,5 +283,10 @@ public class WarrantyCenterService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setStockService(StockService stockService) {
+        this.stockService = stockService;
     }
 }

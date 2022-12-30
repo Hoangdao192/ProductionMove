@@ -9,6 +9,7 @@ import {
     UilChart,
     UilSignOutAlt,
     UilBuilding,
+    UilHistory,
     UilNotes
 } from "@iconscout/react-unicons";
 
@@ -17,21 +18,17 @@ function WarrantyCenterLayout ({ children }) {
         {
             icon: UilEstate,
             heading: "DashBoard",
-            action: "/manager/home"
+            action: "/warranty/home"
         },
         {
             icon: UilNotes,
             heading: "Đơn bảo hành",
-            children: [
-                {
-                    heading: "Tạo mới",
-                    action: "/warranty/warranty/create"
-                },
-                {
-                    heading: "Xem danh sách",
-                    action: "/warranty/warranty/list"
-                }
-            ]
+            action: "/warranty/warranty/list"
+        },
+        {
+            icon: UilHistory,
+            heading: "Lịch sử bảo hành",
+            action: "/warranty/warranty/history"
         },
         {
             icon: UilSignOutAlt,

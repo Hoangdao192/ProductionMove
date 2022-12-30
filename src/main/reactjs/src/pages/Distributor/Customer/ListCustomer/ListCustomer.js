@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useReducer } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function ListCustomer() {
 
@@ -33,7 +34,7 @@ export default function ListCustomer() {
             }).then((response) => {
                 if (response.status == 200) {
                     return response.json()
-                }
+                } else toast.error("Không thể tải dữ liệu")
             }).then((distributor) => {
                 if (distributor != undefined) {
                     resolve(distributor);
@@ -53,7 +54,7 @@ export default function ListCustomer() {
             if (response.status == 200) {
                 return response.json()
             } else {
-                alert("Không thể tải danh sách khách hàng")
+                toast.error("Không thể tải danh sách khách hàng")
             }
         }).then((data) => {
             if (data != undefined) setCustomers(data)
@@ -69,10 +70,10 @@ export default function ListCustomer() {
             }
         }).then((response) => {
             if (response.status == 200) {
-                alert("Xóa khách hàng thành công");
+                toast.success("Xóa khách hàng thành công");
                 restComponent();
             } else {
-                alert("Không thể xóa khách hàng")
+                toast.error("Không thể xóa khách hàng")
             }
         })
     }

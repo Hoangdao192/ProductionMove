@@ -21,8 +21,4 @@ public class DistributorExportModel {
     @NotNull(message = "productIds cannot be null")
     @NotEmptyList(message = "productIds cannot be null")
     private List<Long> productIds;
-
-    @NotNull(message = "exportType cannot be null")
-    @NotEmpty(message = "exportType cannot be empty")
-    private String exportType;
 }

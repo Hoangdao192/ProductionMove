@@ -1,6 +1,6 @@
 import style from './ImportProduct.module.scss';
-import config from '../../../../config.json';
-import Authentication from '../../../../services/Authentication/Authentication';
+import config from '../../../config.json';
+import Authentication from '../../../services/Authentication/Authentication';
 import { useState } from 'react';
 import {
     Table, TableBody, TableCell, 
@@ -8,26 +8,26 @@ import {
     Box, Tab, Tabs, TabPanel, Typography} from '@mui/material';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import ServerAPI from '../../../../services/ServerAPI';
+import ServerAPI from '../../../services/ServerAPI';
 import { useReducer } from 'react';
 
 export default function ImportProduct() {
-    const [distributor, setDistributor] = useState({});
+    const [factory, setFactory] = useState({});
     const [productTransactions, setProductTransactions] = useState([]);
     const [reducer, forceReset] = useReducer(x => x + 1, 0);
 
     const user = Authentication.getCurrentUser();
 
     function resetComponent() {
-        setDistributor({});
+        setFactory({});
         setProductTransactions([]);
         forceReset()
     }
 
-    //  Load thông tin đơn vận chuyển đang được chuyển đến Đại lý
-    function loadIncomingProductTransaction(distributorId) {
-        let url = config.server.api.distributor.producTransaction.inComing.url;
-        fetch(`${url}?distributorId=${distributorId}`, {
+    //  Load thông tin đơn vận chuyển đang được chuyển đến Nhà máy
+    function loadIncomingProductTransaction(factoryId) {
+        let url = config.server.api.factory.stock.product.incoming.url;
+        fetch(`${url}?factoryId=${factoryId}`, {
             headers: {
                 'Authorization': Authentication.generateAuthorizationHeader()
             }
@@ -37,14 +37,14 @@ export default function ImportProduct() {
             } else toast.error("Không thể tải dữ liệu vận chuyển.")
         }).then((data) => {
             if (data != undefined) {
-                
+                console.log(data)
                 setProductTransactions(data);
             }
         })
     }
 
     function sendImportRequest(productTransactionId) {
-        let url = config.server.api.distributor.producTransaction.import.url;
+        let url = config.server.api.factory.stock.product.import.url;
         let formData = new FormData();
         formData.append("productTransactionId", productTransactionId);
         fetch(url, {
@@ -62,10 +62,10 @@ export default function ImportProduct() {
     }
 
     useEffect(() => {
-        ServerAPI.getDistributorByUnitId(user.unit.id)
-            .then((distributor) => {
-                setDistributor(distributor);
-                loadIncomingProductTransaction(distributor.id);
+        ServerAPI.getFactoryByUnitId(user.unit.id)
+            .then((factory) => {
+                setFactory(factory);
+                loadIncomingProductTransaction(factory.id);
             })
     }, [])
 
@@ -93,8 +93,8 @@ export default function ImportProduct() {
                             >
                             <TableCell align="center">{index}</TableCell>
                             <TableCell align="center">{productTransaction.id}</TableCell>
-                            <TableCell align="center">{productTransaction.factory.id}</TableCell>
-                            <TableCell align="center">{productTransaction.factory.name}</TableCell>
+                            <TableCell align="center">{productTransaction.distributor.id}</TableCell>
+                            <TableCell align="center">{productTransaction.distributor.name}</TableCell>
                             <TableCell align="center">
                                 <div className={style.action}>
                                     <button onClick={(e) => sendImportRequest(productTransaction.id)}

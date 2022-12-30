@@ -87,7 +87,7 @@ export default function ProductExport() {
     }
 
     function loadProductInStock(factoryId) {
-        let url = config.server.api.factory.stock.product.list.url;
+        let url = config.server.api.factory.stock.product.list.exportAble.url;
         fetch(`${url}?factoryId=${factoryId}`, {
             headers: {
                 'Authorization': Authentication.generateAuthorizationHeader()

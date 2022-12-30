@@ -2,10 +2,7 @@ package com.uet.productionmove.controller;
 
 import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
-import com.uet.productionmove.model.FactoryExportModel;
-import com.uet.productionmove.model.FactoryExportProductModel;
-import com.uet.productionmove.model.FactoryModel;
-import com.uet.productionmove.model.ProductTransactionModel;
+import com.uet.productionmove.model.*;
 import com.uet.productionmove.service.FactoryService;
 import com.uet.productionmove.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +94,26 @@ public class FactoryController {
         return ResponseEntity.ok(factoryService.getAllProductInStock(factoryId));
     }
 
+    @GetMapping(path = "/stock/product/list", params = {"factoryId", "status"})
+    public ResponseEntity<List<Product>> getAllProductInStockFilter(
+            @RequestParam Long factoryId, @RequestParam String status
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getAllProductInStock(factoryId));
+    }
+    @GetMapping(path = "/stock/product/list/exportable")
+    public ResponseEntity<List<Product>> getAllProductExportableInStock(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getAllExportableProductInStock(factoryId));
+    }
+
+    @PostMapping(path = "stock/product/errorReturn")
+    public ResponseEntity<String> returnErrorWarrantyToFactory(@RequestParam Long productWarrantyId)
+        throws InvalidArgumentException {
+        factoryService.returnErrorWarrantyFactory(productWarrantyId);
+        return ResponseEntity.ok("Success");
+    }
+
     @PostMapping(path = "/stock/product/export")
     public ResponseEntity<ProductTransaction> exportProductsToDistributor(
             @RequestBody @Valid FactoryExportProductModel factoryExportProductModel)
@@ -104,6 +121,21 @@ public class FactoryController {
         ProductTransaction productTransaction =
                 factoryService.exportProductsToDistributor(factoryExportProductModel);
         return ResponseEntity.ok(productTransaction);
+    }
+
+    @GetMapping(path = "/stock/product/incoming")
+    public ResponseEntity<List<DistributorProductTransactionModel>> getAllIncomingProductTransaction(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getAllInComingProductTransaction(factoryId));
+    }
+
+    @PostMapping(path = "/stock/product/import")
+    public ResponseEntity<String> importProductTransaction(
+            @RequestParam Long productTransactionId
+    ) throws InvalidArgumentException {
+        factoryService.importProductTransaction(productTransactionId);
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping(path = "productStatistic")

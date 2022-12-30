@@ -7,10 +7,7 @@ import { useState } from 'react';
 import { useReducer } from 'react';
 import { useEffect } from 'react';
 import ServerAPI from '../../../../services/ServerAPI';
-import ProductStatus from '../../../Data/ProductStatus'
-
-const productStatus = [];
-productStatus['Agency'] = "Tốt"
+import productStatus from '../../../Data/ProductStatus'
 
 export default function ExportProduct() {
     const [exportType, setExportType] = useState("Error")
@@ -91,34 +88,8 @@ export default function ExportProduct() {
         })
     }
 
-    function loadProduct(distributorId, exportType) {
-        if (exportType == "Error") {
-            loadErrorProduct(distributorId);
-        } else {
-            loadProductInStock(distributorId);
-        }
-    }
-
-    function loadErrorProduct(distributorId) {
-        ServerAPI.getStockByUnitId(user.unit.id)
-            .then((stock) => {
-                let url = config.server.api.product.list.url;
-                fetch(`${url}?status=${"Error factory"}&stockId=${stock.id}`, {
-                    headers: {
-                        'Authorization': Authentication.generateAuthorizationHeader()
-                    }
-                }).then((response) => {
-                    if (response.status == 200) {
-                        return response.json();
-                    } else toast.error("Không thể tải dữ liệu sản phẩm lỗi")
-                }).then((data) => {
-                    if (data != undefined) setProducts(data);
-                })
-            }).catch((message) => toast.error("Không thể tải dữ liệu kho hàng"))
-    }
-
     function loadProductInStock(distributorId) {
-        let url = config.server.api.distributor.stock.product.list.url;
+        let url = config.server.api.distributor.stock.product.list.sellable.url;
         fetch(`${url}?distributorId=${distributorId}`, {
             headers: {
                 'Authorization': Authentication.generateAuthorizationHeader()
@@ -168,7 +139,7 @@ export default function ExportProduct() {
             .then((distributor) => {
                 setDistributor(distributor)
                 loadFactories();
-                loadProduct(distributor.id, exportType);
+                loadProductInStock(distributor.id)
             })
     }, [reducer])
     
@@ -180,7 +151,7 @@ export default function ExportProduct() {
     return (
         <div className={style.container}>
             <p className={style.title}>
-                Xuất kho
+                Trả sản phẩm không bán được
             </p>
 
             <button onClick={(e) => sendExportRequest()} className={style.exportButton}>Xuất hàng</button>
@@ -202,21 +173,6 @@ export default function ExportProduct() {
                         )
                     })
                 }
-            </select>
-            <label htmlFor="" className={style.label}>
-                Loại xuất hàng
-            </label>
-            <select value={exportType} className={style.select} name="" id=""
-                onChange={(e) => {
-                    setExportType(e.target.value)
-                    loadProduct(distributor.id, e.target.value)
-                    }}>
-                <option value="Error">
-                    Sản phẩm lỗi
-                </option>
-                <option value="Cannot sale">
-                    Không bán được
-                </option>
             </select>
             <label htmlFor="" className={style.label + " " + style.exportLabel}>
                 Danh sách lô hàng sẽ xuất đi

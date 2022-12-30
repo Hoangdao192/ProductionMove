@@ -63,7 +63,7 @@ public class OrderService {
             /*Kiểm tra xem sản phẩm có nằm trong kho của đơn vị bán hay không*/
             Product product = productOptional.get();
             //  UnitId của đơn vị sở hữu kho
-            Long stockOwnerUnitId = product.getBatch().getStock().getStockOwner().getId();
+            Long stockOwnerUnitId = product.getStock().getStockOwner().getId();
             //  UnitId của đơn vị bán
             Long distributorUnitId = distributorOptional.get().getUnit().getId();
             if (stockOwnerUnitId != distributorUnitId) {
@@ -74,7 +74,9 @@ public class OrderService {
                 throw new InvalidArgumentException("Sản phẩm này đã bán hoặc không nằm trong kho");
             }
 
+            product.setStock(null);
             product.setStatus(ProductStatus.SOLD);
+            product = productRepository.save(product);
 
             //  Tạo thông tin về sản phẩm của khách hàng
             CustomerProduct customerProduct = new CustomerProduct();

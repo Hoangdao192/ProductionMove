@@ -6,8 +6,12 @@ import { useState } from 'react';
 
 import config from '../../../../config.json';
 import Authentication from '../../../../services/Authentication/Authentication';
+import { toast } from 'react-toastify';
+import ServerAPI from '../../../../services/ServerAPI';
 
 export default function CreateCustomer() {
+    const user = Authentication.getCurrentUser();
+
     const [customer, setCustomer] = useState({
         firstName: "",
         lastName: "",
@@ -26,25 +30,25 @@ export default function CreateCustomer() {
 
     function validation() {
         if (customer.firstName === "") {
-            alert("Bạn chưa nhập họ của khách hàng")
+            toast.error("Bạn chưa nhập họ của khách hàng")
             return false;
         }
         if (customer.lastName === "") {
-            alert("Bạn chưa nhập tên khách hàng")
+            toast.error("Bạn chưa nhập tên khách hàng")
             return false;
         }
         if (customer.address === "") {
-            alert("Bạn chưa nhập địa chỉ của khách hàng")
+            toast.error("Bạn chưa nhập địa chỉ của khách hàng")
             return false;
         }
         if (customer.phoneNumber === "") {
-            alert("Bạn chưa nhập số điện thoại của khách hàng")
+            toast.error("Bạn chưa nhập số điện thoại của khách hàng")
             return false;
         } else if (!/^\d+$/.test(customer.phoneNumber)) {
-            alert("Số điện thoại của khách hàng không hợp lệ")
+            toast.error("Số điện thoại của khách hàng không hợp lệ")
             return false;
         } else if (customer.phoneNumber.length < 10) {
-            alert("Số điện thoại phải có ít nhất 10 chữ số");
+            toast.error("Số điện thoại phải có ít nhất 10 chữ số");
             return false;
         }
         return true;
@@ -52,22 +56,28 @@ export default function CreateCustomer() {
 
     function sendCreateCustomerRequest() {
         if (validation()) {
-            let url = config.server.api.customer.create.url;
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': Authentication.generateAuthorizationHeader()
-                },
-                body: JSON.stringify(customer)
-            }).then((response) => {
-                if (response.status === 200) {
-                    alert("Tạo khách hàng thành công")
-                    resetComponent()
-                } else {
-                    alert("Không thành công")
-                }
-            })
+            ServerAPI.getDistributorByUnitId(user.unit.id)
+                .then((distributor) => {
+                    let url = config.server.api.customer.create.url;
+                    fetch(url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': Authentication.generateAuthorizationHeader()
+                        },
+                        body: JSON.stringify({
+                            ...customer,
+                            distributorId: distributor.id
+                        })
+                    }).then((response) => {
+                        if (response.status === 200) {
+                            toast.success("Tạo khách hàng thành công")
+                            resetComponent()
+                        } else {
+                            toast.error("Tạo khách hàng không thành công")
+                        }
+                    })
+                })
         }
     }
 

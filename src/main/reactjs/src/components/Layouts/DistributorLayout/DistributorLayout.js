@@ -87,10 +87,6 @@ function DistributorLayout ({ children }) {
             ]
         },
         {
-            icon: UilChart,
-            heading: "Analytics"
-        },
-        {
             icon: UilSignOutAlt,
             heading: "Đăng xuất",
             action: "/logout"

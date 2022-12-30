@@ -139,11 +139,6 @@ public class DistributorService {
      */
     public ProductTransaction exportProductToFactory(DistributorExportModel distributorExportModel)
             throws InvalidArgumentException{
-        if (!(distributorExportModel.getExportType().equals("Error") ||
-            distributorExportModel.getExportType().equals("Cannot sale"))) {
-            throw new InvalidArgumentException("exportType invalid");
-        }
-
         Factory factory = factoryService.getFactoryById(distributorExportModel.getFactoryId());
         Distributor distributor = getDistributorById(distributorExportModel.getDistributorId());
         Stock factoryStock = stockService.getStockByStockOwner(factory.getUnit());
@@ -163,12 +158,8 @@ public class DistributorService {
                 throw new InvalidArgumentException("Sản phẩm không nằm trong kho.");
             }
 
-            if (distributorExportModel.getExportType().equals("Error")) {
-                product.setStatus(ProductStatus.ERROR_FACTORY);
-            } else {
-                product.setStatus(ProductStatus.RETURNED_FACTORY);
-                product = productRepository.save(product);
-            }
+            product.setStatus(ProductStatus.RETURNED_FACTORY);
+            product = productRepository.save(product);
 
             ProductTransactionDetail productTransactionDetail = new ProductTransactionDetail();
             productTransactionDetail.setProduct(product);
@@ -177,6 +168,14 @@ public class DistributorService {
         }
 
         return productTransaction;
+    }
+
+
+
+    public List<Product> getAllSellableProductInStock(Long distributorId)throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
+        return productRepository.findAllByStockAndStatus(stock, ProductStatus.AGENCY);
     }
 
     public List<SoldProductModel> getAllSoldProduct(Long distributorId) throws InvalidArgumentException {
@@ -222,10 +221,14 @@ public class DistributorService {
         distributorRepository.delete(distributorOptional.get());
     }
 
+    /**
+     * Gửi yêu cầu bảo hành đến trung tâm bảo hành
+     */
     public ProductWarranty requestProductWarranty(ProductWarrantyModel productWarrantyModel)
             throws InvalidArgumentException {
         Distributor distributor = getDistributorById(productWarrantyModel.getRequestWarrantyDistributorId());
 
+        //  Kiểm tra sản phẩm của khách hàng có tồn tại không
         Optional<CustomerProduct> customerProductOptional =
                 customerProductRepository.findById(productWarrantyModel.getCustomerProductId());
         if (customerProductOptional.isEmpty()) {
@@ -244,6 +247,7 @@ public class DistributorService {
             throw new InvalidArgumentException("Sản phẩm đang được bảo hành rồi.");
         }
         product.setStatus(ProductStatus.ERROR_WARRANTY);
+        product.setStock(null);
         productRepository.save(product);
 
         ProductWarranty productWarranty = new ProductWarranty();
@@ -359,12 +363,15 @@ public class DistributorService {
      */
     public void recallProduct(Long distributorId, Long productLineId, Long warrantyCenterId)
             throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
         List<CustomerProduct> customerProducts =
                 getAllRecallCustomerProduct(distributorId, productLineId);
         for (int i = 0; i < customerProducts.size(); ++i) {
             CustomerProduct customerProduct = customerProducts.get(i);
             Product product = customerProduct.getProduct();
             product.setStatus(ProductStatus.ERROR_SUMMON);
+            product.setStock(stock);
             productRepository.save(product);
             ProductWarrantyModel productWarrantyModel = new ProductWarrantyModel();
             productWarrantyModel.setCustomerProductId(customerProduct.getProductId());
@@ -380,14 +387,26 @@ public class DistributorService {
      */
     public List<ProductWarranty> getAllRequestWarranty(Long distributorId) throws InvalidArgumentException {
         Distributor distributor = getDistributorById(distributorId);
-        return productWarrantyRepository
-                .findAllByRequestWarrantyDistributorAndStatusNotLike(distributor, ProductWarrantyStatus.RETURNED);
+        List<ProductWarranty> productWarranties = new ArrayList<>();
+        productWarranties.addAll(productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.WAITING));
+        productWarranties.addAll(productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.DOING));
+        productWarranties.addAll(productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.DONE));
+        productWarranties.addAll(productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.CANNOT_WARRANTY));
+        return productWarranties;
     }
 
     public List<ProductWarranty> getAllFinishedWarranty(Long distributorId) throws InvalidArgumentException {
         Distributor distributor = getDistributorById(distributorId);
-        return productWarrantyRepository
-                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.RETURNED);
+        List<ProductWarranty> productWarranties = new ArrayList<>();
+        productWarranties.addAll(productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.RETURNED));
+        productWarranties.addAll(productWarrantyRepository
+                .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.ERROR_RETURNED_WARRANTY));
+        return productWarranties;
     }
 
     public Map<String, Long> getProductStatusStatistic(Long distributorId) throws InvalidArgumentException {

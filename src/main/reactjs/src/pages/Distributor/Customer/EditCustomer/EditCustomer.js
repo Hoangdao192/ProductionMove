@@ -4,6 +4,7 @@ import config from '../../../../config.json';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { UilSave } from '@iconscout/react-unicons';
+import { toast } from 'react-toastify';
 
 export default function EditCustomer() {
     const [customer, setCustomer] = useState(useLocation().state.customer)
@@ -21,25 +22,25 @@ export default function EditCustomer() {
 
     function validation() {
         if (customer.firstName === "") {
-            alert("Bạn chưa nhập họ của khách hàng")
+            toast.error("Bạn chưa nhập họ của khách hàng")
             return false;
         }
         if (customer.lastName === "") {
-            alert("Bạn chưa nhập tên khách hàng")
+            toast.error("Bạn chưa nhập tên khách hàng")
             return false;
         }
         if (customer.address === "") {
-            alert("Bạn chưa nhập địa chỉ của khách hàng")
+            toast.error("Bạn chưa nhập địa chỉ của khách hàng")
             return false;
         }
         if (customer.phoneNumber === "") {
-            alert("Bạn chưa nhập số điện thoại của khách hàng")
+            toast.error("Bạn chưa nhập số điện thoại của khách hàng")
             return false;
         } else if (!/^\d+$/.test(customer.phoneNumber)) {
-            alert("Số điện thoại của khách hàng không hợp lệ")
+            toast.error("Số điện thoại của khách hàng không hợp lệ")
             return false;
         } else if (customer.phoneNumber.length < 10) {
-            alert("Số điện thoại phải có ít nhất 10 chữ số");
+            toast.error("Số điện thoại phải có ít nhất 10 chữ số");
             return false;
         }
         return true;
@@ -57,10 +58,10 @@ export default function EditCustomer() {
                 body: JSON.stringify(customer)
             }).then((response) => {
                 if (response.status === 200) {
-                    alert("Cập nhập thông tin thành công")
+                    toast.success("Cập nhập thông tin thành công")
                     navigate(-1)
                 } else {
-                    alert("Không thành công")
+                    toast.error("Không thành công")
                 }
             })
         }

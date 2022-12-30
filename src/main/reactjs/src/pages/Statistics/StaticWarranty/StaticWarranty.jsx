@@ -3,15 +3,12 @@ import styles from "./StaticWarranty.module.css";
 
 import { statusProduct, warrantyProduct } from "./data";
 import SingleBarChar from "../StaticWarranty/BarChar.js/SingleBarChar";
-import { Title } from "../../../components/common";
-import { UilShield } from "@iconscout/react-unicons";
 
 function StaticWarranty() {
   const [optionWarranty, setOptionWarranty] = useState("mounth");
 
   return (
     <div className={styles.container}>
-      <Title icon={[{ icon: UilShield }]} title="Trung tâm bảo hành" />
       <div className={styles.line_1}>
         <div className={styles.statusBarChart}>
           <div className={styles.tbOption}>
