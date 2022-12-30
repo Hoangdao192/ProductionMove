@@ -19,4 +19,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByStock(Stock stock);
 
     List<Product> findAllByStockAndStatus(Stock stock, String status);
+
+    Long countAllByStatus(String status);
+
+    Long countAllByBatch(ProductBatch productBatch);
+
+    Long countAllByStock(Stock stock);
+
+    Long countAllByStatusAndStock(String status, Stock stock);
+
+    Long countAllByProductLineAndStatus(ProductLine productLine, String status);
 }

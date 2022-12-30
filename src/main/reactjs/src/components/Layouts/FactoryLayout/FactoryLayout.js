@@ -35,10 +35,6 @@ function FactoryLayout ({ children }) {
                 {
                     heading: "Xuất kho",
                     action: "/factory/warehouse/export"
-                },
-                {
-                    heading: "Quản lý sản phẩm",
-                    action: "/factory/warehouse/product/list"
                 }
             ]
         },
@@ -56,10 +52,6 @@ function FactoryLayout ({ children }) {
                 }
             ]
            
-        },
-        {
-            icon: UilChart,
-            heading: "Analytics"
         },
         {
             icon: UilSignOutAlt,

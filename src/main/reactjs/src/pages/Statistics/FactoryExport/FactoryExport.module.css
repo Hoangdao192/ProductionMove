@@ -1,0 +1,61 @@
+.container {
+  /* border: 1px solid black; */
+  height: 100%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.selectButton, .exportButton {
+  padding: 0.6rem 1rem ;
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  max-width: 300px;
+}
+
+.selectButton {
+  background-color: rgb(249,195,0);
+  border: 2px solid rgb(249,195,0);
+  color: aliceblue;
+}
+
+.selectButton:hover {
+  background-color: transparent;
+  color: rgb(249,195,0);
+}
+
+.exportButton {
+  background-color: rgb(0,146,228);
+  border: 2px solid rgb(0,146,228);
+  color: aliceblue;
+}
+
+.exportButton:hover {
+  background-color: transparent;
+  color: rgb(0,146,228);
+}
+
+.table {
+  width: 100%;
+  /* border: 1px solid black; */
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+
+.titleTable {
+  text-align: center;
+  font-weight: 500;
+}
+
+.table table {
+  width: 100%;
+  text-align: center;
+}

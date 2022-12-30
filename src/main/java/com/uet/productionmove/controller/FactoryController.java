@@ -7,6 +7,7 @@ import com.uet.productionmove.model.FactoryExportProductModel;
 import com.uet.productionmove.model.FactoryModel;
 import com.uet.productionmove.model.ProductTransactionModel;
 import com.uet.productionmove.service.FactoryService;
+import com.uet.productionmove.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class FactoryController {
 
     private FactoryService factoryService;
+    private ProductService productService;
 
     @PostMapping(path = "/create")
     @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
@@ -104,6 +106,53 @@ public class FactoryController {
         return ResponseEntity.ok(productTransaction);
     }
 
+    @GetMapping(path = "productStatistic")
+    public ResponseEntity<Map<String, Long>> getFactoryProductStatistic() {
+        return ResponseEntity.ok(productService.getProductPerFactoryStatistic());
+    }
+
+    @GetMapping(path = "productStatusStatistic")
+    public ResponseEntity<Map<String, Long>> getFactoryProductStatusStatistic(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getProductStatusStatistic(factoryId));
+    }
+
+    @GetMapping(path = "productStatistic/perMonth")
+    public ResponseEntity<Map<String, Long>> getProductStatisticPerMonth(
+            @RequestParam int year, @RequestParam Long factoryId)
+        throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getProductPerMonthStatistic(year, factoryId));
+    }
+
+    @GetMapping(path = "productStatistic/perQuarter")
+    public ResponseEntity<Map<String, Long>> getProductStatisticPerQuarter(
+            @RequestParam int year, @RequestParam Long factoryId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getProductPerQuarterStatistic(year, factoryId));
+    }
+
+    @GetMapping(path = "productStatistic/error/line")
+    public ResponseEntity<Map<String, Long>> getProductErrorStatisticPerLine(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getErrorProductStatisticPerLine(factoryId));
+    }
+
+    @GetMapping(path = "productStatistic/error/warranty")
+    public ResponseEntity<Map<String, Long>> getProductErrorStatisticPerWarranty(
+            @RequestParam Long factoryId
+    ) throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getErrorProductStatisticPerWarrantyCenter(factoryId));
+    }
+
+    @GetMapping(path = "productStatistic/perYear")
+    public ResponseEntity<Map<String, Long>> getProductStatisticPerYear(
+            @RequestParam Long factoryId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(factoryService.getProductPerYearStatistic(factoryId));
+    }
+
     @GetMapping(path = "/stock/product/errorList")
     public ResponseEntity<List<ErrorProduct>> getAllErrorProductInStock(
             @RequestParam Long factoryId
@@ -124,5 +173,10 @@ public class FactoryController {
     @Autowired
     public void setFactoryService(FactoryService factoryService) {
         this.factoryService = factoryService;
+    }
+
+    @Autowired
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 }

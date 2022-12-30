@@ -1,5 +1,9 @@
+import StatisticFactory from '../../Statistics/StaticFactory/StaticFactory';
+
 export default function Home() {
     return (
-        <div>Factory home</div>
+        <div>
+            <StatisticFactory/>
+        </div>
     )
 }

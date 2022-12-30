@@ -1,0 +1,7 @@
+.TbHead {
+  border-bottom: 2px solid #6990c4;
+}
+
+.TbHead th {
+  padding: 1rem 0 0.5rem 0;
+}

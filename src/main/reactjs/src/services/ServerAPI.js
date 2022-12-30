@@ -44,6 +44,26 @@ class ServerAPI {
             })
         })
     }
+
+    getStockByUnitId(unitId) {
+        return new Promise((resolve, reject) => {
+            let url = config.server.api.stock.get.url + "?unitId=" + unitId;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': Authentication.generateAuthorizationHeader()
+                }
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                } else reject("Không thể tải dữ liệu")
+            }).then((stock) => {
+                if (stock != undefined) {
+                    resolve(stock);
+                }
+            })
+        })
+    }
 }
 
 export default new ServerAPI();

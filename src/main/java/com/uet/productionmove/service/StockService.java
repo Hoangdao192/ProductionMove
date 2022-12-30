@@ -8,6 +8,7 @@ import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.repository.BatchRepository;
 import com.uet.productionmove.repository.StockRepository;
 import com.uet.productionmove.repository.StockTransactionRepository;
+import com.uet.productionmove.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class StockService {
     private ProductBatchService productBatchService;
     public BatchRepository batchRepository;
     private StockTransactionRepository stockTransactionRepository;
+    @Autowired
+    private UnitRepository unitRepository;
 
     public Stock getStockByStockOwner(Unit unit) throws InvalidArgumentException {
         Optional<Stock> stockOptional = stockRepository.findByStockOwner(unit);
@@ -61,6 +64,14 @@ public class StockService {
             throw new InvalidArgumentException("Stock with ID not exists.");
         }
         return stockOptional.get();
+    }
+
+    public Stock getStockByOwnerId(Long unitId) throws InvalidArgumentException {
+        Optional<Unit> unitOptional = unitRepository.findById(unitId);
+        if (unitOptional.isEmpty()) {
+            throw new InvalidArgumentException("Unit with Id not exists.");
+        }
+        return getStockByStockOwner(unitOptional.get());
     }
 
     @Autowired

@@ -23,4 +23,6 @@ public interface ProductWarrantyRepository extends JpaRepository<ProductWarranty
     List<ProductWarranty> findAllByWarrantyCenterAndStatus(WarrantyCenter warrantyCenter, String status);
 
     List<ProductWarranty> findAllByRequestWarrantyDistributorAndStatus(Distributor distributor, String status);
+
+    Long countAllByWarrantyCenter(WarrantyCenter warrantyCenter);
 }

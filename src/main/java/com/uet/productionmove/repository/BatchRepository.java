@@ -18,4 +18,6 @@ public interface BatchRepository extends JpaRepository<ProductBatch, Long> {
     List<ProductBatch> findAllByStock(Stock stock);
 
     List<ProductBatch> findAllByFactoryAndStockIsNull(Factory factory);
+
+
 }

@@ -10,9 +10,8 @@ import com.uet.productionmove.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class FactoryService {
@@ -40,6 +39,8 @@ public class FactoryService {
     @Autowired
     private ProductTransactionRepository productTransactionRepository;
     private ProductService productService;
+    @Autowired
+    private WarrantyCenterRepository warrantyCenterRepository;
 
     public Factory createFactory(FactoryModel factoryModel) throws InvalidArgumentException {
         Unit unit = new Unit();
@@ -255,6 +256,162 @@ public class FactoryService {
     public List<ErrorProduct> getAllErrorProductInStock(Long factoryId) throws InvalidArgumentException {
         Factory factory = getFactoryById(factoryId);
         return errorProductRepository.findAllByFactory(factory);
+    }
+
+    public Map<String, Long> getErrorProductStatisticPerLine(Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        Map<String, Long> data = new HashMap<>();
+        List<ProductLine> productLines = productLineRepository.findAll();
+        for (int i = 0; i < productLines.size(); ++i) {
+            data.put(productLines.get(i).getProductName(), 0L);
+        }
+
+        List<ProductBatch> productBatches = batchRepository.findAllByFactoryId(factory.getId());
+        List<Product> products = new ArrayList<>();
+        for (int i = 0; i < productBatches.size(); ++i) {
+            products.addAll(productRepository.findByBatch(productBatches.get(i)));
+        }
+
+        for (int i = 0; i < products.size(); ++i) {
+            Product product = products.get(i);
+            if (product.getStatus().equals(ProductStatus.ERROR_RETURNED_FACTORY) ||
+                product.getStatus().equals(ProductStatus.ERROR_FACTORY)) {
+                data.put(product.getProductLine().getProductName(),
+                        data.get(product.getProductLine().getProductName()) + 1);
+            }
+        }
+
+        return data;
+    }
+
+    public Map<String, Long> getErrorProductStatisticPerWarrantyCenter(Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        List<ErrorProduct> errorProducts = errorProductRepository.findAll();
+        Map<String, Long> data = new HashMap<>();
+        for (int i = 0; i < errorProducts.size(); ++i) {
+            ErrorProduct errorProduct = errorProducts.get(i);
+            Product product = errorProduct.getProduct();
+            if (product.getBatch().getFactory().getId() == factory.getId()) {
+                    Long newValue = (data.get(product.getProductLine().getProductName()) != null ?
+                            data.get(product.getProductLine().getProductName()) : 0L) + 1;
+                    data.put(product.getProductLine().getProductName(), newValue);
+            }
+        }
+        return data;
+    }
+
+    public Map<String, Long> getProductStatusStatistic(Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        Stock stock = stockService.getStockByStockOwner(factory.getUnit());
+        Map<String, Long> statistic = new HashMap<>();
+        statistic.put(ProductStatus.AGENCY,
+                productRepository.countAllByStatusAndStock(ProductStatus.AGENCY, stock));
+        statistic.put(ProductStatus.DONE_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.DONE_WARRANTY, stock));
+        statistic.put(ProductStatus.ERROR_FACTORY,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_FACTORY, stock));
+        statistic.put(ProductStatus.ERROR_SUMMON,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_SUMMON, stock));
+        statistic.put(ProductStatus.ERROR_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_WARRANTY, stock));
+        statistic.put(ProductStatus.ERROR_RETURNED_FACTORY,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_RETURNED_FACTORY, stock));
+        statistic.put(ProductStatus.NEWLY_PRODUCED,
+                productRepository.countAllByStatusAndStock(ProductStatus.NEWLY_PRODUCED, stock));
+        statistic.put(ProductStatus.SOLD,
+                productRepository.countAllByStatusAndStock(ProductStatus.SOLD, stock));
+        statistic.put(ProductStatus.UNDER_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.UNDER_WARRANTY, stock));
+        statistic.put(ProductStatus.RETURNED_FACTORY,
+                productRepository.countAllByStatusAndStock(ProductStatus.RETURNED_FACTORY, stock));
+        statistic.put(ProductStatus.RETURNED_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.RETURNED_WARRANTY, stock));
+        statistic.put(ProductStatus.WARRANTY_EXPIRED,
+                productRepository.countAllByStatusAndStock(ProductStatus.WARRANTY_EXPIRED, stock));
+        statistic.put(ProductStatus.CANNOT_SALE,
+                productRepository.countAllByStatusAndStock(ProductStatus.CANNOT_SALE, stock));
+        return statistic;
+    }
+
+    public Map<String, Long> getProductPerMonthStatistic(int year, Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        Map<String, Long> data = new HashMap<>();
+        for (int i = 1; i <= 12; ++i) {
+            data.put(String.valueOf(i), 0L);
+        }
+        List<ProductBatch> productBatches = batchRepository.findAllByFactoryId(factory.getId());
+        for (int i = 0; i < productBatches.size(); ++i) {
+            ProductBatch productBatch = productBatches.get(i);
+            LocalDate date = productBatch.getManufacturingDate();
+            if (date.getYear() == year) {
+                data.put(String.valueOf(date.getMonthValue()),
+                        data.get(String.valueOf(date.getMonthValue())) + productBatch.getProductQuantity());
+            }
+        }
+        return data;
+    }
+
+    public Map<String, Long> getProductPerQuarterStatistic(int year, Long factoryId) throws InvalidArgumentException {
+        Factory factory = getFactoryById(factoryId);
+        Map<String, Long> data = new HashMap<>();
+        for (int i = 1; i <= 4; ++i) {
+            data.put(String.valueOf(i), 0L);
+        }
+        List<ProductBatch> productBatches = batchRepository.findAllByFactoryId(factory.getId());
+        for (int i = 0; i < productBatches.size(); ++i) {
+            ProductBatch productBatch = productBatches.get(i);
+            LocalDate date = productBatch.getManufacturingDate();
+            if (date.getYear() == year) {
+                if (date.getMonthValue() <= 3) {
+                    data.put("1", data.get("1") + productBatch.getProductQuantity());
+                }
+                if (date.getMonthValue() >= 4 && date.getMonthValue() <= 6) {
+                    data.put("2", data.get("2") + productBatch.getProductQuantity());
+                }
+                if (date.getMonthValue() >= 7 && date.getMonthValue() <= 9) {
+                    data.put("3", data.get("3") + productBatch.getProductQuantity());
+                }
+                if (date.getMonthValue() >= 10) {
+                    data.put("4", data.get("4") + productBatch.getProductQuantity());
+                }
+            }
+        }
+        return data;
+    }
+
+    public Map<String, Long> getProductPerYearStatistic(Long factoryId) throws InvalidArgumentException {
+        int currentYear = LocalDate.now().getYear();
+
+        Factory factory = getFactoryById(factoryId);
+        Map<String, Long> data = new HashMap<>();
+        for (int i = currentYear - 2; i <= currentYear + 2; ++i) {
+            data.put(String.valueOf(i), 0L);
+        }
+        List<ProductBatch> productBatches = batchRepository.findAllByFactoryId(factory.getId());
+        for (int i = 0; i < productBatches.size(); ++i) {
+            ProductBatch productBatch = productBatches.get(i);
+            LocalDate date = productBatch.getManufacturingDate();
+            if (date.getYear() >= currentYear - 2 && date.getYear() <= currentYear + 2) {
+                data.put(String.valueOf(date.getYear()),
+                        data.get(String.valueOf(date.getYear())) + productBatch.getProductQuantity());
+            }
+        }
+        return data;
+    }
+
+    public Map<String, Long> getProductPerFactoryStatistic() {
+        Map<String, Long> data = new HashMap<>();
+        List<Factory> factories = factoryRepository.findAll();
+        for (int i = 0; i < factories.size(); ++i) {
+            Factory factory = factories.get(i);
+            List<ProductBatch> productBatches = batchRepository.findAllByFactoryId(factory.getId());
+            long totalProduct = 0L;
+            for (int j = 0; j < productBatches.size(); ++j) {
+                totalProduct += productRepository.countAllByBatch(productBatches.get(j));
+            }
+            data.put(factory.getName(), totalProduct);
+        }
+        return data;
     }
 
     @Autowired

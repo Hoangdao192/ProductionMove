@@ -83,7 +83,7 @@ export default function ExportProduct() {
         .then((response) => {
             if (response.status == 200) {
                 return response.json()
-            }
+            } else toast.error("Không thể tải dữ liệu cơ sở sản xuất")
         }).then((data) => {
             if (data != undefined) {
                 setFactories(data)
@@ -91,8 +91,30 @@ export default function ExportProduct() {
         })
     }
 
+    function loadProduct(distributorId, exportType) {
+        if (exportType == "Error") {
+            loadErrorProduct(distributorId);
+        } else {
+            loadProductInStock(distributorId);
+        }
+    }
+
     function loadErrorProduct(distributorId) {
-        
+        ServerAPI.getStockByUnitId(user.unit.id)
+            .then((stock) => {
+                let url = config.server.api.product.list.url;
+                fetch(`${url}?status=${"Error factory"}&stockId=${stock.id}`, {
+                    headers: {
+                        'Authorization': Authentication.generateAuthorizationHeader()
+                    }
+                }).then((response) => {
+                    if (response.status == 200) {
+                        return response.json();
+                    } else toast.error("Không thể tải dữ liệu sản phẩm lỗi")
+                }).then((data) => {
+                    if (data != undefined) setProducts(data);
+                })
+            }).catch((message) => toast.error("Không thể tải dữ liệu kho hàng"))
     }
 
     function loadProductInStock(distributorId) {
@@ -146,7 +168,7 @@ export default function ExportProduct() {
             .then((distributor) => {
                 setDistributor(distributor)
                 loadFactories();
-                loadProductInStock(distributor.id);
+                loadProduct(distributor.id, exportType);
             })
     }, [reducer])
     
@@ -185,7 +207,10 @@ export default function ExportProduct() {
                 Loại xuất hàng
             </label>
             <select value={exportType} className={style.select} name="" id=""
-                onChange={(e) => setExportType(e.target.value)}>
+                onChange={(e) => {
+                    setExportType(e.target.value)
+                    loadProduct(distributor.id, e.target.value)
+                    }}>
                 <option value="Error">
                     Sản phẩm lỗi
                 </option>

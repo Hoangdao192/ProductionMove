@@ -5,9 +5,20 @@
             "login" : {
                 "url" : "http://localhost:5000/api/login"
             },
+            "stock" : {
+                "get" : {
+                    "url" : "http://localhost:5000/api/stock/get"
+                }
+            },
             "product" : {
                 "get" : {
                     "url" : "http://localhost:5000/api/product/get"
+                },
+                "list" : {
+                    "url" : "http://localhost:5000/api/product/list"
+                },
+                "statistic" : {
+                    "url" : "http://localhost:5000/api/product/statusStatistic"
                 }
             },
             "productBatch" : {
@@ -89,6 +100,20 @@
                 }
             },
             "distributor" : {
+                "productStatistic" : {
+                    "url" : "http://localhost:5000/api/distributor/productStatistic",
+                    "status" : {
+                        "url": "http://localhost:5000/api/distributor/productStatistic/status"
+                    }
+                },
+                "saleStatistic" : {
+                    "perMonth" : {
+                        "url" : "http://localhost:5000/api/distributor/saleStatistic/perMonth"
+                    },
+                    "perYear" : {
+                        "url" : "http://localhost:5000/api/distributor/saleStatistic/perYear"
+                    }
+                },
                 "producTransaction" : {
                     "inComing" : {
                         "url" : "http://localhost:5000/api/distributor/productTransaction/incoming"
@@ -167,6 +192,29 @@
                 },
                 "stock" : {
                     "product" : {
+                        "statusStatistic" : {
+                            "url" : "http://localhost:5000/api/factory/productStatusStatistic"
+                        },
+                        "statistic" : {
+                            "url" : "http://localhost:5000/api/factory/productStatistic",
+                            "perMonth" : {
+                                "url": "http://localhost:5000/api/factory/productStatistic/perMonth"
+                            },
+                            "perQuarter" : {
+                                "url": "http://localhost:5000/api/factory/productStatistic/perQuarter"
+                            },
+                            "perYear" : {
+                                "url": "http://localhost:5000/api/factory/productStatistic/perYear"
+                            },
+                            "error": {
+                                "perLine" : {
+                                    "url" : "http://localhost:5000/api/factory/productStatistic/error/line"
+                                },
+                                "perWarrantyCenter" : {
+                                    "url" : "http://localhost:5000/api/factory/productStatistic/error/warranty"
+                                }
+                            }
+                        },
                         "export" : {
                             "url" : "http://localhost:5000/api/factory/stock/product/export"
                         },
@@ -207,6 +255,9 @@
                     "url" : "http://localhost:5000/api/warranty/delete"
                 },
                 "warranty" : {
+                    "statistic" : {
+                        "url" : "http://localhost:5000/api/warranty/warrantyStatistic"
+                    },
                     "returnFactory" : {
                         "url" : "http://localhost:5000/api/warranty/warranty/return_factory"
                     },

@@ -1,0 +1,143 @@
+.container {
+  display: flex;
+  /* border: 1px solid black; */
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px
+}
+
+.UilStar {
+  background-color: #f2b95d;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  gap: 1rem;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 500;
+}
+
+.avatarImg {
+  height: 2rem;
+  width: 2rem;
+}
+
+.avatarImg img {
+  object-fit: cover;
+  border-radius: 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.barBtn {
+  display: none
+}
+
+.bar {
+  font-weight: bold;
+  font-size: 48px;
+  /* display: none; */
+  /* color: #DBE400; */
+}
+
+@media only screen and (max-width: 750px) {
+  .name {
+    display: none;
+  }
+  .barBtn {
+    display: block;
+  }
+}
+
+/* Icon */
+.UisStar {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 20px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UisAnalytics {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 2px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UilFileTimesAlt {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 5px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UilFileExport {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 5px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UilShutter {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 0px 2px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UilBuilding {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 0px 2px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}
+
+.UilShield {
+  display: flex;
+  background-color: #f2b95d;
+  color: #fff;
+  width: 30px;
+  padding: 0px 2px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  justify-items: center
+}

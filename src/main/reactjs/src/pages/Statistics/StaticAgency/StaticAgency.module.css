@@ -1,0 +1,96 @@
+.container {
+  overflow-y: auto;
+}
+
+.line_1, .line_2 {
+  display: flex;
+  width: 100%;
+  padding: 1rem;
+  gap: 1rem;
+  /* border: 1px solid black; */
+}
+
+.tbOption {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.tbOption label {
+  font-weight: 500;
+}
+
+.tbOption select {
+  border: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 5px solid #ccc;
+  outline: none;
+}
+
+.tbOption select option {
+  padding: 0.5rem 1rem;
+}
+
+
+.line_1>*, .line_2>* {
+  width: 50%;
+  /* min-width: 600px; */
+  display: flex;
+  justify-content: center;
+  border-radius: 1rem;
+  flex-direction: column;
+  align-items: center;
+}
+.statusBarChart {
+  width: 100%;
+}
+.statusBarChart, .factoryBarChart, .warrantyBarChart, .agencyBarChart{
+  padding: 1rem;
+  /* border: 1px solid black; */
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  cursor: pointer;
+  transition: all 1s;
+}
+
+.statusBarChart .tbOption select {
+  opacity: 0;
+  height: 0px;
+}
+
+
+.statusBarChart {
+  /* background-color: linear-gradient(#ffafbd, #ffc3a0); */
+  /* background-image: linear-gradient(150deg, rgba(255, 175, 189, 0.5) , rgba(255, 195, 160, 0.5)); */
+  /* min-width: 600px; */
+}
+
+.factoryBarChart {
+  /* background-image: linear-gradient(150deg,  rgba(109, 213, 237, 1), #fff); */
+}
+
+.warrantyBarChart {
+  /* background-image: linear-gradient(150deg,  rgba(238, 156, 167, 1), rgba(255, 221, 225, 1)); */
+}
+
+.agencyBarChart {
+  /* background-image: linear-gradient(150deg,  rgba(234, 205, 163, 1), rgba(214, 174, 123, 0.5)); */
+}
+
+.statusBarChart:hover, .factoryBarChart:hover, .warrantyBarChart:hover, .agencyBarChart:hover {
+
+  /* background: transparent; */
+  
+}
+
+
+@media only screen and (max-width: 1200px) {
+  .line_1, .line_2 {
+    flex-direction: column;
+    align-items: center;
+  }
+  .line_1>*, .line_2>* {
+    width: 100%;
+  }
+}

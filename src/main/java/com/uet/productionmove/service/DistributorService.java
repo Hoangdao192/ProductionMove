@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.StackWalker.Option;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DistributorService {
@@ -126,11 +124,14 @@ public class DistributorService {
        return productRepository.findAllByStock(stock);
     }
 
-    public List<Product> getAllErrorProductInStock(Long distributorId) throws InvalidArgumentException {
+    /**
+     * Lấy danh sách tất cả sản phẩm lỗi không thể sửa chữa trong kho
+     */
+    public List<Product> getAllErrorProductCannotFixInStock(Long distributorId) throws InvalidArgumentException {
         Distributor distributor = getDistributorById(distributorId);
         Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
         List<Product> products = new ArrayList<>();
-        products.addAll(productRepository.findAllByStockAndStatus(stock, ProductStatus.ERROR_SUMMON));
+        return productRepository.findAllByStockAndStatus(stock, ProductStatus.ERROR_FACTORY);
     }
 
     /**
@@ -387,6 +388,77 @@ public class DistributorService {
         Distributor distributor = getDistributorById(distributorId);
         return productWarrantyRepository
                 .findAllByRequestWarrantyDistributorAndStatus(distributor, ProductWarrantyStatus.RETURNED);
+    }
+
+    public Map<String, Long> getProductStatusStatistic(Long distributorId) throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
+        Map<String, Long> statistic = new HashMap<>();
+        statistic.put(ProductStatus.AGENCY,
+                productRepository.countAllByStatusAndStock(ProductStatus.AGENCY, stock));
+        statistic.put(ProductStatus.DONE_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.DONE_WARRANTY, stock));
+        statistic.put(ProductStatus.ERROR_FACTORY,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_FACTORY, stock));
+        statistic.put(ProductStatus.ERROR_SUMMON,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_SUMMON, stock));
+        statistic.put(ProductStatus.ERROR_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_WARRANTY, stock));
+        statistic.put(ProductStatus.ERROR_RETURNED_FACTORY,
+                productRepository.countAllByStatusAndStock(ProductStatus.ERROR_RETURNED_FACTORY, stock));
+        statistic.put(ProductStatus.NEWLY_PRODUCED,
+                productRepository.countAllByStatusAndStock(ProductStatus.NEWLY_PRODUCED, stock));
+        statistic.put(ProductStatus.SOLD,
+                productRepository.countAllByStatusAndStock(ProductStatus.SOLD, stock));
+        statistic.put(ProductStatus.UNDER_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.UNDER_WARRANTY, stock));
+        statistic.put(ProductStatus.RETURNED_FACTORY,
+                productRepository.countAllByStatusAndStock(ProductStatus.RETURNED_FACTORY, stock));
+        statistic.put(ProductStatus.RETURNED_WARRANTY,
+                productRepository.countAllByStatusAndStock(ProductStatus.RETURNED_WARRANTY, stock));
+        statistic.put(ProductStatus.WARRANTY_EXPIRED,
+                productRepository.countAllByStatusAndStock(ProductStatus.WARRANTY_EXPIRED, stock));
+        statistic.put(ProductStatus.CANNOT_SALE,
+                productRepository.countAllByStatusAndStock(ProductStatus.CANNOT_SALE, stock));
+        return statistic;
+    }
+
+    public Map<String, Long> getSoldProductStatisticPerMonth(Long distributorId, int year) throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        List<Order> orders = orderService.getAllOrderByDistributorId(distributorId);
+        Map<String, Long> data = new HashMap<>();
+        for (int i = 1; i <= 12; ++i) {
+            data.put(String.valueOf(i), 0L);
+        }
+        for (int i = 0; i < orders.size(); ++i) {
+            Order order = orders.get(i);
+            if (order.getOrderDate().getYear() == year) {
+                data.put(String.valueOf(order.getOrderDate().getMonthValue()),
+                        data.get(String.valueOf(order.getOrderDate().getMonthValue()))
+                                + order.getOrderDetails().size());
+            }
+        }
+        return data;
+    }
+
+    public Map<String, Long> getSoldProductStatisticPerYear(Long distributorId) throws InvalidArgumentException {
+        Distributor distributor = getDistributorById(distributorId);
+        int currentYear = LocalDate.now().getYear();
+        Map<String, Long> data = new HashMap<>();
+        for (int i = currentYear - 5; i <= currentYear; ++i) {
+            data.put(String.valueOf(i), 0L);
+        }
+
+        List<Order> orders = orderService.getAllOrderByDistributorId(distributor.getId());
+        for (int i = 0; i < orders.size(); ++i) {
+            Order order = orders.get(i);
+            if (order.getOrderDate().getYear() >= currentYear - 5
+                    && order.getOrderDate().getYear() <= currentYear) {
+                data.put(String.valueOf(order.getOrderDate().getYear()),
+                        data.get(String.valueOf(order.getOrderDate().getYear())) + order.getOrderDetails().size());
+            }
+        }
+        return data;
     }
 
     @Autowired

@@ -33,7 +33,7 @@ export default function ImportProduct() {
         }).then((response) => {
             if (response.status == 200) {
                 return response.json();
-            } else toast.error("Không thể tải dữ liệu.")
+            } else toast.error("Không thể tải dữ liệu vận chuyển.")
         }).then((data) => {
             if (data != undefined) {
                 

@@ -1,0 +1,81 @@
+.container {
+  width: 100%;
+  /* border: 1px solid black; */
+  padding: 1rem 0;
+  overflow: auto;
+ 
+}
+
+.firstView {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.chartItem {
+  width: 25%;
+  /* border: 1px solid black; */
+  min-width: 280px;
+  padding: 0 0 2rem 0;
+}
+
+.titleChart {
+  text-align: center;
+  transform: translateY(1rem);
+  font-weight: bold;
+}
+
+.tbOption {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.tbOption label {
+  font-weight: 500;
+}
+
+.tbOption select {
+  border: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #2b3b4c;
+}
+
+.tbOption select option {
+  padding: 0.5rem 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  color: #2b3b4c;
+  min-width: 800px;
+}
+
+tbody tr td {
+  border-top: 1px solid #d8d8d8;
+
+}
+
+.name {
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 975px) {
+  .table {
+    font-size: 0.8rem;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .firstView {
+    /* flex-direction: column; */
+    align-items: center;
+    /* border: 1px solid black; */
+  }
+  .chartItem {
+    display: none;
+  }
+}

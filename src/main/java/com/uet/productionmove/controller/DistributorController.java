@@ -4,6 +4,7 @@ import com.uet.productionmove.entity.*;
 import com.uet.productionmove.exception.InvalidArgumentException;
 import com.uet.productionmove.model.*;
 import com.uet.productionmove.service.DistributorService;
+import com.uet.productionmove.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class DistributorController {
 
     private DistributorService distributorService;
+    @Autowired
+    private ProductService productService;
 
     @PostMapping(path = "/create")
     @PreAuthorize("hasAnyAuthority('Admin') and isAuthenticated()")
@@ -75,6 +78,13 @@ public class DistributorController {
         return ResponseEntity.ok(distributorService.getAllSoldProduct(distributorId));
     }
 
+    //  Lấy tất cả sản phẩm lỗi không thể sửa chữa
+    @GetMapping(path = "stock/product/error")
+    public ResponseEntity<List<Product>> getAllProductCannotFix(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getAllErrorProductCannotFixInStock(distributorId));
+    }
+
     @GetMapping(path = "productRecall")
     public ResponseEntity<List<CustomerProduct>> getAllRecallProduct(
             @RequestParam Long distributorId, @RequestParam Long productLineId
@@ -106,7 +116,7 @@ public class DistributorController {
         );
     }
 
-    @GetMapping(path = "/stock/export")
+    @GetMapping(path = "/productTransaction/incoming")
     public ResponseEntity<List<FactoryProductTransactionModel>> getAllInComingProductTransaction(
             @RequestParam Long distributorId
     ) throws InvalidArgumentException {
@@ -153,6 +163,31 @@ public class DistributorController {
         return ResponseEntity.ok(Map.of(
                 "message", "Delete warranty center successful.",
                 "content", Map.of("id", distributorId)));
+    }
+
+    @GetMapping(path = "productStatistic")
+    public ResponseEntity<Map<String, Long>> getProductStatistic() {
+        return ResponseEntity.ok(productService.getProductPerDistributorStatistic());
+    }
+
+    @GetMapping(path = "productStatistic/status")
+    public ResponseEntity<Map<String, Long>> getProductStatusStatistic(@RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getProductStatusStatistic(distributorId));
+    }
+
+    @GetMapping(path = "saleStatistic/perMonth")
+    public ResponseEntity<Map<String, Long>> getProductSoldStatisticPerMonth(
+            @RequestParam Long distributorId, int year)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getSoldProductStatisticPerMonth(distributorId, year));
+    }
+
+    @GetMapping(path = "saleStatistic/perYear")
+    public ResponseEntity<Map<String, Long>> getProductSoldStatisticPerMonth(
+            @RequestParam Long distributorId)
+            throws InvalidArgumentException {
+        return ResponseEntity.ok(distributorService.getSoldProductStatisticPerYear(distributorId));
     }
 
     @Autowired

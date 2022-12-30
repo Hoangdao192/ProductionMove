@@ -28,4 +28,6 @@ public class ProductStatus {
     public static String WARRANTY_EXPIRED = "Warranty expired";
     //  Trả lại cơ sở sản xuất
     public static String RETURNED_FACTORY = "Returned factory";
+    //  Không bán được
+    public static String CANNOT_SALE = "Cannot sale";
 }
