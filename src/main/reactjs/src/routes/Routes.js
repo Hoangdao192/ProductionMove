@@ -60,7 +60,7 @@ const privateRoutes = [
     {path: '/manager/unit/edit', layout: ManagerLayout, component: EditUnit, authorization : ['Admin']},
     {path: '/manager/product_line/create', layout: ManagerLayout, component: CreateProductLine, authorization : ['Admin']},
     {path: '/manager/product_line/list', layout: ManagerLayout, component: ListProductLine, authorization : ['Admin']},
-    {path: '/manager/product_line/show', layout: ManagerLayout, component: ShowProductLine, authorization : ['Admin']},
+    {path: '/manager/product_line/show', layout: ManagerLayout, component: ShowProductLine, authorization : ['Admin', 'Distributor']},
     {path: '/manager/product_line/edit', layout: ManagerLayout, component: EditProductLine, authorization : ['Admin']},
 
     {path: '/distributor/home', layout: DistributorLayout, component: DistributorHome, authorization : ['Distributor']},

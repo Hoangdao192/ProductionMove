@@ -52,8 +52,7 @@ function LoginForm() {
                     <div className="content">
                         <h3>BigCorp</h3>
                         <p>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-                            ex ratione. Aliquid!
+                            Tập đoàn đa quốc gia hàng đầu thế giới
                         </p>
                     </div>
                     <img src={img1} className="image" alt="" />

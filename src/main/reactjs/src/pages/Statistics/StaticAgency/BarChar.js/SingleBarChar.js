@@ -51,7 +51,7 @@ function SingleBarChar({
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.6)",
           borderColor:
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.8)",
-          borderWidth: 5,
+          borderWidth: 0,
           borderRadius: 5,
         },
       ];
@@ -231,7 +231,7 @@ function SingleBarChar({
             ) +
             ", 0.8)",
 
-          borderWidth: 5,
+          borderWidth: 0,
           borderRadius: 5,
         },
       ];

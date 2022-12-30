@@ -67,9 +67,9 @@ export default function ShowOrderDetail() {
                                     <TableCell align='center'>Mã sản phẩm</TableCell>
                                     <TableCell align='center'>Tên sản phẩm</TableCell>
                                     <TableCell align='center'>Số lượng</TableCell>
-                                    <TableCell align='right' sx={{paddingRight: 0}}>
+                                    {/* <TableCell align='right' sx={{paddingRight: 0}}>
                                         Tùy chọn
-                                    </TableCell>
+                                    </TableCell> */}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -83,13 +83,13 @@ export default function ShowOrderDetail() {
                                                 <TableCell align='center'>{orderDetail.product.id}</TableCell>
                                                 <TableCell align='center'>{orderDetail.productLine.productName}</TableCell>
                                                 <TableCell align='center'>{orderDetail.quantity}</TableCell>
-                                                <TableCell align='right' sx={{paddingRight: 0}}>
+                                                {/* <TableCell align='right' sx={{paddingRight: 0}}>
                                                     <Link to='/manager/product_line/show' state={{productLine: orderDetail.productLine}}>
                                                         <button className={style.actionButton}>
                                                             Xem sản phẩm
                                                         </button>
                                                     </Link>
-                                                </TableCell>
+                                                </TableCell> */}
                                             </TableRow>
                                         )
                                     })

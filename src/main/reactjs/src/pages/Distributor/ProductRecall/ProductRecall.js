@@ -4,6 +4,7 @@ import Authentication from '../../../services/Authentication/Authentication';
 import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useReducer } from 'react';
+import { toast } from 'react-toastify';
 
 export default function ProductRecall() {
     const [productLines, setProductLines] = useState([]);
@@ -130,8 +131,9 @@ export default function ProductRecall() {
             body: formData
         }).then((response) => {
             if (response.status == 200) {
-                alert("Thành công")
-            } else alert("Không thành công")
+                resetComponent();
+                toast.success("Thành công")
+            } else toast.error("Không thành công")
         })
     }
 

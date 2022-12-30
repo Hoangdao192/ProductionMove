@@ -5,6 +5,8 @@
     background-color: white;
     padding: 1rem 2rem;
     border-radius: 0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .title {
@@ -35,10 +37,13 @@
     display: flex;
     padding: 10px 5%;
     align-items: center;
+    row-gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .form>div label {
     min-width: 25%;
+    width: 13rem;
     padding-right: 2rem;
 }
 
@@ -102,17 +107,12 @@
     }
 }
 
-@media screen and (max-width: 960px) {
-    .submitButton button {
-        display: block;
+@media screen and (max-width: 700px) {
+    .container {
+        width: 100%;
     }
 
-    .form>div>div {
-        flex-direction: column;
-    }
-
-    .form>div>div label {
-        margin-bottom: 5px;
-        width: 50%;
+    .form>div {
+        flex-direction: row;
     }
 }

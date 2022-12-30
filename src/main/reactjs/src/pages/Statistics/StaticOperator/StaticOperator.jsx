@@ -175,7 +175,7 @@ function StaticOperator() {
                         <select></select>
                     </div>
                     <SingleBarChar
-                        title={"Sản phẩm từng trạng thái"}
+                        title={"Thống kê sản phẩm theo trạng thái"}
                         dataList={productData}
                         positionLabels={"right"}
                         sizeLabels={6}
@@ -189,7 +189,7 @@ function StaticOperator() {
                         <select></select>
                     </div>
                     <SingleBarChar
-                        title={"Sản phẩm từng nhà sản xuất"}
+                        title={"Thống kê sản xuất sản phẩm"}
                         dataList={factoryData}
                         positionLabels={"right"}
                         sizeLabels={sizeLabelStatusChart}
@@ -205,7 +205,7 @@ function StaticOperator() {
                         <select></select>
                     </div>
                     <SingleBarChar
-                        title={"Sản phẩm từng cơ sở bảo hành"}
+                        title={"Thống kê sản phẩm từng cơ sở bảo hành"}
                         dataList={warrantyData}
                         positionLabels={"right"}
                         sizeLabels={sizeLabelStatusChart}
@@ -219,7 +219,7 @@ function StaticOperator() {
                         <select></select>
                     </div>
                     <SingleBarChar
-                        title={"Sản phẩm từng đại lý"}
+                        title={"Thống kê sản phẩm từng đại lý"}
                         dataList={distributorData}
                         positionLabels={"right"}
                         sizeLabels={sizeLabelStatusChart}

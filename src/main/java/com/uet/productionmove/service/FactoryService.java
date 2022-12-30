@@ -25,8 +25,6 @@ public class FactoryService {
 
     private UnitRepository unitRepository;
 
-    private StockTransactionRepository stockTransactionRepository;
-
     private ProductRepository productRepository;
 
     private ErrorProductRepository errorProductRepository;
@@ -530,11 +528,6 @@ public class FactoryService {
     @Autowired
     public void setUnitRepository(UnitRepository unitRepository) {
         this.unitRepository = unitRepository;
-    }
-
-    @Autowired
-    public void setStockTransactionRepository(StockTransactionRepository stockTransactionRepository) {
-        this.stockTransactionRepository = stockTransactionRepository;
     }
 
     @Autowired

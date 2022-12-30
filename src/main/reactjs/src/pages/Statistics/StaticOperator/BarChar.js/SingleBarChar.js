@@ -33,7 +33,7 @@ function SingleBarChar({
     },
   };
 
-  if (title === "Sản phẩm từng trạng thái") {
+  if (title === "Thống kê sản phẩm theo trạng thái") {
     // { status: "NEW", quantity: 300, color: "rgb(66, 194, 255)" }
     dataList.forEach((item, index) => {
       dataSet = [
@@ -46,7 +46,7 @@ function SingleBarChar({
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.6)",
           borderColor:
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.8)",
-          borderWidth: 5,
+          borderWidth: 0,
           borderRadius: 5,
         },
       ];
@@ -63,7 +63,7 @@ function SingleBarChar({
     };
   }
 
-  if (title === "Sản phẩm từng nhà sản xuất") {
+  if (title === "Thống kê sản xuất sản phẩm") {
     // { status: "NEW", quantity: 300, color: "rgb(66, 194, 255)" }
     dataList.forEach((item, index) => {
       dataSet = [
@@ -76,14 +76,14 @@ function SingleBarChar({
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.6)",
           borderColor:
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.8)",
-          borderWidth: 5,
+          borderWidth: 0,
           borderRadius: 5,
         },
       ];
     });
   }
 
-  if (title === "Sản phẩm từng cơ sở bảo hành") {
+  if (title === "Thống kê sản phẩm từng cơ sở bảo hành") {
     // { status: "NEW", quantity: 300, color: "rgb(66, 194, 255)" }
     dataList.forEach((item, index) => {
       dataSet = [
@@ -96,14 +96,14 @@ function SingleBarChar({
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.6)",
           borderColor:
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.8)",
-          borderWidth: 5,
+          borderWidth: 0,
           borderRadius: 5,
         },
       ];
     });
   }
 
-  if (title === "Sản phẩm từng đại lý") {
+  if (title === "Thống kê sản phẩm từng đại lý") {
     // { status: "NEW", quantity: 300, color: "rgb(66, 194, 255)" }
     dataList.forEach((item, index) => {
       dataSet = [
@@ -116,7 +116,7 @@ function SingleBarChar({
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.6)",
           borderColor:
             "rgba(" + item.color.substring(4, item.color.length - 1) + ", 0.8)",
-          borderWidth: 5,
+          borderWidth: 0,
           borderRadius: 5,
         },
       ];

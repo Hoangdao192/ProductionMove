@@ -170,8 +170,6 @@ public class DistributorService {
         return productTransaction;
     }
 
-
-
     public List<Product> getAllSellableProductInStock(Long distributorId)throws InvalidArgumentException {
         Distributor distributor = getDistributorById(distributorId);
         Stock stock = stockService.getStockByStockOwner(distributor.getUnit());
