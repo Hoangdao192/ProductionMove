@@ -30,8 +30,10 @@ export default function BarChart({
   sizeLabels,
   displayLabels,
   sizeTitle,
+  indexAxis,
 }) {
   const options = {
+    indexAxis: indexAxis ? indexAxis : "x",
     responsive: true,
     // scales: scales,
     // scales: scales,

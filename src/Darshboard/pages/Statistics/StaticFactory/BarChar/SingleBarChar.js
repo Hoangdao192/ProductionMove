@@ -14,6 +14,7 @@ function SingleBarChar({
   sizeLabels,
   displayLabels,
   sizeTitle,
+  indexAxis,
 }) {
   let labels = [""];
   let dataSet = [];
@@ -373,7 +374,7 @@ function SingleBarChar({
         },
       ];
       scales = {
-        y: {
+        x: {
           ticks: {
             callback: function (value) {
               if (value % 1 === 0) return value;
@@ -415,7 +416,7 @@ function SingleBarChar({
         },
       ];
       scales = {
-        y: {
+        x: {
           ticks: {
             callback: function (value) {
               if (value % 1 === 0) return value;
@@ -457,7 +458,7 @@ function SingleBarChar({
         },
       ];
       scales = {
-        y: {
+        x: {
           ticks: {
             callback: function (value) {
               if (value % 1 === 0) return value;
@@ -466,6 +467,7 @@ function SingleBarChar({
         },
       };
     }
+    indexAxis = "y";
   }
 
   return (
@@ -479,6 +481,7 @@ function SingleBarChar({
       sizeLabels={sizeLabels}
       displayLabels={displayLabels}
       sizeTitle={sizeTitle}
+      indexAxis={indexAxis}
     />
   );
 }
